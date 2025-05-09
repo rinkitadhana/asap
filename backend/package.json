@@ -3,10 +3,22 @@
   "module": "index.ts",
   "type": "module",
   "private": true,
+  "scripts": {
+    "dev": "bun --watch src/index.ts",
+    "start": "bun src/index.ts",
+    "build": "bun build ./src/index.ts --outdir ./dist --minify",
+    "test": "bun test",
+    "lint": "bunx biome check src/",
+    "format": "bunx biome format src/ --write"
+  },
   "devDependencies": {
-    "@types/bun": "^1.2.12"
+    "@types/bun": "^1.2.12",
+    "@types/express": "^5.0.1"
   },
   "peerDependencies": {
     "typescript": "^5"
+  },
+  "dependencies": {
+    "express": "^5.1.0"
   }
 }
