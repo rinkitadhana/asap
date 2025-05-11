@@ -5,8 +5,10 @@ import ThemeSwitcher from "./ThemeSwitcher"
 import GithubButton from "./GithubButton"
 import Button from "./ui/Button"
 import Version from "./ui/Version"
+import { useRouter } from "next/navigation"
 const Navbar = () => {
   const [scrolled, setScrolled] = useState(false)
+  const router = useRouter()
 
   useEffect(() => {
     const onScroll = () => {
@@ -41,7 +43,12 @@ const Navbar = () => {
       >
         <div className="flex items-center gap-10">
           <div className="flex items-center gap-3">
-            <h1 className="text-2xl font-bold">bordre</h1>
+            <button
+              onClick={() => router.push("/")}
+              className="text-2xl font-bold cursor-pointer"
+            >
+              bordre
+            </button>
             <Version text="BETA 0.0.1" />
           </div>
           <nav className="hidden md:flex gap-6">
@@ -63,10 +70,18 @@ const Navbar = () => {
             <ThemeSwitcher />
           </div>
           <div className="hidden md:flex gap-4">
-            <button className="select-none text-sm font-semibold cursor-pointer hover:opacity-80 transition-opacity duration-200">
+            <button
+              onClick={() => router.push("/login")}
+              className="select-none text-sm font-semibold cursor-pointer hover:opacity-80 transition-opacity duration-200"
+            >
               Sign in
             </button>
-            <Button text="Get started" />
+            <button
+              onClick={() => router.push("/signup")}
+              className="btn text-sm font-semibold"
+            >
+              Get Started
+            </button>
           </div>
         </div>
       </div>
