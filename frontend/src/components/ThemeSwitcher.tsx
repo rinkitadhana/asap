@@ -1,53 +1,53 @@
 "use client"
+
+import * as React from "react"
 import { Moon, Sun } from "lucide-react"
-import React, { useEffect, useState } from "react"
+import { useTheme } from "next-themes"
 
-const getSystemTheme = () =>
-  window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"
+import { Button } from "@/components/ui/button"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 
-export default function ThemeSwitcher() {
-  const [theme, setTheme] = useState<string | null>(null)
-
-  // Set theme on mount
-  useEffect(() => {
-    const saved = localStorage.getItem("theme")
-    const initial = saved || getSystemTheme()
-    setTheme(initial)
-    document.documentElement.classList.remove("light", "dark")
-    document.documentElement.classList.add(initial)
-  }, [])
-
-  // Listen for system theme changes
-  useEffect(() => {
-    const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)")
-    const handleChange = () => {
-      if (!localStorage.getItem("theme")) {
-        const newTheme = mediaQuery.matches ? "dark" : "light"
-        setTheme(newTheme)
-        document.documentElement.classList.remove("light", "dark")
-        document.documentElement.classList.add(newTheme)
-      }
-    }
-    mediaQuery.addEventListener("change", handleChange)
-    return () => mediaQuery.removeEventListener("change", handleChange)
-  }, [])
-
-  // Update theme
-  const toggleTheme = () => {
-    const newTheme = theme === "dark" ? "light" : "dark"
-    setTheme(newTheme)
-    localStorage.setItem("theme", newTheme)
-    document.documentElement.classList.remove("light", "dark")
-    document.documentElement.classList.add(newTheme)
-  }
+export function ThemeSwitcher() {
+  const { setTheme } = useTheme()
 
   return (
-    <button
-      onClick={toggleTheme}
-      aria-label="Toggle dark/light mode"
-      className="cursor-pointer p-2 hover:bg-hover rounded-md transition-all duration-200"
-    >
-      {theme === "dark" ? <Moon size={18} /> : <Sun size={18} />}
-    </button>
+    <DropdownMenu modal={false}>
+      <DropdownMenuTrigger asChild>
+        <Button
+          variant="ghost"
+          size="icon"
+          className="rounded-md hover:bg-hover transition-colors duration-200 cursor-pointer"
+        >
+          <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+          <Moon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+          <span className="sr-only">Toggle theme</span>
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end" className="overflow-hidden ">
+        <DropdownMenuItem
+          className="cursor-pointer"
+          onClick={() => setTheme("light")}
+        >
+          Light
+        </DropdownMenuItem>
+        <DropdownMenuItem
+          className="cursor-pointer"
+          onClick={() => setTheme("dark")}
+        >
+          Dark
+        </DropdownMenuItem>
+        <DropdownMenuItem
+          className="cursor-pointer"
+          onClick={() => setTheme("system")}
+        >
+          System
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
   )
 }

@@ -1,10 +1,10 @@
 "use client"
 import React, { useEffect, useState } from "react"
 import Link from "next/link"
-import ThemeSwitcher from "./ThemeSwitcher"
 import GithubButton from "./GithubButton"
 import Version from "./ui/Version"
 import { useRouter } from "next/navigation"
+import { ThemeSwitcher } from "./ThemeSwitcher"
 const Navbar = () => {
   const [scrolled, setScrolled] = useState(false)
   const router = useRouter()
