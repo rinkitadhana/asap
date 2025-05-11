@@ -1,8 +1,14 @@
 @import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #f4f4f4;
+  --foreground: #141414;
+  --primary: #1d1d1d;
+  --primary-text: #ffffff;
+  --hover: #f0f0f0;
+  --main-border: #c9c9c9;
+  --border: #d8d8d8;
 }
 
 @theme inline {
@@ -10,14 +16,19 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --color-primary: var(--primary);
+  --color-primary-text: var(--primary-text);
+  --color-hover: var(--hover);
+  --color-border: var(--border);
+  --color-main-border: var(--main-border);
 }
-
+/* 
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;
     --foreground: #ededed;
   }
-}
+} */
 
 body {
   background: var(--background);
