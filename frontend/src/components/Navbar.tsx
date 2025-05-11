@@ -3,7 +3,6 @@ import React, { useEffect, useState } from "react"
 import Link from "next/link"
 import ThemeSwitcher from "./ThemeSwitcher"
 import GithubButton from "./GithubButton"
-import Button from "./ui/Button"
 import Version from "./ui/Version"
 import { useRouter } from "next/navigation"
 const Navbar = () => {
@@ -34,7 +33,7 @@ const Navbar = () => {
   return (
     <section className="fixed z-10 top-3 left-0 right-0 ">
       <div
-        className={`max-w-[1100px] mx-auto flex justify-between items-center w-full py-3 px-6  dark:bg-back border shadow-sm rounded-2xl transition-all duration-400 
+        className={`max-w-[1100px] mx-auto flex justify-between items-center w-full py-3 px-6  dark:bg-back border shadow-sm rounded-2xl transition-all duration-300 
  ${
    scrolled
      ? "bg-white border-border shadow-black/10"

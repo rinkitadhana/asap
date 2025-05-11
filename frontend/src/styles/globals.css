@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap");
+@import "cal-sans";
 @import "tailwindcss";
 @custom-variant dark (&:where(.dark, .dark *));
 
@@ -6,21 +8,31 @@
   --foreground: #141414;
   --primary: #1d1d1d;
   --primary-text: #ffffff;
+  --secondary-text: #6e6e6e;
   --hover: #f0f0f0;
   --main-border: #b9b9b9;
   --border: #d8d8d8;
+  --font-cal: "Cal Sans", sans-serif;
+  --font-inter: "Inter", sans-serif;
+  --selection-background: #141414;
+  --selection-text: #ffffff;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
+  --font-sans: var(--font-sans);
   --font-mono: var(--font-geist-mono);
+  --font-cal: var(--font-cal);
+  --font-inter: var(--font-inter);
   --color-primary: var(--primary);
   --color-primary-text: var(--primary-text);
   --color-hover: var(--hover);
   --color-border: var(--border);
   --color-main-border: var(--main-border);
+  --color-secondary-text: var(--secondary-text);
+  --color-selection-background: var(--selection-background);
+  --color-selection-text: var(--selection-text);
 }
 /* 
 @media (prefers-color-scheme: dark) {
@@ -36,8 +48,21 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
+::selection {
+  background-color: var(--selection-background);
+  color: var(--selection-text);
+}
+
+.dark {
+  --selection-background: #ffffff;
+  --selection-text: #0a0a0a;
+}
+
 .btn {
   @apply select-none px-3.5 py-2.5 shadow-inner shadow-primary-text/60  cursor-pointer rounded-[10px] hover:opacity-90 duration-200 bg-primary text-primary-text inline-flex items-center justify-center whitespace-nowrap  transition-all;
+}
+.btn-secondary {
+  @apply select-none px-3.5 py-2.5 shadow-inner shadow-primary-text  cursor-pointer rounded-[10px] hover:opacity-90 duration-200 bg-background border border-border  inline-flex items-center justify-center whitespace-nowrap  transition-all;
 }
 .sin-screen {
   @apply flex items-center justify-center  w-[300px] mx-auto;

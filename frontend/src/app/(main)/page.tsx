@@ -8,7 +8,9 @@ const page = () => {
       <PageHead title="Home | bordre" />
       <Navbar />
       <Hero />
-      <div className="h-screen text-background">hello china</div>
+      <div className="border-t border-main-border border-dashed w-full">
+        <div className="h-screen text-background">hello china</div>
+      </div>
     </>
   )
 }
