@@ -4,8 +4,8 @@ import React from "react"
 const Hero = () => {
   return (
     <LayoutWrapper>
-      <section className="h-screen border border-main-border border-dashed">
-        <div className="flex flex-col items-center justify-center h-screen">
+      <section className=" border border-main-border border-dashed p-4">
+        <div className=" h-[600px] flex flex-col bg-white dark:bg-black items-center justify-center border border-border rounded-xl p-6 mt-20">
           <h1 className="text-4xl font-bold">Welcome to bordre</h1>
           <p className="text-secondary">
             The best way to create and manage your borderless accounts

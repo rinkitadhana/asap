@@ -4,7 +4,7 @@ import PageHead from "@/components/PageHead"
 // import { useLogin } from "@/hooks/useAuth"
 import FooterInfo from "@/components/FooterInfo"
 import { Eye, EyeOff, LoaderCircle, LockKeyhole, UserRound } from "lucide-react"
-import Image from "next/image"
+// import Image from "next/image"
 import Link from "next/link"
 import { useState } from "react"
 
