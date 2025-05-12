@@ -21,7 +21,7 @@ export function ThemeSwitcher({ scrolled }: { scrolled: boolean }) {
         <Button
           variant="ghost"
           size="icon"
-          className={`rounded-md transition-colors duration-200 cursor-pointer ${
+          className={`rounded-md transition-colors duration-200 cursor-pointer focus:outline-none focus:ring-0 ${
             scrolled ? "hover:bg-secondary-hover" : "hover:bg-primary-hover"
           }`}
         >
