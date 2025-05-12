@@ -12,7 +12,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 
-export function ThemeSwitcher() {
+export function ThemeSwitcher({ scrolled }: { scrolled: boolean }) {
   const { setTheme } = useTheme()
 
   return (
@@ -21,14 +21,19 @@ export function ThemeSwitcher() {
         <Button
           variant="ghost"
           size="icon"
-          className="rounded-md hover:bg-hover transition-colors duration-200 cursor-pointer"
+          className={`rounded-md transition-colors duration-200 cursor-pointer ${
+            scrolled ? "hover:bg-secondary-hover" : "hover:bg-primary-hover"
+          }`}
         >
           <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
           <Moon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
           <span className="sr-only">Toggle theme</span>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="overflow-hidden ">
+      <DropdownMenuContent
+        align="end"
+        className="overflow-hidden border-secondary-border"
+      >
         <DropdownMenuItem
           className="cursor-pointer"
           onClick={() => setTheme("light")}

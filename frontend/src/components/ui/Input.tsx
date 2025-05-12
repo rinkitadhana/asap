@@ -26,17 +26,19 @@ const Input: React.FC<InputProps> = ({
   const [show, setShow] = useState(false)
   return (
     <div
-      className={`flex flex-row border  rounded-[10px] gap-3 py-2 px-3 border-zinc  transition-colors duration-200 ${
-        error ? "border-red-500" : "border-zinc-500 focus-within:border-mainclr"
+      className={`flex flex-row border  rounded-[14px] gap-3 py-2 px-3 border-auth-border  transition-colors duration-200 ${
+        error
+          ? "border-red-500"
+          : "border-auth-border focus-within:border-mainclr"
       }`}
     >
-      {ficon && <div className="text-zinc-500">{ficon}</div>}
+      {ficon && <div className="text-foreground/60">{ficon}</div>}
       <input
         name={name}
         type={show ? "text" : type}
         value={value}
         onChange={onChange}
-        className=" w-full placeholder:text-zinc-500 bg-transparent outline-none placeholder:select-none"
+        className=" w-full placeholder:text-foreground/60 bg-transparent outline-none placeholder:select-none"
         placeholder={text}
       />
       {licon1 && licon2 && (
