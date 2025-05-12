@@ -1,9 +1,9 @@
 "use client"
 import { useRouter } from "next/navigation"
 
-const Dashboard = () => {
+const page = () => {
   const router = useRouter()
   router.push("/dashboard/home")
 }
 
-export default Dashboard
+export default page

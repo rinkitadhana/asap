@@ -1,5 +1,11 @@
+import DashboardWrapper from "../DashboardWrapper"
+
 const page = () => {
-  return <div>Dashboard Home Page</div>
+  return (
+    <DashboardWrapper>
+      <div>Dashboard Home Page</div>
+    </DashboardWrapper>
+  )
 }
 
 export default page

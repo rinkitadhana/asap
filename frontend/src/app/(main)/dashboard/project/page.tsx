@@ -1,7 +1,11 @@
 import React from "react"
-
+import DashboardWrapper from "../DashboardWrapper"
 const page = () => {
-  return <div>Dashboard Project Page</div>
+  return (
+    <DashboardWrapper>
+      <div>Dashboard Project Page</div>
+    </DashboardWrapper>
+  )
 }
 
 export default page
