@@ -3,7 +3,7 @@ import DashboardWrapper from "../DashboardWrapper"
 const page = () => {
   return (
     <DashboardWrapper>
-      <div>Dashboard Project Page</div>
+      <div className="p-4">Dashboard Project Page</div>
     </DashboardWrapper>
   )
 }
