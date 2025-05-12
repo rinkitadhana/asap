@@ -1,12 +1,28 @@
 "use client"
 import { ThemeSwitcher } from "@/components/ThemeSwitcher"
-import { FolderClosed, House } from "lucide-react"
+import { FolderClosed, House, User } from "lucide-react"
 import Link from "next/link"
-import React, { useState } from "react"
+import { usePathname } from "next/navigation"
+import React, { useState, useEffect } from "react"
 import { BsLayoutSidebarInset } from "react-icons/bs"
 
 const DashboardWrapper = ({ children }: { children: React.ReactNode }) => {
   const [isOpen, setIsOpen] = useState(false)
+  const pathname = usePathname()
+
+  useEffect(() => {
+    const savedSidebarState = localStorage.getItem("sidebarOpen")
+    if (savedSidebarState) {
+      setIsOpen(savedSidebarState === "true")
+    }
+  }, [])
+
+  const toggleSidebar = () => {
+    const newState = !isOpen
+    setIsOpen(newState)
+    localStorage.setItem("sidebarOpen", String(newState))
+  }
+
   const links = [
     {
       icon: <House size={24} />,
@@ -22,31 +38,61 @@ const DashboardWrapper = ({ children }: { children: React.ReactNode }) => {
   return (
     <section className="flex bg-background p-4 gap-4">
       <div
-        className={`flex flex-col justify-between items-center bg-background h-[calc(100vh-2rem] py-3 px-2 ${
-          isOpen ? "w-[150px]" : "w-fit"
+        className={`flex flex-col justify-between items-center bg-background h-[calc(100vh-2rem)] py-3  ${
+          isOpen ? "w-[180px]" : "w-fit"
         }`}
       >
-        <div className="flex flex-col items-center justify-center gap-6">
-          <button
-            onClick={() => setIsOpen((prev) => !prev)}
-            className="hover:bg-primary-hover p-2 rounded-md cursor-pointer"
+        <div className="flex flex-col items-center justify-center gap-6 w-full">
+          <div
+            className={`flex gap-2  items-center w-full ${
+              isOpen ? "justify-between" : "justify-center"
+            }`}
           >
-            <BsLayoutSidebarInset className="size-[20px]" />
-          </button>
-          <nav className="flex flex-col items-center justify-center gap-3 border">
+            {isOpen && <h1 className="text-xl font-semibold">bordre</h1>}
+            <button
+              title={isOpen ? "Close sidebar" : "Open sidebar"}
+              onClick={toggleSidebar}
+              className="hover:bg-primary-hover p-2 rounded-md cursor-pointer transition-all duration-200"
+            >
+              <BsLayoutSidebarInset size={20} />
+            </button>
+          </div>
+
+          <nav className="flex flex-col items-center justify-center gap-2 w-full">
             {links.map((link) => (
               <Link
+                key={link.href}
                 href={link.href}
                 title={link.name}
-                className="p-2 hover:bg-primary-hover rounded-md"
+                className={`p-2 rounded-md select-none transition-all duration-200 w-full flex items-center gap-2 font-medium ${
+                  pathname === link.href
+                    ? "bg-primary-hover"
+                    : "hover:bg-primary-hover"
+                }`}
               >
-                {link.icon}
+                <span>{link.icon}</span>
+                {isOpen && <span className="truncate">{link.name}</span>}
               </Link>
             ))}
           </nav>
         </div>
-        <div>
-          <ThemeSwitcher scrolled={false} />
+        <div className=" flex flex-col items-center justify-center gap-4 w-full select-none">
+          <div
+            className={`truncate flex gap-2 items-center  w-full font-medium rounded-md ${
+              isOpen
+                ? " bg-secondary border border-secondary-border justify-between  py-1 px-2 "
+                : " justify-center"
+            }`}
+          >
+            {isOpen && <span className="truncate">Change theme</span>}
+            <ThemeSwitcher scrolled={true} />
+          </div>
+          <div className="flex items-center gap-2 hover:bg-primary-hover p-2 rounded-md cursor-pointer transition-all duration-200 font-medium w-full">
+            <div title="Rinkit Adhana">
+              <User size={24} />
+            </div>
+            {isOpen && <span className="truncate">Rinkit Adhana</span>}
+          </div>
         </div>
       </div>
       <div className="flex-grow bg-secondary rounded-xl h-[calc(100vh-2rem)] border overflow-hidden">
