@@ -172,7 +172,7 @@
   @apply select-none px-3.5 py-2.5 border border-foreground shadow-inner shadow-secondary/60  cursor-pointer rounded-[14px] hover:opacity-85 duration-200 bg-primary text-primary-text inline-flex items-center justify-center whitespace-nowrap  transition-all;
 }
 .btn-secondary {
-  @apply select-none px-3.5 py-2.5 shadow-inner shadow-primary/60  cursor-pointer rounded-[14px] hover:opacity-85 duration-200 bg-background border border-background  inline-flex items-center justify-center whitespace-nowrap  transition-all;
+  @apply select-none px-3.5 py-2.5 shadow-inner shadow-primary/60  cursor-pointer rounded-[14px] hover:opacity-85 duration-200 bg-background border border-foreground/40   inline-flex items-center justify-center whitespace-nowrap  transition-all;
 }
 
 .sin-screen {
