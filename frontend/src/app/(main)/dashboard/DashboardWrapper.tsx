@@ -1,4 +1,5 @@
 "use client"
+import Logo from "@/components/Logo"
 import { ThemeSwitcher } from "@/components/ThemeSwitcher"
 import { FolderClosed, House, User } from "lucide-react"
 import Link from "next/link"
@@ -48,7 +49,7 @@ const DashboardWrapper = ({ children }: { children: React.ReactNode }) => {
               isOpen ? "justify-between" : "justify-center"
             }`}
           >
-            {isOpen && <h1 className="text-xl font-semibold">bordre</h1>}
+            {isOpen && <Logo />}
             <button
               title={isOpen ? "Close sidebar" : "Open sidebar"}
               onClick={toggleSidebar}
