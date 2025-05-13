@@ -10,7 +10,7 @@ const Back = () => {
       title="Back"
       className="p-2.5 hover:bg-primary-hover rounded-md cursor-pointer transition-all duration-200"
     >
-      <MdArrowBackIosNew size={20} />
+      <MdArrowBackIosNew size={17} />
     </button>
   )
 }
