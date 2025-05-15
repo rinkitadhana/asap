@@ -43,7 +43,6 @@ const SpaceWrapper = ({ children }: { children: React.ReactNode }) => {
               </div>
             </div>
             <div className=" flex gap-2 items-center">
-              <ThemeSwitcher scrolled={false} />
               <div className="flex items-center gap-2 py-[0.57rem] px-3 rounded-md hover:bg-primary-hover/80 transition-all duration-200 bg-primary-hover cursor-pointer select-none">
                 <UserPlus size={17} />
                 <span className="font-medium text-[15px] leading-tight">
@@ -80,19 +79,25 @@ const SpaceWrapper = ({ children }: { children: React.ReactNode }) => {
         <div className=" flex flex-col justify-center items-center border border-primary-border h-full w-[200px] rounded-xl bg-secondary">
           space
         </div>
-        <div className="bg-secondary p-2 w-[70px] rounded-xl h-full flex flex-col justify-center items-center gap-2 border border-primary-border">
-          <button className="p-2 w-full text-lg flex flex-col gap-0.5 justify-center items-center rounded-md hover:bg-primary-hover/80 transition-all duration-200 bg-primary-hover cursor-pointer select-none">
-            <BsInfoLg />
-            <span className="text-xs text-secondary-text">Info</span>
-          </button>
-          <button className="p-2 w-full text-lg flex flex-col gap-0.5 justify-center items-center rounded-md hover:bg-primary-hover/80 transition-all duration-200 cursor-pointer select-none">
-            <LuUsers />
-            <span className="text-xs text-secondary-text">Users</span>
-          </button>
-          <button className="p-2 w-full text-lg flex flex-col gap-0.5 justify-center items-center rounded-md hover:bg-primary-hover/80 transition-all duration-200 cursor-pointer select-none">
-            <IoChatbubbleOutline />
-            <span className="text-xs text-secondary-text">Chat</span>
-          </button>
+        <div className="bg-secondary p-2 w-[70px] rounded-xl h-full flex flex-col justify-between items-center border border-primary-border">
+          <div className="py-2">
+            <ThemeSwitcher scrolled={false} />
+          </div>
+          <div className="flex flex-col gap-2">
+            <button className="p-2 w-full text-lg flex flex-col gap-0.5 justify-center items-center rounded-md hover:bg-primary-hover/80 transition-all duration-200 bg-primary-hover cursor-pointer select-none">
+              <BsInfoLg />
+              <span className="text-xs text-secondary-text">Info</span>
+            </button>
+            <button className="p-2 w-full text-lg flex flex-col gap-0.5 justify-center items-center rounded-md hover:bg-primary-hover/80 transition-all duration-200 cursor-pointer select-none">
+              <LuUsers />
+              <span className="text-xs text-secondary-text">Users</span>
+            </button>
+            <button className="p-2 w-full text-lg flex flex-col gap-0.5 justify-center items-center rounded-md hover:bg-primary-hover/80 transition-all duration-200 cursor-pointer select-none">
+              <IoChatbubbleOutline />
+              <span className="text-xs text-secondary-text">Chat</span>
+            </button>
+          </div>
+          <div></div>
         </div>
       </div>
     </section>
