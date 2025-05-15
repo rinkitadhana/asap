@@ -13,7 +13,7 @@ const Hero = () => {
             <h1 className="text-[4.5rem] font-[950] font-cal leading-[1.05]">
               From Video Call to Podcast in Minutes
             </h1>
-            <p className="text-secondary-text font-inter font-medium">
+            <p className="text-secondary-text font-inter">
               Bordre lets you host powerful 1:1 or group video calls with
               built-in local recording and smooth S3 uploads, delivering
               high-quality videos, perfect for podcasts, content creation, or
@@ -28,7 +28,7 @@ const Hero = () => {
                 <Disc2 size={17} className="text-red-600" /> Start Recording
                 Your Call
               </button>
-              <p className="text-secondary-text w-full text-center font-inter font-medium text-sm">
+              <p className="text-secondary-text w-full text-center font-inter text-sm">
                 No credit card required
               </p>
             </div>
