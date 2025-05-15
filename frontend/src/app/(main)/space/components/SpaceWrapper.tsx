@@ -51,7 +51,7 @@ const SpaceWrapper = ({ children }: { children: React.ReactNode }) => {
           </div>
         </div>
       </header>
-      <div className={` w-full h-full ${hidden ? "p-2" : "px-2"}`}>
+      <div className={` w-full h-full ${hidden ? "p-2" : "px-2 pb-2"}`}>
         {children}
       </div>
     </section>
