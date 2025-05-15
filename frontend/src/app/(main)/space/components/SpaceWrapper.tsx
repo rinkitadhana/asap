@@ -54,6 +54,11 @@ const SpaceWrapper = ({ children }: { children: React.ReactNode }) => {
       <div className={` w-full h-full ${hidden ? "p-2" : "px-2 pb-2"}`}>
         {children}
       </div>
+      <div className="fixed bottom-0 w-full  p-2 flex items-center justify-between">
+        <div></div>
+        <div className="bg-secondary/40 backdrop-blur-sm"></div>
+        <div></div>
+      </div>
     </section>
   )
 }
