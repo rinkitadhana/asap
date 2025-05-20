@@ -104,7 +104,7 @@ const DashboardWrapper = ({ children }: { children: React.ReactNode }) => {
         className={`flex-grow bg-secondary overflow-hidden ${
           isOpen
             ? "rounded-xl h-[calc(100vh)-2rem] border"
-            : "rounded-none pt-4 h-[calc(100vh)]"
+            : "rounded-none pt-4 h-[calc(100vh)]  border-l"
         }`}
       >
         {children}
