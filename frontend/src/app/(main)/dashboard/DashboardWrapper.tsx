@@ -37,10 +37,14 @@ const DashboardWrapper = ({ children }: { children: React.ReactNode }) => {
     },
   ]
   return (
-    <section className="flex bg-background p-4 gap-4">
+    <section
+      className={`relative flex bg-background gap-4  ${
+        isOpen ? "p-4" : "pl-4"
+      }`}
+    >
       <div
-        className={`flex flex-col justify-between items-center bg-background h-[calc(100vh-2rem)] py-3  ${
-          isOpen ? "w-[180px]" : "w-fit"
+        className={`flex flex-col justify-between items-center bg-background h-[calc(100vh-2rem)]  ${
+          isOpen ? "w-[180px] py-3 " : "w-fit pt-7"
         }`}
       >
         <div className="flex flex-col items-center justify-center gap-6 w-full">
@@ -78,7 +82,7 @@ const DashboardWrapper = ({ children }: { children: React.ReactNode }) => {
           </nav>
         </div>
         <div className=" flex flex-col items-center justify-center gap-4 w-full select-none">
-          <div
+          {/* <div
             className={`truncate flex gap-2 items-center  w-full font-medium rounded-md ${
               isOpen
                 ? " bg-secondary border border-secondary-border justify-between  py-1 px-2 "
@@ -87,7 +91,7 @@ const DashboardWrapper = ({ children }: { children: React.ReactNode }) => {
           >
             {isOpen && <span className="truncate">Change theme</span>}
             <ThemeSwitcher scrolled={true} />
-          </div>
+          </div> */}
           <div className="flex items-center gap-2 hover:bg-primary-hover p-2 rounded-md cursor-pointer transition-all duration-200 font-medium w-full">
             <div title="Rinkit Adhana">
               <User size={24} />
@@ -96,8 +100,21 @@ const DashboardWrapper = ({ children }: { children: React.ReactNode }) => {
           </div>
         </div>
       </div>
-      <div className="flex-grow bg-secondary rounded-xl h-[calc(100vh-2rem)] border overflow-hidden">
+      <div
+        className={`flex-grow bg-secondary overflow-hidden ${
+          isOpen
+            ? "rounded-xl h-[calc(100vh)-2rem] border"
+            : "rounded-none pt-4 h-[calc(100vh)]"
+        }`}
+      >
         {children}
+      </div>
+      <div
+        className={`absolute top-4 left-1/2 -translate-x-1/2 border rounded-xl w-[220px] py-0.5 px-2 bg-background ${
+          isOpen ? "border-t-transparent rounded-t-none" : ""
+        }`}
+      >
+        <ThemeSwitcher scrolled={false} />
       </div>
     </section>
   )
