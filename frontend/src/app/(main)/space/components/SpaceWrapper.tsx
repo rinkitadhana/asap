@@ -13,7 +13,7 @@ const SpaceWrapper = ({ children }: { children: React.ReactNode }) => {
   const [hidden, setHidden] = useState(false)
 
   return (
-    <section className=" bg-background h-screen flex items-center p-2 ">
+    <section className=" bg-secondary h-screen flex items-center p-2 ">
       <div className="relative flex-grow flex flex-col items-center justify-center h-screen">
         <header
           className={`w-full p-2 pl-0 ${
@@ -29,8 +29,8 @@ const SpaceWrapper = ({ children }: { children: React.ReactNode }) => {
           transition-all duration-300 ease-in-out
           ${
             hidden
-              ? "transform -translate-y-[calc(100%+8px)] group-hover:translate-y-0 bg-secondary rounded-t-xl border border-primary-border "
-              : "rounded-xl border border-primary-border bg-secondary  "
+              ? "transform -translate-y-[calc(100%+8px)] group-hover:translate-y-0 bg-background rounded-t-xl border border-primary-border "
+              : "rounded-xl border border-primary-border bg-background  "
           }
         `}
           >
@@ -76,10 +76,10 @@ const SpaceWrapper = ({ children }: { children: React.ReactNode }) => {
         </div>
       </div>
       <div className="flex justify-center items-center h-full gap-2">
-        <div className=" flex flex-col justify-center items-center border border-primary-border h-full w-[200px] rounded-xl bg-secondary">
+        <div className=" flex flex-col justify-center items-center border border-primary-border h-full w-[200px] rounded-xl bg-background">
           space
         </div>
-        <div className="bg-secondary p-2 w-[70px] rounded-xl h-full flex flex-col justify-between items-center border border-primary-border">
+        <div className="bg-background p-2 w-[70px] rounded-xl h-full flex flex-col justify-between items-center border border-primary-border">
           <div className="py-2">
             <ThemeSwitcher scrolled={false} />
           </div>

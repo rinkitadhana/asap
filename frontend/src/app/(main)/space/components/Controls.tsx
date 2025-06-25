@@ -21,6 +21,7 @@ const Controls = () => {
       <button className="flex items-center justify-center px-3 h-10 rounded-[10px] bg-primary-hover text-lg font-medium cursor-pointer hover:bg-primary-hover/80 transition-all duration-200">
         <LuScreenShare />
       </button>
+      <div className="h-6 border-r border-primary-border px-1" />
       <button className="flex items-center justify-center px-3 h-10 rounded-[10px] text-lg font-medium cursor-pointer text-red-400 bg-red-400/20 hover:bg-red-400/30 transition-all duration-200">
         <BsFillTelephoneFill className="-rotate-[225deg]" />
       </button>
