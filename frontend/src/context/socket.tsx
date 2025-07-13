@@ -37,7 +37,7 @@ export const SocketProvider = ({ children }: SocketProviderProps) => {
   useEffect(() => {
     // Connect to the backend socket server
     const connection: SocketType = io("http://localhost:4000", {
-      transports: ["websocket", "polling"], // Enable both transports
+      transports: ["websocket", "polling"],
       autoConnect: true,
     }); 
     
