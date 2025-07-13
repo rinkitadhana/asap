@@ -1,19 +1,16 @@
 "use client"
-import React, { useEffect } from "react"
+import React from "react"
 import { useSocket } from "@/context/socket"
 import usePeer from "@/hooks/usePeer";
 
 const Screen = () => {
   const socket = useSocket();
-  usePeer()
+  const {peer, myId} = usePeer();
 
-  useEffect(()=>{
-    if(socket) {
-      socket.on('user-connected', (userId: string)=>{
-        console.log('User connected: ', userId);
-      })
-    }
-  },[socket])
+
+
+
+
   return (
     <div className="flex h-full gap-2">
       <div className="bg-background rounded-xl h-full w-full flex justify-center items-center border border-primary-border relative">
