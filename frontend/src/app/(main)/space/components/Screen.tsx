@@ -2,15 +2,12 @@
 import React from "react"
 import { useSocket } from "@/context/socket"
 import usePeer from "@/hooks/usePeer";
+import useMediaStream from "@/hooks/useMediaStream";
 
 const Screen = () => {
   const socket = useSocket();
   const {peer, myId} = usePeer();
-
-
-
-
-
+  const {stream} = useMediaStream();
   return (
     <div className="flex h-full gap-2">
       <div className="bg-background rounded-xl h-full w-full flex justify-center items-center border border-primary-border relative">
