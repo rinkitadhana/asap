@@ -2,6 +2,7 @@ import LayoutWrapper from "@/layout/LayoutWrapper"
 import React from "react"
 import Recording from "./ui/Recording"
 import { Disc2, TvMinimal } from "lucide-react"
+import Link from "next/link"
 
 const Hero = () => {
   return (
@@ -20,14 +21,14 @@ const Hero = () => {
               capturing moments that matter.
             </p>
             <div className="flex flex-col gap-4 w-full my-4 pr-20 justify-start items-start">
-              <button className="btn w-full font-medium flex gap-2.5 items-center justify-center text-sm">
+              <Link href="/dashboard" className="btn w-full font-medium flex gap-2.5 items-center justify-center text-sm">
                 <TvMinimal size={17} className="text-green-600" /> Start Your
                 Meeting Now
-              </button>
-              <button className="btn-secondary w-full font-medium flex gap-2.5 items-center justify-center text-sm">
+              </Link>
+              <Link href="/dashboard" className="btn-secondary w-full font-medium flex gap-2.5 items-center justify-center text-sm">
                 <Disc2 size={17} className="text-red-600" /> Start Recording
                 Your Call
-              </button>
+              </Link>
               <p className="text-secondary-text w-full text-center font-inter text-sm">
                 No credit card required
               </p>
