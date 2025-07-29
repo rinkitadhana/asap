@@ -9,7 +9,7 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
 app.get("/", (req: Request, res: Response) => {
-  res.send("Hello China!")
+  res.send("bordre is live :D")
 })
 
 const httpServer = createServer(app)
@@ -27,7 +27,15 @@ io.on("connection", (socket) => {
   socket.on("join-room", (roomId, userId) => {
     console.log(`User ${userId} joined room ${roomId}`)
     socket.join(roomId)
+    
+    // Get the number of users in the room
+    const room = io.sockets.adapter.rooms.get(roomId);
+    const usersInRoom = room ? room.size : 0;
+    console.log(`Room ${roomId} now has ${usersInRoom} users`);
+    
+    // Only broadcast to other users (not including the one who just joined)
     socket.broadcast.to(roomId).emit("user-connected", userId)
+    console.log(`Broadcasting user-connected event for ${userId} to ${usersInRoom - 1} other users in room ${roomId}`);
   })
 
   socket.on("user-toggle-audio", (userId, roomId) => {
