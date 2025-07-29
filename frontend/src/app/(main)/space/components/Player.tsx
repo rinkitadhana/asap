@@ -1,8 +1,8 @@
 import ReactPlayer from 'react-player';
 import { useEffect, useRef } from 'react';
 
-const Player = (props: {playerId: string, url: string | MediaStream | null, muted: boolean, playing: boolean, className: string}) => {
-    const {playerId, url, muted, playing, className} = props
+const Player = (props: { url: string | MediaStream | null, muted: boolean, playing: boolean, className: string}) => {
+    const { url, muted, playing, className} = props
     const videoRef = useRef<HTMLVideoElement>(null);
     
     useEffect(() => {
@@ -29,7 +29,7 @@ const Player = (props: {playerId: string, url: string | MediaStream | null, mute
     
     return(
         <div>
-            <ReactPlayer key={playerId} controls={true} playing={playing} muted={muted} src={url as string} className={className} />
+            <ReactPlayer controls={true} playing={playing} muted={muted} src={url as string} className={className} />
         </div>
     )
 }
