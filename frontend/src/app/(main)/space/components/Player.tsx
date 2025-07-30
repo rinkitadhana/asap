@@ -1,4 +1,3 @@
-import ReactPlayer from 'react-player';
 import { useEffect, useRef } from 'react';
 
 interface PlayerProps {
@@ -17,9 +16,22 @@ const Player = ({ url, muted, playing, className }: PlayerProps) => {
         }
     }, [url]);
 
+    useEffect(() => {
+        if (videoRef.current) {
+            if (playing) {
+                videoRef.current.play().catch(console.error);
+            } else {
+                videoRef.current.pause();
+            }
+        }
+    }, [playing]);
+
     if (!url) {
         return null;
     }
+
+    // Base styles to prevent layout issues and ensure proper sizing
+    const baseVideoStyles = "max-w-full max-h-full min-w-0 min-h-0 object-contain";
 
     if (url instanceof MediaStream) {
         return (
@@ -28,18 +40,19 @@ const Player = ({ url, muted, playing, className }: PlayerProps) => {
                 autoPlay
                 playsInline
                 muted={muted}
-                className={className}
+                className={`${baseVideoStyles} ${className}`}
             />
         );
     }
 
     return (
-        <ReactPlayer
+        <video
+            ref={videoRef}
             controls
-            playing={playing}
             muted={muted}
             src={url}
-            className={className}
+            className={`${baseVideoStyles} ${className}`}
+            playsInline
         />
     );
 };

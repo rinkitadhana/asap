@@ -106,12 +106,12 @@ const Screen = () => {
     const { url, muted, playing } = playerHighlighted;
     return (
       <div className="flex-1 h-full min-w-0 relative group/my-screen overflow-hidden">
-        <div className="bg-background overflow-hidden rounded-xl h-full w-full flex justify-center items-center border border-primary-border relative">
+        <div className="bg-background overflow-hidden rounded-xl h-full w-full border border-primary-border relative">
           <Player
             url={url}
             muted={muted}
             playing={playing}
-            className={`h-full ${myFullScreen ? 'object-cover' : ''}`}
+            className={`h-full w-full ${myFullScreen ? 'object-cover' : 'object-contain'}`}
           />
           <div className="absolute bottom-4 left-4 bg-primary-hover px-3 py-1.5 rounded-lg text-foreground text-sm font-medium ">
             You
@@ -157,7 +157,7 @@ const Screen = () => {
             return (
               <div
                 key={playerId}
-                className={`bg-background overflow-hidden rounded-xl flex justify-center items-center border border-primary-border relative ${isBottomSpanning ? 'col-span-2' : ''
+                className={`bg-background overflow-hidden rounded-xl border border-primary-border relative ${isBottomSpanning ? 'col-span-2' : ''
                   }`}
               >
                 <Player
