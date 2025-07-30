@@ -106,7 +106,7 @@ const Screen = () => {
     const { url, muted, playing } = playerHighlighted;
     return (
       <div className="flex-1 h-full min-w-0 relative group/my-screen overflow-hidden">
-        <div className="bg-background overflow-hidden rounded-xl h-full w-full border border-primary-border relative">
+        <div className="bg-call-primary overflow-hidden rounded-xl h-full w-full border border-call-border relative">
           <Player
             url={url}
             muted={muted}
@@ -117,7 +117,7 @@ const Screen = () => {
             You
           </div>
         </div>
-        <button onClick={() => { setMyFullScreen(prev => !prev) }} className="select-none hidden group-hover/my-screen:block absolute bottom-0 right-0 p-2 m-2 rounded-xl bg-secondary hover:bg-primary-hover border border-primary-border cursor-pointer transition-all duration-200">
+        <button onClick={() => { setMyFullScreen(prev => !prev) }} className="select-none hidden group-hover/my-screen:block absolute bottom-0 right-0 p-2 m-2 rounded-xl bg-secondary hover:bg-primary-hover border border-call-border cursor-pointer transition-all duration-200">
           {myFullScreen ? <RxExitFullScreen size={20} /> : <RxEnterFullScreen size={20} />}
         </button>
       </div>
@@ -128,10 +128,10 @@ const Screen = () => {
     if (visibleOtherPlayers.length === 0) {
       return (
         <div className={`flex-1 h-full min-w-0 relative group/close overflow-hidden ${closeWaiting ? 'hidden' : ''}`}>
-          <div className="bg-background border border-primary-border rounded-xl h-full w-full flex justify-center items-center">
+          <div className="bg-call-primary border border-call-border rounded-xl h-full w-full flex justify-center items-center">
             <div className="text-muted-foreground text-lg">Waiting for others to join...</div>
           </div>
-          <button onClick={() => setCloseWaiting(true)} className="hidden group-hover/close:block absolute top-0 right-0 p-2 m-2 rounded-xl bg-secondary hover:bg-primary-hover border border-primary-border cursor-pointer transition-all duration-200">
+          <button onClick={() => setCloseWaiting(true)} className="hidden group-hover/close:block absolute top-0 right-0 p-2 m-2 rounded-xl bg-secondary hover:bg-primary-hover border border-call-border cursor-pointer transition-all duration-200">
             <X size={20} />
           </button>
         </div>
@@ -157,7 +157,7 @@ const Screen = () => {
             return (
               <div
                 key={playerId}
-                className={`bg-background overflow-hidden rounded-xl border border-primary-border relative ${isBottomSpanning ? 'col-span-2' : ''
+                className={`bg-call-primary overflow-hidden rounded-xl border border-call-border relative ${isBottomSpanning ? 'col-span-2' : ''
                   }`}
               >
                 <Player
@@ -174,7 +174,7 @@ const Screen = () => {
           })}
         </div>
 
-        <div onClick={() => { setOtherFullScreen(prev => !prev) }} className="select-none hidden group-hover/other-screen:block absolute bottom-0 right-0 p-2 m-2 rounded-xl bg-secondary hover:bg-primary-hover border border-primary-border cursor-pointer transition-all duration-200">
+        <div onClick={() => { setOtherFullScreen(prev => !prev) }} className="select-none hidden group-hover/other-screen:block absolute bottom-0 right-0 p-2 m-2 rounded-xl bg-secondary hover:bg-primary-hover border border-call-border cursor-pointer transition-all duration-200">
           {otherFullScreen ? <RxExitFullScreen size={20} /> : <RxEnterFullScreen size={20} />}
         </div>
 
@@ -185,7 +185,7 @@ const Screen = () => {
             <button
               onClick={() => setCurrentPage(Math.max(0, currentPage - 1))}
               disabled={currentPage === 0}
-              className="hidden group-hover/pagination:block absolute left-5 top-1/2 transform -translate-y-1/2 -translate-x-1/2 p-2 rounded-xl bg-secondary/80 backdrop-blur-sm hover:bg-primary-hover disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 border border-primary-border cursor-pointer "
+              className="hidden group-hover/pagination:block absolute left-5 top-1/2 transform -translate-y-1/2 -translate-x-1/2 p-2 rounded-xl bg-secondary/80 backdrop-blur-sm hover:bg-primary-hover disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 border border-call-border cursor-pointer "
               title="Previous page"
             >
               <ChevronLeft size={20} />
@@ -195,14 +195,14 @@ const Screen = () => {
             <button
               onClick={() => setCurrentPage(Math.min(totalPages - 1, currentPage + 1))}
               disabled={currentPage === totalPages - 1}
-              className="hidden group-hover/pagination:block absolute right-5 top-1/2 transform -translate-y-1/2 translate-x-1/2 p-2 rounded-xl bg-secondary/80 backdrop-blur-sm hover:bg-primary-hover disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 border border-primary-border cursor-pointer"
+              className="hidden group-hover/pagination:block absolute right-5 top-1/2 transform -translate-y-1/2 translate-x-1/2 p-2 rounded-xl bg-secondary/80 backdrop-blur-sm hover:bg-primary-hover disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 border border-call-border cursor-pointer"
               title="Next page"
             >
               <ChevronRight size={20} />
             </button>
 
             {/* Page Indicator - Top Right Corner */}
-            <div className="hidden group-hover/pagination:block absolute top-2 right-2 bg-secondary/80 backdrop-blur-sm rounded-md px-2 py-1 text-xs text-foreground border border-primary-border">
+            <div className="hidden group-hover/pagination:block absolute top-2 right-2 bg-secondary/80 backdrop-blur-sm rounded-md px-2 py-1 text-xs text-foreground border border-call-border">
               {currentPage + 1} / {totalPages}
             </div>
           </>

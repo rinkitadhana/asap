@@ -22,6 +22,9 @@
   --secondary-shadow: #000000;
   --selection-background: #141414;
   --selection-text: #ffffff;
+  --call-border: #ebebeb;
+  --call-background: #ffffff;
+  --call-primary: #f0f0f0;
 
   --radius: 0.625rem;
   --card: oklch(1 0 0);
@@ -70,6 +73,9 @@
   --secondary-shadow: #ffffff;
   --selection-background: #ffffff;
   --selection-text: #0a0a0a;
+  --call-border: #292929;
+  --call-background: #000000;
+  --call-primary: #141414;
 
   --card: oklch(0.21 0.006 285.885);
   --card-foreground: oklch(0.985 0 0);
@@ -114,6 +120,9 @@
   --color-primary-shadow: var(--primary-shadow);
   --color-secondary-shadow: var(--secondary-shadow);
   --color-auth-border: var(--auth-border);
+  --color-call-border: var(--call-border);
+  --color-call-background: var(--call-background);
+  --color-call-primary: var(--call-primary);
   --color-selection-background: var(--selection-background);
   --color-selection-text: var(--selection-text);
   --font-sans: var(--font-sans);

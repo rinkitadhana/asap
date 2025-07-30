@@ -10,14 +10,14 @@ import { BsInfoLg } from "react-icons/bs"
 
 const SpaceWrapper = ({ children }: { children: React.ReactNode }) => {
   return (
-    <section className="bg-secondary h-screen flex items-center p-2">
+    <section className="bg-call-background h-screen flex items-center p-2">
       <div className="relative flex-1 flex flex-col items-center justify-center h-full max-w-full overflow-hidden">
         <div className="w-full p-2 pl-0">
-          <div className="flex items-center justify-between p-2.5 w-full rounded-xl border border-primary-border bg-background">
+          <div className="flex items-center justify-between p-2.5 w-full rounded-xl border border-call-border bg-call-primary">
             <div className="flex items-center gap-2">
               <Back />
               <Logo />
-              <div className="h-5 border-l border-primary-border px-1" />
+              <div className="h-6 border-l border-primary-border mx-1" />
               <div className=" text-secondary-text font-medium text-sm">
                 Gruz's Space
               </div>
@@ -30,6 +30,8 @@ const SpaceWrapper = ({ children }: { children: React.ReactNode }) => {
                 </span>
               </div>
             </div>
+            <ThemeSwitcher scrolled={false} />
+
           </div>
         </div>
         <div className="w-full flex-1 min-h-0 px-2 pb-2 pl-0">
@@ -40,11 +42,11 @@ const SpaceWrapper = ({ children }: { children: React.ReactNode }) => {
         </div>
 
       </div>
-      <div className="flex justify-center items-center h-full gap-2 flex-shrink-0">
-        <div className=" flex flex-col justify-center items-center border border-primary-border h-full w-[200px] rounded-xl bg-background">
+      {/* <div className="flex justify-center items-center h-full gap-2 flex-shrink-0">
+        <div className=" flex flex-col justify-center items-center border border-call-border h-full w-[200px] rounded-xl bg-call-primary">
           space
         </div>
-        <div className="bg-background p-2 w-[70px] rounded-xl h-full flex flex-col justify-between items-center border border-primary-border">
+        <div className="bg-call-primary p-2 w-[70px] rounded-xl h-full flex flex-col justify-between items-center border border-call-border">
           <div className="py-2">
             <ThemeSwitcher scrolled={false} />
           </div>
@@ -64,7 +66,7 @@ const SpaceWrapper = ({ children }: { children: React.ReactNode }) => {
           </div>
           <div></div>
         </div>
-      </div>
+      </div> */}
     </section>
   )
 }
