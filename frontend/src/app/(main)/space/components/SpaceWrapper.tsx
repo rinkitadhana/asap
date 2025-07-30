@@ -64,7 +64,7 @@ const SpaceWrapper = ({ children }: { children: React.ReactNode }) => {
         >
           {children}
         </div>
-        <div className="fixed bottom-0 w-full h-24 group">
+        {/* <div className="fixed bottom-0 w-full h-24 group">
           <div className="opacity-0 group-hover:opacity-100 transform translate-y-4 group-hover:translate-y-0 transition-all duration-200 ease-in-out fixed bottom-6 left-6 items-center gap-2 flex">
             <DateTimeDisplay />
             <div className="h-5 border-r border-primary-border px-1" />
@@ -73,7 +73,7 @@ const SpaceWrapper = ({ children }: { children: React.ReactNode }) => {
           <div className="opacity-0 group-hover:opacity-100 translate-y-4 group-hover:translate-y-0 transition-all duration-200 ease-in-out absolute bottom-6 left-1/2 transform -translate-x-1/2 flex">
             <Controls />
           </div>
-        </div>
+        </div> */}
       </div>
       <div className="flex justify-center items-center h-full gap-2">
         <div className=" flex flex-col justify-center items-center border border-primary-border h-full w-[200px] rounded-xl bg-background">

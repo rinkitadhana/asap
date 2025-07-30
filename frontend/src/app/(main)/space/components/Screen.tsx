@@ -1,16 +1,36 @@
 "use client"
-import React, { useEffect } from "react"
+import React, { useEffect, useState } from "react"
 import { useSocket } from "@/context/socket"
 import usePeer from "@/hooks/usePeer";
 import useMediaStream from "@/hooks/useMediaStream";
 import usePlayer from "@/hooks/usePlayer";
 import Player from "./Player";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 const Screen = () => {
   const socket = useSocket();
   const {peer, myId} = usePeer();
   const {stream} = useMediaStream();
-  const {players, setPlayer} = usePlayer();
+  const {setPlayer, playerHighlighted, nonHighlightedPlayers} = usePlayer(myId || "");
+  const [currentPage, setCurrentPage] = useState(0);
+
+  const USERS_PER_PAGE = 4;
+  const otherPlayerIds = Object.keys(nonHighlightedPlayers);
+  const totalPages = Math.ceil(otherPlayerIds.length / USERS_PER_PAGE);
+  const startIndex = currentPage * USERS_PER_PAGE;
+  const visibleOtherPlayers = otherPlayerIds.slice(startIndex, startIndex + USERS_PER_PAGE);
+
+  // Calculate layout for right side based on number of users
+  const getGridLayout = (userCount: number) => {
+    if (userCount === 0) return { rows: 0, cols: 0 };
+    if (userCount === 1) return { rows: 1, cols: 1 };
+    if (userCount === 2) return { rows: 2, cols: 1 };
+    if (userCount === 3) return { rows: 2, cols: 2, bottomSpan: true };
+    if (userCount === 4) return { rows: 2, cols: 2 };
+    return { rows: 2, cols: 2 }; // fallback
+  };
+
+  const gridLayout = getGridLayout(visibleOtherPlayers.length);
 
   useEffect(()=>{
     if (!socket || !peer || !stream) {
@@ -23,7 +43,7 @@ const Screen = () => {
 
       call.on('stream', (incomingStream: MediaStream)=>{
         console.log(`Received stream from user ${newUserId}`);
-        setPlayer((prev: any)=>({
+        setPlayer((prev)=>({
           ...prev,
           [newUserId]: {
           url: incomingStream, 
@@ -50,7 +70,7 @@ const Screen = () => {
 
       call.on('stream', (incomingStream: MediaStream)=>{
         console.log(`Received stream from user ${callerId}`);
-        setPlayer((prev: any)=>({
+        setPlayer((prev)=>({
           ...prev,
           [callerId]: {
           url: incomingStream, 
@@ -60,12 +80,12 @@ const Screen = () => {
         }))
       })
     })
-  }, [peer, stream])
+  }, [peer, stream, setPlayer])
 
   useEffect(()=>{
     if(!stream || !myId) return;
     console.log(`Setting my stream ${myId}`);
-    setPlayer((prev: any)=>({
+    setPlayer((prev)=>({
       ...prev,
       [myId]: {
         url: stream, 
@@ -75,26 +95,112 @@ const Screen = () => {
     }))
   }, [stream, myId, setPlayer])
 
-  
+  const renderMainUser = () => {
+    if (!playerHighlighted) return null;
+    
+    const {url, muted, playing} = playerHighlighted;
+    return (
+      <div className="w-1/2 h-full pr-1">
+        <div className="bg-background overflow-hidden rounded-xl h-full w-full flex justify-center items-center border border-primary-border relative">
+          <Player 
+            url={url}
+            muted={muted}
+            playing={playing}
+            className="h-full w-full"
+          />
+          <div className="absolute bottom-4 left-4 bg-primary-hover px-3 py-1.5 rounded-lg text-foreground text-sm font-medium">
+            You
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  const renderOtherUsers = () => {
+    if (visibleOtherPlayers.length === 0) {
+      return (
+        <div className="flex-1 h-full pl-1">
+          <div className="bg-background border border-primary-border rounded-xl h-full w-full flex justify-center items-center">
+            <div className="text-muted-foreground text-lg">Waiting for others to join...</div>
+          </div>
+        </div>
+      );
+    }
+
+    return (
+      <div className="w-1/2 h-full pl-1 relative">
+        <div className="grid h-full gap-2" style={{
+          gridTemplateRows: gridLayout.rows === 1 ? '1fr' : 
+                           gridLayout.rows === 2 ? '1fr 1fr' : 
+                           '1fr 1fr 1fr',
+          gridTemplateColumns: gridLayout.cols === 1 ? '1fr' : 
+                              gridLayout.cols === 2 ? '1fr 1fr' : 
+                              '1fr 1fr 1fr'
+        }}>
+          {visibleOtherPlayers.map((playerId, index) => {
+            const {url, muted, playing} = nonHighlightedPlayers[playerId];
+            
+            // Special handling for 3 users layout (2 top, 1 bottom spanning full width)
+            const isBottomSpanning = gridLayout.bottomSpan && index === 2;
+            
+            return (
+              <div 
+                key={playerId} 
+                className={`bg-background overflow-hidden rounded-xl flex justify-center items-center border border-primary-border relative ${
+                  isBottomSpanning ? 'col-span-2' : ''
+                }`}
+              >
+                <Player 
+                  url={url}
+                  muted={muted}
+                  playing={playing}
+                  className="h-full w-full"
+                />
+                <div className="absolute bottom-2 left-2 bg-primary-hover px-2 py-1 rounded-md text-foreground text-xs">
+                  User {index + 1 + (currentPage * USERS_PER_PAGE)}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+        
+                 {/* Pagination Controls */}
+         {totalPages > 1 && (
+           <>
+             {/* Previous Page Button - Left Side */}
+             <button
+               onClick={() => setCurrentPage(Math.max(0, currentPage - 1))}
+               disabled={currentPage === 0}
+               className="absolute left-0 top-1/2 transform -translate-y-1/2 -translate-x-1/2 p-2 rounded-full bg-secondary/80 backdrop-blur-sm hover:bg-primary-hover disabled:opacity-50 disabled:cursor-not-allowed transition-all border border-primary-border shadow-lg"
+               title="Previous page"
+             >
+               <ChevronLeft size={20} />
+             </button>
+             
+             {/* Next Page Button - Right Side */}
+             <button
+               onClick={() => setCurrentPage(Math.min(totalPages - 1, currentPage + 1))}
+               disabled={currentPage === totalPages - 1}
+               className="absolute right-0 top-1/2 transform -translate-y-1/2 translate-x-1/2 p-2 rounded-full bg-secondary/80 backdrop-blur-sm hover:bg-primary-hover disabled:opacity-50 disabled:cursor-not-allowed transition-all border border-primary-border shadow-lg"
+               title="Next page"
+             >
+               <ChevronRight size={20} />
+             </button>
+             
+             {/* Page Indicator - Top Right Corner */}
+             <div className="absolute top-2 right-2 bg-secondary/80 backdrop-blur-sm rounded-md px-2 py-1 text-xs text-foreground border border-primary-border">
+               {currentPage + 1} / {totalPages}
+             </div>
+           </>
+         )}
+      </div>
+    );
+  };
 
   return (
-    <div className="flex h-full gap-2">
-      {players && Object.keys(players).map((playerId)=>{
-        const {url, muted, playing} = players[playerId as keyof typeof players];
-        return (
-          <div key={playerId} className="bg-background overflow-hidden rounded-xl h-full w-full flex justify-center items-center border border-primary-border relative">
-            <Player 
-              url={url}
-              muted={muted}
-              playing={playing}
-              className="h-full object-cover"
-            />
-            <div className="absolute bottom-4 left-4 bg-primary-hover px-3 py-1.5 rounded-lg text-foreground text-sm">
-              {playerId === myId ? "You" : "Remote User"}
-            </div>
-          </div>
-        );
-      })}
+    <div className="flex h-full w-full gap-1">
+      {renderMainUser()}
+      {renderOtherUsers()}
     </div>
   )
 }
