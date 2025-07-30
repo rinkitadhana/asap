@@ -1,20 +1,26 @@
 import ReactPlayer from 'react-player';
 import { useEffect, useRef } from 'react';
 
-const Player = (props: { url: string | MediaStream | null, muted: boolean, playing: boolean, className: string}) => {
-    const { url, muted, playing, className} = props
+interface PlayerProps {
+    url: string | MediaStream | null;
+    muted: boolean;
+    playing: boolean;
+    className: string;
+}
+
+const Player = ({ url, muted, playing, className }: PlayerProps) => {
     const videoRef = useRef<HTMLVideoElement>(null);
-    
+
     useEffect(() => {
         if (videoRef.current && url instanceof MediaStream) {
             videoRef.current.srcObject = url;
         }
     }, [url]);
-    
+
     if (!url) {
-        return <div className={className}></div>;
+        return null;
     }
-    
+
     if (url instanceof MediaStream) {
         return (
             <video
@@ -26,12 +32,16 @@ const Player = (props: { url: string | MediaStream | null, muted: boolean, playi
             />
         );
     }
-    
-    return(
-        <div>
-            <ReactPlayer controls={true} playing={playing} muted={muted} src={url as string} className={className} />
-        </div>
-    )
-}
+
+    return (
+        <ReactPlayer
+            controls
+            playing={playing}
+            muted={muted}
+            src={url}
+            className={className}
+        />
+    );
+};
 
 export default Player;

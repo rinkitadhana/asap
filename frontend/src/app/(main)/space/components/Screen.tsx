@@ -5,14 +5,19 @@ import usePeer from "@/hooks/usePeer";
 import useMediaStream from "@/hooks/useMediaStream";
 import usePlayer from "@/hooks/usePlayer";
 import Player from "./Player";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, X } from "lucide-react";
+import { RxEnterFullScreen, RxExitFullScreen } from "react-icons/rx";
+
 
 const Screen = () => {
   const socket = useSocket();
-  const {peer, myId} = usePeer();
-  const {stream} = useMediaStream();
-  const {setPlayer, playerHighlighted, nonHighlightedPlayers} = usePlayer(myId || "");
+  const { peer, myId } = usePeer();
+  const { stream } = useMediaStream();
+  const { setPlayer, playerHighlighted, nonHighlightedPlayers } = usePlayer(myId || "");
   const [currentPage, setCurrentPage] = useState(0);
+  const [closeWaiting, setCloseWaiting] = useState(false);
+  const [myFullScreen, setMyFullScreen] = useState(false);
+  const [otherFullScreen, setOtherFullScreen] = useState(false);
 
   const USERS_PER_PAGE = 4;
   const otherPlayerIds = Object.keys(nonHighlightedPlayers);
@@ -32,63 +37,63 @@ const Screen = () => {
 
   const gridLayout = getGridLayout(visibleOtherPlayers.length);
 
-  useEffect(()=>{
+  useEffect(() => {
     if (!socket || !peer || !stream) {
       console.log("Socket, peer or stream not available yet");
       return;
     }
-    const handleUserConnected = (newUserId: string) =>{
+    const handleUserConnected = (newUserId: string) => {
       console.log(`User connected in a room with userID: ${newUserId}`)
       const call = peer.call(newUserId, stream);
 
-      call.on('stream', (incomingStream: MediaStream)=>{
+      call.on('stream', (incomingStream: MediaStream) => {
         console.log(`Received stream from user ${newUserId}`);
-        setPlayer((prev)=>({
+        setPlayer((prev) => ({
           ...prev,
           [newUserId]: {
-          url: incomingStream, 
-          muted: false,
-          playing: true,
+            url: incomingStream,
+            muted: false,
+            playing: true,
           }
         }))
-        
+
       })
     }
     socket.on("user-connected", handleUserConnected);
-    
-    return () =>{
+
+    return () => {
       console.log("Cleaning up user-connected listener");
       socket.off("user-connected", handleUserConnected);
     }
   }, [socket, peer, stream, setPlayer])
 
-  useEffect(()=>{
+  useEffect(() => {
     if (!peer || !stream) return;
-    peer.on("call", (call)=>{
-      const {peer: callerId} =call;
+    peer.on("call", (call) => {
+      const { peer: callerId } = call;
       call.answer(stream);
 
-      call.on('stream', (incomingStream: MediaStream)=>{
+      call.on('stream', (incomingStream: MediaStream) => {
         console.log(`Received stream from user ${callerId}`);
-        setPlayer((prev)=>({
+        setPlayer((prev) => ({
           ...prev,
           [callerId]: {
-          url: incomingStream, 
-          muted: false,
-          playing: true,
+            url: incomingStream,
+            muted: false,
+            playing: true,
           }
         }))
       })
     })
   }, [peer, stream, setPlayer])
 
-  useEffect(()=>{
-    if(!stream || !myId) return;
+  useEffect(() => {
+    if (!stream || !myId) return;
     console.log(`Setting my stream ${myId}`);
-    setPlayer((prev)=>({
+    setPlayer((prev) => ({
       ...prev,
       [myId]: {
-        url: stream, 
+        url: stream,
         muted: false,
         playing: true,
       }
@@ -97,21 +102,24 @@ const Screen = () => {
 
   const renderMainUser = () => {
     if (!playerHighlighted) return null;
-    
-    const {url, muted, playing} = playerHighlighted;
+
+    const { url, muted, playing } = playerHighlighted;
     return (
-      <div className="w-1/2 h-full pr-1">
+      <div className="flex-1 h-full min-w-0 relative group/my-screen overflow-hidden">
         <div className="bg-background overflow-hidden rounded-xl h-full w-full flex justify-center items-center border border-primary-border relative">
-          <Player 
+          <Player
             url={url}
             muted={muted}
             playing={playing}
-            className="h-full w-full"
+            className={`h-full ${myFullScreen ? 'object-cover' : ''}`}
           />
-          <div className="absolute bottom-4 left-4 bg-primary-hover px-3 py-1.5 rounded-lg text-foreground text-sm font-medium">
+          <div className="absolute bottom-4 left-4 bg-primary-hover px-3 py-1.5 rounded-lg text-foreground text-sm font-medium ">
             You
           </div>
         </div>
+        <button onClick={() => { setMyFullScreen(prev => !prev) }} className="select-none hidden group-hover/my-screen:block absolute bottom-0 right-0 p-2 m-2 rounded-xl bg-secondary hover:bg-primary-hover border border-primary-border cursor-pointer transition-all duration-200">
+          {myFullScreen ? <RxExitFullScreen size={20} /> : <RxEnterFullScreen size={20} />}
+        </button>
       </div>
     );
   };
@@ -119,42 +127,44 @@ const Screen = () => {
   const renderOtherUsers = () => {
     if (visibleOtherPlayers.length === 0) {
       return (
-        <div className="flex-1 h-full pl-1">
+        <div className={`flex-1 h-full min-w-0 relative group/close overflow-hidden ${closeWaiting ? 'hidden' : ''}`}>
           <div className="bg-background border border-primary-border rounded-xl h-full w-full flex justify-center items-center">
             <div className="text-muted-foreground text-lg">Waiting for others to join...</div>
           </div>
+          <button onClick={() => setCloseWaiting(true)} className="hidden group-hover/close:block absolute top-0 right-0 p-2 m-2 rounded-xl bg-secondary hover:bg-primary-hover border border-primary-border cursor-pointer transition-all duration-200">
+            <X size={20} />
+          </button>
         </div>
       );
     }
 
     return (
-      <div className="w-1/2 h-full pl-1 relative">
+      <div className="flex-1 h-full min-w-0 relative group/other-screen group/pagination overflow-hidden">
         <div className="grid h-full gap-2" style={{
-          gridTemplateRows: gridLayout.rows === 1 ? '1fr' : 
-                           gridLayout.rows === 2 ? '1fr 1fr' : 
-                           '1fr 1fr 1fr',
-          gridTemplateColumns: gridLayout.cols === 1 ? '1fr' : 
-                              gridLayout.cols === 2 ? '1fr 1fr' : 
-                              '1fr 1fr 1fr'
+          gridTemplateRows: gridLayout.rows === 1 ? '1fr' :
+            gridLayout.rows === 2 ? '1fr 1fr' :
+              '1fr 1fr 1fr',
+          gridTemplateColumns: gridLayout.cols === 1 ? '1fr' :
+            gridLayout.cols === 2 ? '1fr 1fr' :
+              '1fr 1fr 1fr'
         }}>
           {visibleOtherPlayers.map((playerId, index) => {
-            const {url, muted, playing} = nonHighlightedPlayers[playerId];
-            
+            const { url, muted, playing } = nonHighlightedPlayers[playerId];
+
             // Special handling for 3 users layout (2 top, 1 bottom spanning full width)
             const isBottomSpanning = gridLayout.bottomSpan && index === 2;
-            
+
             return (
-              <div 
-                key={playerId} 
-                className={`bg-background overflow-hidden rounded-xl flex justify-center items-center border border-primary-border relative ${
-                  isBottomSpanning ? 'col-span-2' : ''
-                }`}
+              <div
+                key={playerId}
+                className={`bg-background overflow-hidden rounded-xl flex justify-center items-center border border-primary-border relative ${isBottomSpanning ? 'col-span-2' : ''
+                  }`}
               >
-                <Player 
+                <Player
                   url={url}
                   muted={muted}
                   playing={playing}
-                  className="h-full w-full"
+                  className={`h-full w-full ${otherFullScreen ? 'object-cover' : 'object-contain'}`}
                 />
                 <div className="absolute bottom-2 left-2 bg-primary-hover px-2 py-1 rounded-md text-foreground text-xs">
                   User {index + 1 + (currentPage * USERS_PER_PAGE)}
@@ -163,42 +173,46 @@ const Screen = () => {
             );
           })}
         </div>
-        
-                 {/* Pagination Controls */}
-         {totalPages > 1 && (
-           <>
-             {/* Previous Page Button - Left Side */}
-             <button
-               onClick={() => setCurrentPage(Math.max(0, currentPage - 1))}
-               disabled={currentPage === 0}
-               className="absolute left-0 top-1/2 transform -translate-y-1/2 -translate-x-1/2 p-2 rounded-full bg-secondary/80 backdrop-blur-sm hover:bg-primary-hover disabled:opacity-50 disabled:cursor-not-allowed transition-all border border-primary-border shadow-lg"
-               title="Previous page"
-             >
-               <ChevronLeft size={20} />
-             </button>
-             
-             {/* Next Page Button - Right Side */}
-             <button
-               onClick={() => setCurrentPage(Math.min(totalPages - 1, currentPage + 1))}
-               disabled={currentPage === totalPages - 1}
-               className="absolute right-0 top-1/2 transform -translate-y-1/2 translate-x-1/2 p-2 rounded-full bg-secondary/80 backdrop-blur-sm hover:bg-primary-hover disabled:opacity-50 disabled:cursor-not-allowed transition-all border border-primary-border shadow-lg"
-               title="Next page"
-             >
-               <ChevronRight size={20} />
-             </button>
-             
-             {/* Page Indicator - Top Right Corner */}
-             <div className="absolute top-2 right-2 bg-secondary/80 backdrop-blur-sm rounded-md px-2 py-1 text-xs text-foreground border border-primary-border">
-               {currentPage + 1} / {totalPages}
-             </div>
-           </>
-         )}
+
+        <div onClick={() => { setOtherFullScreen(prev => !prev) }} className="select-none hidden group-hover/other-screen:block absolute bottom-0 right-0 p-2 m-2 rounded-xl bg-secondary hover:bg-primary-hover border border-primary-border cursor-pointer transition-all duration-200">
+          {otherFullScreen ? <RxExitFullScreen size={20} /> : <RxEnterFullScreen size={20} />}
+        </div>
+
+        {/* Pagination Controls */}
+        {totalPages > 1 && (
+          <>
+            {/* Previous Page Button - Left Side */}
+            <button
+              onClick={() => setCurrentPage(Math.max(0, currentPage - 1))}
+              disabled={currentPage === 0}
+              className="hidden group-hover/pagination:block absolute left-5 top-1/2 transform -translate-y-1/2 -translate-x-1/2 p-2 rounded-xl bg-secondary/80 backdrop-blur-sm hover:bg-primary-hover disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 border border-primary-border cursor-pointer "
+              title="Previous page"
+            >
+              <ChevronLeft size={20} />
+            </button>
+
+            {/* Next Page Button - Right Side */}
+            <button
+              onClick={() => setCurrentPage(Math.min(totalPages - 1, currentPage + 1))}
+              disabled={currentPage === totalPages - 1}
+              className="hidden group-hover/pagination:block absolute right-5 top-1/2 transform -translate-y-1/2 translate-x-1/2 p-2 rounded-xl bg-secondary/80 backdrop-blur-sm hover:bg-primary-hover disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 border border-primary-border cursor-pointer"
+              title="Next page"
+            >
+              <ChevronRight size={20} />
+            </button>
+
+            {/* Page Indicator - Top Right Corner */}
+            <div className="hidden group-hover/pagination:block absolute top-2 right-2 bg-secondary/80 backdrop-blur-sm rounded-md px-2 py-1 text-xs text-foreground border border-primary-border">
+              {currentPage + 1} / {totalPages}
+            </div>
+          </>
+        )}
       </div>
     );
   };
 
   return (
-    <div className="flex h-full w-full gap-1">
+    <div className="flex h-full w-full gap-2">
       {renderMainUser()}
       {renderOtherUsers()}
     </div>
