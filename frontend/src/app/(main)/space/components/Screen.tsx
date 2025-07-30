@@ -16,8 +16,8 @@ const Screen = () => {
   const { setPlayer, playerHighlighted, nonHighlightedPlayers } = usePlayer(myId || "");
   const [currentPage, setCurrentPage] = useState(0);
   const [closeWaiting, setCloseWaiting] = useState(false);
-  const [myFullScreen, setMyFullScreen] = useState(false);
-  const [otherFullScreen, setOtherFullScreen] = useState(false);
+  const [myFullScreen, setMyFullScreen] = useState(true);
+  const [otherFullScreen, setOtherFullScreen] = useState(true);
 
   const USERS_PER_PAGE = 4;
   const otherPlayerIds = Object.keys(nonHighlightedPlayers);
@@ -111,6 +111,7 @@ const Screen = () => {
             url={url}
             muted={muted}
             playing={playing}
+            myVideo={true}
             className={`h-full w-full ${myFullScreen ? 'object-cover' : 'object-contain'}`}
           />
           <div className="absolute bottom-4 left-4 bg-primary-hover px-3 py-1.5 rounded-lg text-foreground text-sm font-medium ">

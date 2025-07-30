@@ -5,9 +5,10 @@ interface PlayerProps {
     muted: boolean;
     playing: boolean;
     className: string;
+    myVideo?: boolean;
 }
 
-const Player = ({ url, muted, playing, className }: PlayerProps) => {
+const Player = ({ url, muted, playing, className, myVideo }: PlayerProps) => {
     const videoRef = useRef<HTMLVideoElement>(null);
 
     useEffect(() => {
@@ -32,6 +33,7 @@ const Player = ({ url, muted, playing, className }: PlayerProps) => {
 
     // Base styles to prevent layout issues and ensure proper sizing
     const baseVideoStyles = "max-w-full max-h-full min-w-0 min-h-0 object-contain";
+    const mirrorStyle = myVideo ? "scale-x-[-1]" : "";
 
     if (url instanceof MediaStream) {
         return (
@@ -40,7 +42,7 @@ const Player = ({ url, muted, playing, className }: PlayerProps) => {
                 autoPlay
                 playsInline
                 muted={muted}
-                className={`${baseVideoStyles} ${className}`}
+                className={`${baseVideoStyles} ${className} ${mirrorStyle}`}
             />
         );
     }
@@ -51,7 +53,7 @@ const Player = ({ url, muted, playing, className }: PlayerProps) => {
             controls
             muted={muted}
             src={url}
-            className={`${baseVideoStyles} ${className}`}
+            className={`${baseVideoStyles} ${className} ${mirrorStyle}`}
             playsInline
         />
     );
