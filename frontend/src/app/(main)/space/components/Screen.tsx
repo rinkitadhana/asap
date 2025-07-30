@@ -118,7 +118,7 @@ const Screen = () => {
             You
           </div>
         </div>
-        <button onClick={() => { setMyFullScreen(prev => !prev) }} className="select-none hidden group-hover/my-screen:block absolute bottom-0 right-0 p-2 m-2 rounded-xl bg-secondary hover:bg-primary-hover border border-call-border cursor-pointer transition-all duration-200">
+        <button onClick={() => { setMyFullScreen(prev => !prev) }} className="select-none opacity-0 group-hover/my-screen:opacity-100 absolute bottom-0 right-0 p-2 m-2 rounded-xl bg-secondary hover:bg-primary-hover border border-call-border cursor-pointer transition-all duration-300">
           {myFullScreen ? <RxExitFullScreen size={20} /> : <RxEnterFullScreen size={20} />}
         </button>
       </div>
@@ -132,7 +132,7 @@ const Screen = () => {
           <div className="bg-call-primary border border-call-border rounded-xl h-full w-full flex justify-center items-center">
             <div className="text-muted-foreground text-lg">Waiting for others to join...</div>
           </div>
-          <button onClick={() => setCloseWaiting(true)} className="hidden group-hover/close:block absolute top-0 right-0 p-2 m-2 rounded-xl bg-secondary hover:bg-primary-hover border border-call-border cursor-pointer transition-all duration-200">
+          <button onClick={() => setCloseWaiting(true)} className="select-none opacity-0 group-hover/close:opacity-100 absolute top-0 right-0 p-2 m-2 rounded-xl bg-secondary hover:bg-primary-hover border border-call-border cursor-pointer transition-all duration-300">
             <X size={20} />
           </button>
         </div>
@@ -175,7 +175,7 @@ const Screen = () => {
           })}
         </div>
 
-        <div onClick={() => { setOtherFullScreen(prev => !prev) }} className="select-none hidden group-hover/other-screen:block absolute bottom-0 right-0 p-2 m-2 rounded-xl bg-secondary hover:bg-primary-hover border border-call-border cursor-pointer transition-all duration-200">
+        <div onClick={() => { setOtherFullScreen(prev => !prev) }} className="select-none opacity-0 group-hover/other-screen:opacity-100 absolute bottom-0 right-0 p-2 m-2 rounded-xl bg-secondary hover:bg-primary-hover border border-call-border cursor-pointer transition-all duration-300">
           {otherFullScreen ? <RxExitFullScreen size={20} /> : <RxEnterFullScreen size={20} />}
         </div>
 
@@ -186,7 +186,7 @@ const Screen = () => {
             <button
               onClick={() => setCurrentPage(Math.max(0, currentPage - 1))}
               disabled={currentPage === 0}
-              className="hidden group-hover/pagination:block absolute left-5 top-1/2 transform -translate-y-1/2 -translate-x-1/2 p-2 rounded-xl bg-secondary/80 backdrop-blur-sm hover:bg-primary-hover disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 border border-call-border cursor-pointer "
+              className="select-none opacity-0 group-hover/pagination:opacity-100 absolute left-5 top-1/2 transform -translate-y-1/2 -translate-x-1/2 p-2 rounded-xl bg-secondary/80 backdrop-blur-sm hover:bg-primary-hover disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 border border-call-border cursor-pointer "
               title="Previous page"
             >
               <ChevronLeft size={20} />
@@ -196,7 +196,7 @@ const Screen = () => {
             <button
               onClick={() => setCurrentPage(Math.min(totalPages - 1, currentPage + 1))}
               disabled={currentPage === totalPages - 1}
-              className="hidden group-hover/pagination:block absolute right-5 top-1/2 transform -translate-y-1/2 translate-x-1/2 p-2 rounded-xl bg-secondary/80 backdrop-blur-sm hover:bg-primary-hover disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 border border-call-border cursor-pointer"
+              className="select-none opacity-0 group-hover/pagination:opacity-100 absolute right-5 top-1/2 transform -translate-y-1/2 translate-x-1/2 p-2 rounded-xl bg-secondary/80 backdrop-blur-sm hover:bg-primary-hover disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 border border-call-border cursor-pointer"
               title="Next page"
             >
               <ChevronRight size={20} />
