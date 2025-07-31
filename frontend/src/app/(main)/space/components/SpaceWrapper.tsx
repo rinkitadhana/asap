@@ -6,34 +6,43 @@ import { UserPlus } from "lucide-react"
 import Controls from "./Controls"
 import { LuUsers } from "react-icons/lu"
 import { IoChatbubbleOutline } from "react-icons/io5"
-import { BsInfoLg } from "react-icons/bs"
+import { BsInfoLg, BsPatchQuestion } from "react-icons/bs"
+import { TbUserQuestion } from "react-icons/tb";
 
 const SpaceWrapper = ({ children }: { children: React.ReactNode }) => {
   return (
-    <section className="bg-call-background h-screen flex items-center p-2">
+    <section className="bg-call-background h-screen flex items-center px-4 pb-2">
       <div className="relative flex-1 flex flex-col items-center justify-center h-full max-w-full overflow-hidden">
-        <div className="w-full p-2 pl-0">
-          <div className="flex items-center justify-between p-2.5 w-full rounded-xl border border-call-border bg-call-primary">
+        <header className="w-full p-2 select-none">
+          <div className="flex items-center justify-between py-2 w-full rounded-xl  border-black">
             <div className="flex items-center gap-2">
               <Back />
               <Logo />
               <div className="h-6 border-l border-primary-border mx-1" />
-              <div className=" text-secondary-text font-medium text-sm">
-                Gruz's Space
+              <div className=" text-secondary-text text-sm">
+                Rinkit Adhana's Space
               </div>
             </div>
             <div className="flex items-center gap-2">
-              <div className="flex items-center gap-2 py-[0.57rem] px-3 rounded-md hover:bg-primary-hover/80 transition-all duration-200 bg-primary-hover cursor-pointer select-none">
+              <ThemeSwitcher scrolled={false} className="p-2.5 border border-call-border rounded-xl hover:bg-primary-hover transition-all duration-200 bg-call-primary cursor-pointer select-none" />
+              <div className="h-7 border-l border-primary-border mx-1" />
+              <div className="flex items-center gap-2 py-2.5 px-3 border border-call-border rounded-xl hover:bg-primary-hover transition-all duration-200 bg-call-primary cursor-pointer select-none">
+                <BsPatchQuestion size={17} />
+                <span className="font-medium text-[15px] leading-tight">
+                  Help
+                </span>
+              </div>
+
+              <div className="flex items-center gap-2 py-2.5 px-3 border border-call-border rounded-xl hover:bg-primary-hover transition-all duration-200 bg-call-primary cursor-pointer select-none">
                 <UserPlus size={17} />
                 <span className="font-medium text-[15px] leading-tight">
                   Invite
                 </span>
               </div>
             </div>
-            <ThemeSwitcher scrolled={false} />
 
           </div>
-        </div>
+        </header>
         <div className="w-full flex-1 min-h-0 px-2 pb-2 pl-0">
           {children}
         </div>

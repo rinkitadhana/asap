@@ -105,7 +105,7 @@ const Screen = () => {
 
     const { url, muted, playing } = playerHighlighted;
     return (
-      <div className="flex-1 h-full min-w-0 relative group/my-screen overflow-hidden">
+      <div className="flex-1 max-w-[75%] mx-auto h-full min-w-0 relative group/my-screen overflow-hidden">
         <div className="bg-call-primary overflow-hidden rounded-xl h-full w-full border border-call-border relative">
           <Player
             url={url}
@@ -114,8 +114,8 @@ const Screen = () => {
             myVideo={true}
             className={`h-full w-full ${myFullScreen ? 'object-cover' : 'object-contain'}`}
           />
-          <div className="absolute bottom-4 left-4 bg-primary-hover px-3 py-1.5 rounded-lg text-foreground text-sm font-medium ">
-            You
+          <div className="select-none absolute bottom-4 left-4 bg-call-primary/75 backdrop-blur-xs px-2.5 py-1 rounded-lg text-foreground text-sm font-medium">
+            Rinkit Adhana
           </div>
         </div>
         <button onClick={() => { setMyFullScreen(prev => !prev) }} className="select-none opacity-0 group-hover/my-screen:opacity-100 absolute bottom-0 right-0 p-2 m-2 rounded-xl bg-secondary hover:bg-primary-hover border border-call-border cursor-pointer transition-all duration-300">
@@ -140,7 +140,7 @@ const Screen = () => {
     }
 
     return (
-      <div className="flex-1 h-full min-w-0 relative group/other-screen group/pagination overflow-hidden">
+      <div className="flex-1 max-w-[75%] mx-auto h-full min-w-0 relative group/other-screen group/pagination overflow-hidden">
         <div className="grid h-full gap-2" style={{
           gridTemplateRows: gridLayout.rows === 1 ? '1fr' :
             gridLayout.rows === 2 ? '1fr 1fr' :
@@ -167,7 +167,7 @@ const Screen = () => {
                   playing={playing}
                   className={`h-full w-full ${otherFullScreen ? 'object-cover' : 'object-contain'}`}
                 />
-                <div className="absolute bottom-2 left-2 bg-primary-hover px-2 py-1 rounded-md text-foreground text-xs">
+                <div className="select-none absolute bottom-2 left-2 bg-call-primary/75 backdrop-blur-xs px-2.5 py-1 rounded-lg text-foreground text-sm font-medium">
                   User {index + 1 + (currentPage * USERS_PER_PAGE)}
                 </div>
               </div>

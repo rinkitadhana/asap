@@ -8,7 +8,7 @@ const Back = () => {
     <button
       onClick={() => router.push("/dashboard")}
       title="Back"
-      className="p-2.5 hover:bg-primary-hover rounded-md cursor-pointer transition-all duration-200"
+      className="p-2.5 hover:bg-primary-hover rounded-[12px] cursor-pointer transition-all duration-200"
     >
       <MdArrowBackIosNew size={17} />
     </button>
