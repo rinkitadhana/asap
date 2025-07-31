@@ -148,7 +148,7 @@ const Screen = () => {
 
     const { url, muted, playing } = playerHighlighted;
     return (
-      <div className="flex-1 max-w-[75%] mx-auto h-full min-w-0 relative group/my-screen overflow-hidden">
+      <div className="flex-1 h-full min-w-0 relative group/my-screen overflow-hidden">
         <div className="bg-call-primary overflow-hidden rounded-xl h-full w-full border border-call-border relative">
           <Player
             url={url}
@@ -183,7 +183,7 @@ const Screen = () => {
     }
 
     return (
-      <div className="flex-1 max-w-[75%] mx-auto h-full min-w-0 relative group/other-screen group/pagination overflow-hidden">
+      <div className="flex-1 h-full min-w-0 relative group/other-screen group/pagination overflow-hidden">
         <div className="grid h-full gap-2" style={{
           gridTemplateRows: gridLayout.rows === 1 ? '1fr' :
             gridLayout.rows === 2 ? '1fr 1fr' :
@@ -256,12 +256,12 @@ const Screen = () => {
   };
 
   return (
-    <div className="flex flex-col gap-2 items-center justify-center h-full w-full">
-      <div className="flex h-full w-full gap-2">
+    <div className="flex flex-col h-full w-full">
+      <div className="flex h-full w-full gap-2 flex-1 min-h-0 pb-2">
         {renderMainUser()}
         {renderOtherUsers()}
       </div>
-      <div className="w-full">
+      <div className="w-full flex-shrink-0 py-2">
         <Controls muted={playerHighlighted?.muted} playing={playerHighlighted?.playing} toggleAudio={toggleAudio} toggleVideo={toggleVideo} leaveRoom={leaveRoom} />
       </div>
     </div>

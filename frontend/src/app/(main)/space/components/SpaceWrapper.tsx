@@ -11,7 +11,7 @@ import { TbUserQuestion } from "react-icons/tb";
 
 const SpaceWrapper = ({ children }: { children: React.ReactNode }) => {
   return (
-    <section className="bg-call-background h-screen flex items-center px-2 py-2">
+    <section className="bg-call-background h-screen flex items-center p-2">
       <div className="relative flex-1 flex flex-col items-center justify-center h-full max-w-full overflow-hidden">
         <header className="w-full px-2 select-none z-50">
           <div className="flex items-center justify-between py-2 w-full rounded-xl">
