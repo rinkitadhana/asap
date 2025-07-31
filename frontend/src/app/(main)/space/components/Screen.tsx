@@ -261,7 +261,7 @@ const Screen = () => {
         {renderMainUser()}
         {renderOtherUsers()}
       </div>
-      <div className="">
+      <div className="w-full">
         <Controls muted={playerHighlighted?.muted} playing={playerHighlighted?.playing} toggleAudio={toggleAudio} toggleVideo={toggleVideo} leaveRoom={leaveRoom} />
       </div>
     </div>

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react"
 
-const DateComponent = () => {
+const DateComponent = ({ className }: { className?: string }) => {
   const [currentDate, setCurrentDate] = useState<Date>(new Date())
 
   useEffect(() => {
@@ -19,7 +19,7 @@ const DateComponent = () => {
   })
 
   return (
-    <div className="font-mono font-semibold text-base text-foreground/80">
+    <div className={"font-medium text-base text-foreground/80 w-[70px] text-center" + (className ? ` ${className}` : "")}>
       {formattedTime}
     </div>
   )
