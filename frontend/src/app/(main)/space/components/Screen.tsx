@@ -9,6 +9,8 @@ import { ChevronLeft, ChevronRight, X } from "lucide-react";
 import { RxEnterFullScreen, RxExitFullScreen } from "react-icons/rx";
 import { useParams } from "next/navigation";
 import Controls from "./Controls";
+import { cloneDeep } from 'lodash'
+
 
 
 const Screen = () => {
@@ -70,6 +72,43 @@ const Screen = () => {
       socket.off("user-connected", handleUserConnected);
     }
   }, [socket, peer, stream, setPlayers])
+
+  // useEffect(() => {
+  //   if (!socket) return;
+  //   const handleToggleAudio = (userId: string) => {
+  //     console.log(`user with id ${userId} toggled audio`);
+  //     setPlayers((prev) => {
+  //       const copy = cloneDeep(prev);
+  //       copy[userId].muted = !copy[userId].muted;
+  //       return { ...copy };
+  //     });
+  //   };
+
+  //   const handleToggleVideo = (userId: string) => {
+  //     console.log(`user with id ${userId} toggled video`);
+  //     setPlayers((prev) => {
+  //       const copy = cloneDeep(prev);
+  //       copy[userId].playing = !copy[userId].playing;
+  //       return { ...copy };
+  //     });
+  //   };
+
+  //   const handleUserLeave = (userId: string) => {
+  //     console.log(`user ${userId} is leaving the room`);
+  //     users[userId]?.close()
+  //     const playersCopy = cloneDeep(players);
+  //     delete playersCopy[userId];
+  //     setPlayers(playersCopy);
+  //   }
+  //   socket.on("user-toggle-audio", handleToggleAudio);
+  //   socket.on("user-toggle-video", handleToggleVideo);
+  //   socket.on("user-leave", handleUserLeave);
+  //   return () => {
+  //     socket.off("user-toggle-audio", handleToggleAudio);
+  //     socket.off("user-toggle-video", handleToggleVideo);
+  //     socket.off("user-leave", handleUserLeave);
+  //   };
+  // }, [players, setPlayers, socket, users]);
 
   useEffect(() => {
     if (!peer || !stream) return;
