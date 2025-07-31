@@ -7,13 +7,17 @@ import usePlayer from "@/hooks/usePlayer";
 import Player from "./Player";
 import { ChevronLeft, ChevronRight, X } from "lucide-react";
 import { RxEnterFullScreen, RxExitFullScreen } from "react-icons/rx";
+import { useParams } from "next/navigation";
+import Controls from "./Controls";
 
 
 const Screen = () => {
   const socket = useSocket();
+  const params = useParams();
+  const roomId = params.roomId as string;
   const { peer, myId } = usePeer();
   const { stream } = useMediaStream();
-  const { setPlayer, playerHighlighted, nonHighlightedPlayers } = usePlayer(myId || "");
+  const { setPlayers, playerHighlighted, nonHighlightedPlayers, toggleAudio, toggleVideo, leaveRoom } = usePlayer(myId || "", roomId || "", peer);
   const [currentPage, setCurrentPage] = useState(0);
   const [closeWaiting, setCloseWaiting] = useState(false);
   const [myFullScreen, setMyFullScreen] = useState(true);
@@ -48,7 +52,7 @@ const Screen = () => {
 
       call.on('stream', (incomingStream: MediaStream) => {
         console.log(`Received stream from user ${newUserId}`);
-        setPlayer((prev) => ({
+        setPlayers((prev) => ({
           ...prev,
           [newUserId]: {
             url: incomingStream,
@@ -65,7 +69,7 @@ const Screen = () => {
       console.log("Cleaning up user-connected listener");
       socket.off("user-connected", handleUserConnected);
     }
-  }, [socket, peer, stream, setPlayer])
+  }, [socket, peer, stream, setPlayers])
 
   useEffect(() => {
     if (!peer || !stream) return;
@@ -75,7 +79,7 @@ const Screen = () => {
 
       call.on('stream', (incomingStream: MediaStream) => {
         console.log(`Received stream from user ${callerId}`);
-        setPlayer((prev) => ({
+        setPlayers((prev) => ({
           ...prev,
           [callerId]: {
             url: incomingStream,
@@ -85,12 +89,12 @@ const Screen = () => {
         }))
       })
     })
-  }, [peer, stream, setPlayer])
+  }, [peer, stream, setPlayers])
 
   useEffect(() => {
     if (!stream || !myId) return;
     console.log(`Setting my stream ${myId}`);
-    setPlayer((prev) => ({
+    setPlayers((prev) => ({
       ...prev,
       [myId]: {
         url: stream,
@@ -98,7 +102,7 @@ const Screen = () => {
         playing: true,
       }
     }))
-  }, [stream, myId, setPlayer])
+  }, [stream, myId, setPlayers])
 
   const renderMainUser = () => {
     if (!playerHighlighted) return null;
@@ -213,9 +217,14 @@ const Screen = () => {
   };
 
   return (
-    <div className="flex h-full w-full gap-2">
-      {renderMainUser()}
-      {renderOtherUsers()}
+    <div className="flex flex-col gap-2 items-center justify-center h-full w-full">
+      <div className="flex h-full w-full gap-2">
+        {renderMainUser()}
+        {renderOtherUsers()}
+      </div>
+      <div className="">
+        <Controls muted={playerHighlighted?.muted} playing={playerHighlighted?.playing} toggleAudio={toggleAudio} toggleVideo={toggleVideo} leaveRoom={leaveRoom} />
+      </div>
     </div>
   )
 }

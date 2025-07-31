@@ -1,10 +1,12 @@
 import { BsFillRecordCircleFill, BsFillTelephoneFill } from "react-icons/bs"
-import { RiMic2Line } from "react-icons/ri"
-import { FiVideo } from "react-icons/fi"
+import { RiMicLine, RiMicOffLine } from "react-icons/ri"
+import { FiVideo, FiVideoOff } from "react-icons/fi"
 import { LuScreenShare } from "react-icons/lu"
 import { RxSpeakerLoud } from "react-icons/rx"
 
-const Controls = () => {
+const Controls = (props: { muted: boolean, playing: boolean, toggleAudio: () => void, toggleVideo: () => void, leaveRoom: () => void }) => {
+  const { muted, playing, toggleAudio, toggleVideo, leaveRoom } = props;
+
   return (
     <div className="select-none flex items-center gap-2.5 p-2">
       <div className="flex flex-col gap-1 items-center">
@@ -14,14 +16,14 @@ const Controls = () => {
         <p className="text-[0.675rem] text-foreground/50">Start</p>
       </div>
       <div className="flex flex-col gap-1 items-center">
-        <button className="flex items-center justify-center border border-call-border p-3 rounded-xl bg-call-primary text-lg font-medium cursor-pointer hover:bg-primary-hover transition-all duration-200">
-          <RiMic2Line />
+        <button onClick={toggleAudio} className="flex items-center justify-center border border-call-border p-3 rounded-xl bg-call-primary text-lg font-medium cursor-pointer hover:bg-primary-hover transition-all duration-200">
+          {muted ? <RiMicOffLine /> : <RiMicLine />}
         </button>
         <p className="text-[0.675rem] text-foreground/50">Mic</p>
       </div>
       <div className="flex flex-col gap-1 items-center">
-        <button className="flex items-center justify-center border border-call-border p-3 rounded-xl bg-call-primary text-lg font-medium cursor-pointer hover:bg-primary-hover transition-all duration-200">
-          <FiVideo />
+        <button onClick={toggleVideo} className="flex items-center justify-center border border-call-border p-3 rounded-xl bg-call-primary text-lg font-medium cursor-pointer hover:bg-primary-hover transition-all duration-200">
+          {playing ? <FiVideo /> : <FiVideoOff />}
         </button>
         <p className="text-[0.675rem] text-foreground/50">Cam</p>
       </div>
@@ -39,7 +41,7 @@ const Controls = () => {
       </div>
       <div className="h-8 border-r border-primary-border mx-1 mb-4.5" />
       <div className="flex flex-col gap-1 items-center">
-        <button className="flex items-center justify-center border border-red-400/10 p-3 rounded-xl text-lg font-medium cursor-pointer text-red-400 bg-red-400/20 hover:bg-red-400/40 transition-all duration-200">
+        <button onClick={leaveRoom} className="flex items-center justify-center border border-red-400/10 p-3 rounded-xl text-lg font-medium cursor-pointer text-red-400 bg-red-400/20 hover:bg-red-400/40 transition-all duration-200">
           <BsFillTelephoneFill className="-rotate-[225deg]" />
         </button>
         <p className="text-[0.675rem] text-foreground/50">Leave</p>

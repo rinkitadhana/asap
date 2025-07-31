@@ -13,8 +13,8 @@ const SpaceWrapper = ({ children }: { children: React.ReactNode }) => {
   return (
     <section className="bg-call-background h-screen flex items-center px-4 pb-2">
       <div className="relative flex-1 flex flex-col items-center justify-center h-full max-w-full overflow-hidden">
-        <header className="w-full p-2 select-none">
-          <div className="flex items-center justify-between py-2 w-full rounded-xl  border-black">
+        <header className="w-full p-2 select-none z-50">
+          <div className="flex items-center justify-between py-2 w-full rounded-xl">
             <div className="flex items-center gap-2">
               <Back />
               <Logo />
@@ -43,11 +43,8 @@ const SpaceWrapper = ({ children }: { children: React.ReactNode }) => {
 
           </div>
         </header>
-        <div className="w-full flex-1 min-h-0 px-2 pb-2 pl-0">
+        <div className="w-full flex-1 min-h-0 px-2">
           {children}
-        </div>
-        <div>
-          <Controls />
         </div>
 
       </div>
