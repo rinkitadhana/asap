@@ -156,12 +156,16 @@ const Screen = () => {
             playing={playing}
             myVideo={true}
             username={"Rinkit Adhana"}
+            userProfile={"/img/test/mark.jpeg"}
             className={`h-full w-full ${myFullScreen ? 'object-cover' : 'object-contain'}`}
           />
         </div>
-        <button onClick={() => { setMyFullScreen(prev => !prev) }} className="select-none opacity-0 group-hover/my-screen:opacity-100 absolute bottom-0 right-0 p-2 m-2 rounded-xl bg-secondary hover:bg-primary-hover border border-call-border cursor-pointer transition-all duration-300">
-          {myFullScreen ? <RxExitFullScreen size={20} /> : <RxEnterFullScreen size={20} />}
-        </button>
+        {playerHighlighted.playing &&
+          <button onClick={() => { setMyFullScreen(prev => !prev) }} className="select-none opacity-0 group-hover/my-screen:opacity-100 absolute bottom-0 right-0 p-2 m-2 rounded-xl bg-secondary hover:bg-primary-hover border border-call-border cursor-pointer transition-all duration-300">
+            {myFullScreen ? <RxExitFullScreen size={20} /> : <RxEnterFullScreen size={20} />}
+          </button>
+        }
+
       </div>
     );
   };
