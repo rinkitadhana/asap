@@ -7,9 +7,10 @@ interface PlayerProps {
     playing: boolean;
     className: string;
     myVideo?: boolean;
+    username?: string;
 }
 
-const Player = ({ url, muted, playing, className, myVideo }: PlayerProps) => {
+const Player = ({ url, muted, playing, className, myVideo, username }: PlayerProps) => {
     const videoRef = useRef<HTMLVideoElement>(null);
 
     useEffect(() => {
@@ -52,8 +53,13 @@ const Player = ({ url, muted, playing, className, myVideo }: PlayerProps) => {
         <div className="relative w-full h-full">
             {videoElement}
             {muted && (
-                <div className="absolute top-3 right-3 bg-black/40 p-2 rounded-full">
-                    <RiMicOffLine size={20} className="text-white" />
+                <div className="absolute top-3 right-3 bg-call-primary/50 p-2 rounded-full">
+                    <RiMicOffLine size={19} className="text-foreground" />
+                </div>
+            )}
+            {username && (
+                <div className="select-none absolute bottom-3 left-3 bg-call-primary/50 px-3 py-1 rounded-full text-foreground text-sm font-medium">
+                    {username}
                 </div>
             )}
         </div>

@@ -155,11 +155,9 @@ const Screen = () => {
             muted={muted}
             playing={playing}
             myVideo={true}
+            username={"Rinkit Adhana"}
             className={`h-full w-full ${myFullScreen ? 'object-cover' : 'object-contain'}`}
           />
-          <div className="select-none absolute bottom-4 left-4 bg-call-primary/75 backdrop-blur-xs px-2.5 py-1 rounded-lg text-foreground text-sm font-medium">
-            Rinkit Adhana
-          </div>
         </div>
         <button onClick={() => { setMyFullScreen(prev => !prev) }} className="select-none opacity-0 group-hover/my-screen:opacity-100 absolute bottom-0 right-0 p-2 m-2 rounded-xl bg-secondary hover:bg-primary-hover border border-call-border cursor-pointer transition-all duration-300">
           {myFullScreen ? <RxExitFullScreen size={20} /> : <RxEnterFullScreen size={20} />}
@@ -208,11 +206,9 @@ const Screen = () => {
                   url={url}
                   muted={muted}
                   playing={playing}
+                  username={`User ${index + 1 + (currentPage * USERS_PER_PAGE)}`}
                   className={`h-full w-full ${otherFullScreen ? 'object-cover' : 'object-contain'}`}
                 />
-                <div className="select-none absolute bottom-2 left-2 bg-call-primary/75 backdrop-blur-xs px-2.5 py-1 rounded-lg text-foreground text-sm font-medium">
-                  User {index + 1 + (currentPage * USERS_PER_PAGE)}
-                </div>
               </div>
             );
           })}
