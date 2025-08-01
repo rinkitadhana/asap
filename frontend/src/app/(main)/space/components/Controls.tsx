@@ -4,7 +4,7 @@ import { FiVideo, FiVideoOff } from "react-icons/fi"
 import { LuLayoutDashboard, LuScreenShare, LuUsers } from "react-icons/lu"
 import { RxSpeakerLoud } from "react-icons/rx"
 import DateComponent from "@/utils/Date"
-import { IoChatboxOutline, IoChatbubbleOutline } from "react-icons/io5"
+import { IoChatbubbleOutline } from "react-icons/io5"
 
 const Controls = (props: { muted: boolean, playing: boolean, toggleAudio: () => void, toggleVideo: () => void, leaveRoom: () => void }) => {
   const { muted, playing, toggleAudio, toggleVideo, leaveRoom } = props;

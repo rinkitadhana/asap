@@ -48,11 +48,11 @@ const SpaceWrapper = ({ children }: { children: React.ReactNode }) => {
         </div>
 
       </div>
-      <div className="flex justify-center items-center h-full gap-2 flex-shrink-0">
+      {/* <div className="flex justify-center items-center h-full gap-2 flex-shrink-0">
         <div className=" flex flex-col justify-center items-center border border-call-border h-full w-[350px] rounded-xl bg-call-primary">
           space
         </div>
-      </div>
+      </div> */}
     </section>
   )
 }

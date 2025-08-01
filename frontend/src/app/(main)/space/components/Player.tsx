@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react';
+import { RiMicOffLine } from 'react-icons/ri';
 
 interface PlayerProps {
     url: string | MediaStream | null;
@@ -35,27 +36,27 @@ const Player = ({ url, muted, playing, className, myVideo }: PlayerProps) => {
     const baseVideoStyles = "max-w-full max-h-full min-w-0 min-h-0 object-contain";
     const mirrorStyle = myVideo ? "scale-x-[-1]" : "";
 
-    if (url instanceof MediaStream) {
-        return (
-            <video
-                ref={videoRef}
-                autoPlay
-                playsInline
-                muted={muted}
-                className={`${baseVideoStyles} ${className} ${mirrorStyle}`}
-            />
-        );
-    }
-
-    return (
+    const videoElement = (
         <video
             ref={videoRef}
-            controls
-            muted={muted}
-            src={url}
-            className={`${baseVideoStyles} ${className} ${mirrorStyle}`}
+            autoPlay={url instanceof MediaStream}
+            controls={!(url instanceof MediaStream)}
             playsInline
+            muted={muted}
+            src={url instanceof MediaStream ? undefined : url}
+            className={`${baseVideoStyles} ${className} ${mirrorStyle}`}
         />
+    );
+
+    return (
+        <div className="relative w-full h-full">
+            {videoElement}
+            {muted && (
+                <div className="absolute top-3 right-3 bg-black/40 p-2 rounded-full">
+                    <RiMicOffLine size={20} className="text-white" />
+                </div>
+            )}
+        </div>
     );
 };
 
