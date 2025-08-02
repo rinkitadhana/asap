@@ -170,7 +170,7 @@ const PreJoinScreen = ({ onJoinCall, roomId }: PreJoinScreenProps) => {
                                     url={stream}
                                     muted={true}
                                     playing={videoEnabled}
-                                    className="w-full h-full"
+                                    className="w-full h-full object-cover"
                                     myVideo={true}
                                     hideElements={true}
                                 />

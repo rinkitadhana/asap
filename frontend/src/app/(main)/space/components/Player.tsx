@@ -65,7 +65,7 @@ const Player = ({ url, muted, playing, className, myVideo, username, userProfile
     }
 
     // Base styles to prevent layout issues and ensure proper sizing
-    const baseVideoStyles = "max-w-full max-h-full min-w-0 min-h-0 object-cover";
+    const baseVideoStyles = "max-w-full max-h-full min-w-0 min-h-0 object-contain";
     const mirrorStyle = myVideo ? "scale-x-[-1]" : "";
 
     const videoElement =
