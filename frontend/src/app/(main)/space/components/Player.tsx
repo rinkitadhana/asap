@@ -73,7 +73,7 @@ const Player = ({ url, muted, playing, className, myVideo, username, userProfile
             autoPlay
             controls={false}
             playsInline
-            muted={muted}
+            muted={myVideo ? true : muted}
             src={url instanceof MediaStream ? undefined : url}
             className={`${baseVideoStyles} ${className} ${mirrorStyle}`}
         />
@@ -89,7 +89,7 @@ const Player = ({ url, muted, playing, className, myVideo, username, userProfile
                         autoPlay
                         controls={false}
                         playsInline
-                        muted={muted}
+                        muted={myVideo ? true : muted}
                         className={playing ? `${baseVideoStyles} ${className} ${mirrorStyle}` : "hidden"}
                     />
                     {/* Show fallback UI when video is off */}
