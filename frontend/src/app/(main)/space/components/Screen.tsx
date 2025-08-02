@@ -15,6 +15,7 @@ import { MediaConnection } from 'peerjs';
 interface PreJoinSettings {
   videoEnabled: boolean;
   audioEnabled: boolean;
+  username: string;
 }
 
 interface ScreenProps {
@@ -73,6 +74,7 @@ const Screen = ({ toggleSidebar, activeSidebar, preJoinSettings }: ScreenProps) 
             muted: false,
             playing: true,
             speakerMuted: false,
+            username: `User ${newUserId.slice(-4)}`,
           }
         }))
 
@@ -154,6 +156,7 @@ const Screen = ({ toggleSidebar, activeSidebar, preJoinSettings }: ScreenProps) 
             muted: false,
             playing: true,
             speakerMuted: false,
+            username: `User ${callerId.slice(-4)}`,
           }
         }))
         setUsers((prev) => ({
@@ -174,9 +177,10 @@ const Screen = ({ toggleSidebar, activeSidebar, preJoinSettings }: ScreenProps) 
         muted: preJoinSettings ? !preJoinSettings.audioEnabled : false,
         playing: preJoinSettings ? preJoinSettings.videoEnabled : true,
         speakerMuted: false,
+        username: preJoinSettings?.username || 'You',
       }
     }))
-  }, [stream, myId, setPlayers, preJoinSettings])
+  }, [stream, myId, preJoinSettings, setPlayers]);
 
   const renderMainUser = () => {
     if (!playerHighlighted) return null;
@@ -190,7 +194,7 @@ const Screen = ({ toggleSidebar, activeSidebar, preJoinSettings }: ScreenProps) 
             muted={muted}
             playing={playing}
             myVideo={true}
-            username={"Rinkit Adhana"}
+            username={playerHighlighted.username}
             userProfile={"/img/test/mark.jpeg"}
             className={`h-full w-full ${myFullScreen ? 'object-cover' : 'object-contain'}`}
             speakerMuted={playerHighlighted.speakerMuted}
@@ -246,7 +250,7 @@ const Screen = ({ toggleSidebar, activeSidebar, preJoinSettings }: ScreenProps) 
                   url={url}
                   muted={muted}
                   playing={playing}
-                  username={`User ${index + 1 + (currentPage * USERS_PER_PAGE)}`}
+                  username={nonHighlightedPlayers[playerId]?.username || `User ${index + 1 + (currentPage * USERS_PER_PAGE)}`}
                   className={`h-full w-full ${otherFullScreen ? 'object-cover' : 'object-contain'}`}
                   speakerMuted={speakerMuted}
                 />

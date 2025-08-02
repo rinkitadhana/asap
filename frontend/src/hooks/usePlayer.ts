@@ -9,6 +9,7 @@ interface Player {
   muted: boolean;
   playing: boolean;
   speakerMuted: boolean;
+  username?: string;
 }
 
 interface Players {

@@ -10,6 +10,7 @@ type SidebarType = 'info' | 'users' | 'chat' | null
 interface PreJoinSettings {
   videoEnabled: boolean;
   audioEnabled: boolean;
+  username: string;
 }
 
 const Room = () => {
