@@ -3,11 +3,7 @@ import Back from "@/components/Back"
 import Logo from "@/components/Logo"
 import { ThemeSwitcher } from "@/components/ThemeSwitcher"
 import { UserPlus } from "lucide-react"
-import Controls from "./Controls"
-import { LuUsers } from "react-icons/lu"
-import { IoChatbubbleOutline } from "react-icons/io5"
-import { BsInfoLg, BsPatchQuestion } from "react-icons/bs"
-import { TbUserQuestion } from "react-icons/tb";
+import { BsPatchQuestion } from "react-icons/bs"
 
 const SpaceWrapper = ({ children }: { children: React.ReactNode }) => {
   return (
@@ -48,11 +44,11 @@ const SpaceWrapper = ({ children }: { children: React.ReactNode }) => {
         </div>
 
       </div>
-      {/* <div className="flex justify-center items-center h-full gap-2 flex-shrink-0">
-        <div className=" flex flex-col justify-center items-center border border-call-border h-full w-[350px] rounded-xl bg-call-primary">
+      <div className="flex justify-center items-center h-full gap-2 flex-shrink-0">
+        <div className=" flex flex-col justify-center items-center border border-call-border h-full w-[350px] rounded-2xl bg-call-primary">
           space
         </div>
-      </div> */}
+      </div>
     </section>
   )
 }
