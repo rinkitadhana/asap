@@ -1,6 +1,6 @@
 import express, { type Request, type Response } from "express"
 import { Server } from "socket.io"
-import {createServer} from "http"
+import { createServer } from "http"
 
 const app = express()
 const PORT = process.env.PORT || 4000
@@ -27,12 +27,12 @@ io.on("connection", (socket) => {
   socket.on("join-room", (roomId, userId) => {
     console.log(`User ${userId} joined room ${roomId}`)
     socket.join(roomId)
-    
+
     // Get the number of users in the room
     const room = io.sockets.adapter.rooms.get(roomId);
     const usersInRoom = room ? room.size : 0;
     console.log(`Room ${roomId} now has ${usersInRoom} users`);
-    
+
     // Only broadcast to other users (not including the one who just joined)
     socket.broadcast.to(roomId).emit("user-connected", userId)
     console.log(`Broadcasting user-connected event for ${userId} to ${usersInRoom - 1} other users in room ${roomId}`);
@@ -52,11 +52,8 @@ io.on("connection", (socket) => {
     console.log(`User ${userId} left room ${roomId}`);
     socket.broadcast.to(roomId).emit("user-leave", userId);
   });
-
-  socket.on("disconnect", () => {
-    console.log("A user disconnected:", socket.id);
-  });
 })
 
-httpServer.listen(PORT, ()=>{
-  console.log(`Server running on http://localhost:${PORT}`);})
+httpServer.listen(PORT, () => {
+  console.log(`Server running on http://localhost:${PORT}`);
+})

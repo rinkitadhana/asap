@@ -4,8 +4,14 @@ import { useSocket } from '@/context/socket';
 import { useRouter } from 'next/navigation';
 import { Peer } from 'peerjs';
 
+interface Player {
+  url: MediaStream | string;
+  muted: boolean;
+  playing: boolean;
+}
+
 interface Players {
-  [key: string]: any;
+  [key: string]: Player;
 }
 
 const usePlayer = (myId: string, roomId: string, peer: Peer | null) => {
@@ -28,7 +34,17 @@ const usePlayer = (myId: string, roomId: string, peer: Peer | null) => {
     console.log("I toggled my audio")
     setPlayers((prev) => {
       const copy = cloneDeep(prev)
-      copy[myId].muted = !copy[myId].muted
+      const newMutedState = !copy[myId].muted
+      copy[myId].muted = newMutedState
+
+      // Actually control the MediaStream audio track
+      if (copy[myId].url instanceof MediaStream) {
+        const audioTracks = copy[myId].url.getAudioTracks()
+        audioTracks.forEach((track: MediaStreamTrack) => {
+          track.enabled = !newMutedState // enabled is opposite of muted
+        })
+      }
+
       return { ...copy }
     })
     socket?.emit('user-toggle-audio', myId, roomId)
@@ -38,7 +54,17 @@ const usePlayer = (myId: string, roomId: string, peer: Peer | null) => {
     console.log("I toggled my video")
     setPlayers((prev) => {
       const copy = cloneDeep(prev)
-      copy[myId].playing = !copy[myId].playing
+      const newPlayingState = !copy[myId].playing
+      copy[myId].playing = newPlayingState
+
+      // Actually control the MediaStream video track
+      if (copy[myId].url instanceof MediaStream) {
+        const videoTracks = copy[myId].url.getVideoTracks()
+        videoTracks.forEach((track: MediaStreamTrack) => {
+          track.enabled = newPlayingState
+        })
+      }
+
       return { ...copy }
     })
     socket?.emit('user-toggle-video', myId, roomId)

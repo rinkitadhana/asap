@@ -10,7 +10,7 @@ import { RxEnterFullScreen, RxExitFullScreen } from "react-icons/rx";
 import { useParams } from "next/navigation";
 import Controls from "./Controls";
 import { cloneDeep } from 'lodash'
-
+import { MediaConnection } from 'peerjs';
 
 
 const Screen = () => {
@@ -19,11 +19,12 @@ const Screen = () => {
   const roomId = params.roomId as string;
   const { peer, myId } = usePeer();
   const { stream } = useMediaStream();
-  const { setPlayers, playerHighlighted, nonHighlightedPlayers, toggleAudio, toggleVideo, leaveRoom } = usePlayer(myId || "", roomId || "", peer);
+  const { players, setPlayers, playerHighlighted, nonHighlightedPlayers, toggleAudio, toggleVideo, leaveRoom } = usePlayer(myId || "", roomId || "", peer);
   const [currentPage, setCurrentPage] = useState(0);
   const [closeWaiting, setCloseWaiting] = useState(false);
   const [myFullScreen, setMyFullScreen] = useState(true);
   const [otherFullScreen, setOtherFullScreen] = useState(true);
+  const [users, setUsers] = useState<Record<string, MediaConnection>>({});
 
   const USERS_PER_PAGE = 4;
   const otherPlayerIds = Object.keys(nonHighlightedPlayers);
@@ -63,6 +64,11 @@ const Screen = () => {
           }
         }))
 
+        setUsers((prev) => ({
+          ...prev,
+          [newUserId]: call
+        }))
+
       })
     }
     socket.on("user-connected", handleUserConnected);
@@ -93,22 +99,22 @@ const Screen = () => {
       });
     };
 
-    // const handleUserLeave = (userId: string) => {
-    //   console.log(`user ${userId} is leaving the room`);
-    //   users[userId]?.close()
-    //   const playersCopy = cloneDeep(players);
-    //   delete playersCopy[userId];
-    //   setPlayers(playersCopy);
-    // }
+    const handleUserLeave = (userId: string) => {
+      console.log(`user ${userId} is leaving the room`);
+      users[userId]?.close()
+      const playersCopy = cloneDeep(players);
+      delete playersCopy[userId];
+      setPlayers(playersCopy);
+    }
     socket.on("user-toggle-audio", handleToggleAudio);
     socket.on("user-toggle-video", handleToggleVideo);
-    // socket.on("user-leave", handleUserLeave);
+    socket.on("user-leave", handleUserLeave);
     return () => {
       socket.off("user-toggle-audio", handleToggleAudio);
       socket.off("user-toggle-video", handleToggleVideo);
-      // socket.off("user-leave", handleUserLeave);
+      socket.off("user-leave", handleUserLeave);
     };
-  }, [setPlayers, socket]);
+  }, [setPlayers, socket, users, players]);
 
   useEffect(() => {
     if (!peer || !stream) return;
@@ -125,6 +131,10 @@ const Screen = () => {
             muted: false,
             playing: true,
           }
+        }))
+        setUsers((prev) => ({
+          ...prev,
+          [callerId]: call
         }))
       })
     })

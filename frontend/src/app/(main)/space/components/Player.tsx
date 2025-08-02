@@ -17,22 +17,26 @@ const Player = ({ url, muted, playing, className, myVideo, username, userProfile
 
     useEffect(() => {
         if (videoRef.current && url instanceof MediaStream) {
-            videoRef.current.srcObject = url;
-        }
-    }, [url]);
+            // For MediaStream, always keep the video element playing
+            // The actual video/audio control is handled via track.enabled
+            if (videoRef.current.srcObject !== url) {
+                videoRef.current.srcObject = url;
+            }
 
-    useEffect(() => {
-        if (videoRef.current) {
-            if (playing) {
-                // Ensure MediaStream is set before playing
-                if (url instanceof MediaStream && videoRef.current.srcObject !== url) {
-                    videoRef.current.srcObject = url;
+            const playVideo = async () => {
+                try {
+                    await new Promise(resolve => setTimeout(resolve, 100));
+                    await videoRef.current?.play();
+                } catch (error) {
+                    console.error("Error playing video:", error);
                 }
-
-                // Ensure video plays when playing state changes to true
+            };
+            playVideo();
+        } else if (videoRef.current && typeof url === 'string') {
+            // For string URLs (recorded videos), handle play/pause normally
+            if (playing) {
                 const playVideo = async () => {
                     try {
-                        // Wait a bit to ensure srcObject is properly set
                         await new Promise(resolve => setTimeout(resolve, 100));
                         await videoRef.current?.play();
                     } catch (error) {
@@ -68,28 +72,64 @@ const Player = ({ url, muted, playing, className, myVideo, username, userProfile
 
     return (
         <div className="relative w-full h-full">
-            {playing ? videoElement :
-                (
-                    <div className="select-none w-full h-full bg-call-primary/50 flex items-center justify-center">
-                        <div className="text-foreground text-sm font-medium">
-                            {userProfile ? <Image src={userProfile} alt="User Profile" width={100} height={100} className="rounded-full" /> :
-                                <div className="select-none rounded-full bg-green-400/20 flex items-center justify-center">
-                                    <div className='size-[100px] flex items-center justify-center'>
-                                        {username ? (
-                                            <span className="text-foreground text-4xl font-medium">
-                                                {username.charAt(0).toUpperCase()}
-                                            </span>
-                                        ) : (
-                                            <span className="text-foreground text-4xl font-medium">
-                                                ?
-                                            </span>
-                                        )}
+            {url instanceof MediaStream ? (
+                <>
+                    {/* Always render video element for MediaStream to maintain audio */}
+                    <video
+                        ref={videoRef}
+                        autoPlay
+                        controls={false}
+                        playsInline
+                        muted={muted}
+                        className={playing ? `${baseVideoStyles} ${className} ${mirrorStyle}` : "hidden"}
+                    />
+                    {/* Show fallback UI when video is off */}
+                    {!playing && (
+                        <div className="select-none w-full h-full bg-call-primary/50 flex items-center justify-center">
+                            <div className="text-foreground text-sm font-medium">
+                                {userProfile ? <Image src={userProfile} alt="User Profile" width={100} height={100} className="rounded-full" /> :
+                                    <div className="select-none rounded-full bg-green-400/20 flex items-center justify-center">
+                                        <div className='size-[100px] flex items-center justify-center'>
+                                            {username ? (
+                                                <span className="text-foreground text-4xl font-medium">
+                                                    {username.charAt(0).toUpperCase()}
+                                                </span>
+                                            ) : (
+                                                <span className="text-foreground text-4xl font-medium">
+                                                    ?
+                                                </span>
+                                            )}
+                                        </div>
                                     </div>
-                                </div>
-                            }
+                                }
+                            </div>
                         </div>
+                    )}
+                </>
+            ) : playing ? (
+                // For non-MediaStream URLs (like recorded videos)
+                videoElement
+            ) : (
+                <div className="select-none w-full h-full bg-call-primary/50 flex items-center justify-center">
+                    <div className="text-foreground text-sm font-medium">
+                        {userProfile ? <Image src={userProfile} alt="User Profile" width={100} height={100} className="rounded-full" /> :
+                            <div className="select-none rounded-full bg-green-400/20 flex items-center justify-center">
+                                <div className='size-[100px] flex items-center justify-center'>
+                                    {username ? (
+                                        <span className="text-foreground text-4xl font-medium">
+                                            {username.charAt(0).toUpperCase()}
+                                        </span>
+                                    ) : (
+                                        <span className="text-foreground text-4xl font-medium">
+                                            ?
+                                        </span>
+                                    )}
+                                </div>
+                            </div>
+                        }
                     </div>
-                )}
+                </div>
+            )}
             {muted && (
                 <div className="absolute top-3 right-3 bg-call-primary/50 p-2 rounded-full">
                     <RiMicOffLine size={19} className="text-foreground" />
