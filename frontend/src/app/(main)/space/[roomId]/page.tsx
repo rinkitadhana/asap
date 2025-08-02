@@ -2,11 +2,22 @@
 import React, { useState } from "react"
 import SpaceWrapper from "../components/SpaceWrapper"
 import Screen from "../components/Screen"
+import PreJoinScreen from "../components/PreJoinScreen"
+import { useParams } from "next/navigation"
 
 type SidebarType = 'info' | 'users' | 'chat' | null
 
+interface PreJoinSettings {
+  videoEnabled: boolean;
+  audioEnabled: boolean;
+}
+
 const Room = () => {
+  const params = useParams()
+  const roomId = params.roomId as string
   const [activeSidebar, setActiveSidebar] = useState<SidebarType>(null)
+  const [hasJoined, setHasJoined] = useState(false)
+  const [preJoinSettings, setPreJoinSettings] = useState<PreJoinSettings | null>(null)
 
   const toggleSidebar = (sidebarType: SidebarType) => {
     if (activeSidebar === sidebarType) {
@@ -22,9 +33,24 @@ const Room = () => {
     setActiveSidebar(null)
   }
 
+  const handleJoinCall = (settings: PreJoinSettings) => {
+    setPreJoinSettings(settings)
+    setHasJoined(true)
+  }
+
+  // Show pre-join screen if user hasn't joined yet
+  if (!hasJoined) {
+    return <PreJoinScreen onJoinCall={handleJoinCall} roomId={roomId} />
+  }
+
+  // Show main call interface after joining
   return (
     <SpaceWrapper activeSidebar={activeSidebar} closeSidebar={closeSidebar}>
-      <Screen toggleSidebar={toggleSidebar} activeSidebar={activeSidebar} />
+      <Screen
+        toggleSidebar={toggleSidebar}
+        activeSidebar={activeSidebar}
+        preJoinSettings={preJoinSettings}
+      />
     </SpaceWrapper>
   )
 }

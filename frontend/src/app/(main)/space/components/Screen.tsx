@@ -12,18 +12,24 @@ import Controls from "./Controls";
 import { cloneDeep } from 'lodash'
 import { MediaConnection } from 'peerjs';
 
+interface PreJoinSettings {
+  videoEnabled: boolean;
+  audioEnabled: boolean;
+}
+
 interface ScreenProps {
   toggleSidebar: (sidebarType: SidebarType) => void
   activeSidebar: SidebarType
+  preJoinSettings: PreJoinSettings | null
 }
 type SidebarType = 'info' | 'users' | 'chat' | null
 
-const Screen = ({ toggleSidebar, activeSidebar }: ScreenProps) => {
+const Screen = ({ toggleSidebar, activeSidebar, preJoinSettings }: ScreenProps) => {
   const socket = useSocket();
   const params = useParams();
   const roomId = params.roomId as string;
   const { peer, myId } = usePeer();
-  const { stream } = useMediaStream();
+  const { stream } = useMediaStream(preJoinSettings || undefined);
   const { players, setPlayers, playerHighlighted, nonHighlightedPlayers, toggleAudio, toggleVideo, toggleSpeaker, leaveRoom } = usePlayer(myId || "", roomId || "", peer);
   const [currentPage, setCurrentPage] = useState(0);
   const [closeWaiting, setCloseWaiting] = useState(false);
@@ -160,17 +166,17 @@ const Screen = ({ toggleSidebar, activeSidebar }: ScreenProps) => {
 
   useEffect(() => {
     if (!stream || !myId) return;
-    console.log(`Setting my stream ${myId}`);
+    console.log(`Setting my stream ${myId} with pre-join settings:`, preJoinSettings);
     setPlayers((prev) => ({
       ...prev,
       [myId]: {
         url: stream,
-        muted: false,
-        playing: true,
+        muted: preJoinSettings ? !preJoinSettings.audioEnabled : false,
+        playing: preJoinSettings ? preJoinSettings.videoEnabled : true,
         speakerMuted: false,
       }
     }))
-  }, [stream, myId, setPlayers])
+  }, [stream, myId, setPlayers, preJoinSettings])
 
   const renderMainUser = () => {
     if (!playerHighlighted) return null;

@@ -12,9 +12,10 @@ interface PlayerProps {
     username?: string;
     userProfile?: string;
     speakerMuted?: boolean;
+    hideElements?: boolean;
 }
 
-const Player = ({ url, muted, playing, className, myVideo, username, userProfile, speakerMuted = false }: PlayerProps) => {
+const Player = ({ url, muted, playing, className, myVideo, username, userProfile, speakerMuted = false, hideElements = false }: PlayerProps) => {
     const videoRef = useRef<HTMLVideoElement>(null);
 
     useEffect(() => {
@@ -64,7 +65,7 @@ const Player = ({ url, muted, playing, className, myVideo, username, userProfile
     }
 
     // Base styles to prevent layout issues and ensure proper sizing
-    const baseVideoStyles = "max-w-full max-h-full min-w-0 min-h-0 object-contain";
+    const baseVideoStyles = "max-w-full max-h-full min-w-0 min-h-0 object-cover";
     const mirrorStyle = myVideo ? "scale-x-[-1]" : "";
 
     const videoElement =
@@ -139,25 +140,28 @@ const Player = ({ url, muted, playing, className, myVideo, username, userProfile
                     </div>
                 </div>
             )}
-            {muted && speakerMuted && (
-                <div className="absolute top-3 right-3 bg-call-primary/50 p-2 rounded-full flex gap-2.5">
-                    <RiMicOffLine size={18} className="text-foreground" />
-                    <RxSpeakerOff size={18} className="text-foreground" />
-                </div>
-            )
-            }
-            {muted && !speakerMuted && (
-                <div className="absolute top-3 right-3 bg-call-primary/50 p-2 rounded-full">
-                    <RiMicOffLine size={18} className="text-foreground" />
-                </div>
+            {!hideElements && (
+                <>
+                    {muted && speakerMuted && (
+                        <div className="absolute top-3 right-3 bg-call-primary/50 p-2 rounded-full flex gap-2.5">
+                            <RiMicOffLine size={18} className="text-foreground" />
+                            <RxSpeakerOff size={18} className="text-foreground" />
+                        </div>
+                    )
+                    }
+                    {muted && !speakerMuted && (
+                        <div className="absolute top-3 right-3 bg-call-primary/50 p-2 rounded-full">
+                            <RiMicOffLine size={18} className="text-foreground" />
+                        </div>
+                    )}
+                    {speakerMuted && !muted && (
+                        <div className="absolute top-3 right-3 bg-call-primary/50 p-2 rounded-full">
+                            <RxSpeakerOff size={18} className="text-foreground" />
+                        </div>
+                    )}
+                </>
             )}
-            {speakerMuted && !muted && (
-                <div className="absolute top-3 right-3 bg-call-primary/50 p-2 rounded-full">
-                    <RxSpeakerOff size={18} className="text-foreground" />
-                </div>
-            )}
-
-            {username && (
+            {!hideElements && username && (
                 <div className="select-none absolute bottom-3 left-3 bg-call-primary/50 px-3 py-1 rounded-full text-foreground text-sm font-medium">
                     {username}
                 </div>
