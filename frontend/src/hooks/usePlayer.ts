@@ -8,6 +8,7 @@ interface Player {
   url: MediaStream | string;
   muted: boolean;
   playing: boolean;
+  speakerMuted: boolean;
 }
 
 interface Players {
@@ -70,7 +71,17 @@ const usePlayer = (myId: string, roomId: string, peer: Peer | null) => {
     socket?.emit('user-toggle-video', myId, roomId)
   }
 
-  return { players, setPlayers, playerHighlighted, nonHighlightedPlayers, toggleAudio, toggleVideo, leaveRoom }
+  const toggleSpeaker = () => {
+    console.log("I toggled my speaker")
+    setPlayers((prev) => {
+      const copy = cloneDeep(prev)
+      copy[myId].speakerMuted = !copy[myId].speakerMuted
+      return { ...copy }
+    })
+    socket?.emit('user-toggle-speaker', myId, roomId)
+  }
+
+  return { players, setPlayers, playerHighlighted, nonHighlightedPlayers, toggleAudio, toggleVideo, toggleSpeaker, leaveRoom }
 }
 
 export default usePlayer

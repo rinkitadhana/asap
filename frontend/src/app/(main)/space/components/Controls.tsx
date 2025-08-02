@@ -2,11 +2,11 @@ import { BsFillRecordCircleFill, BsFillTelephoneFill, BsInfoLg } from "react-ico
 import { RiMicLine, RiMicOffLine } from "react-icons/ri"
 import { FiVideo, FiVideoOff } from "react-icons/fi"
 import { LuLayoutDashboard, LuScreenShare, LuUsers } from "react-icons/lu"
-import { RxSpeakerLoud } from "react-icons/rx"
+import { RxSpeakerLoud, RxSpeakerOff } from "react-icons/rx"
 import DateComponent from "@/utils/Date"
 import { IoChatbubbleOutline } from "react-icons/io5"
-const Controls = (props: { muted: boolean, playing: boolean, toggleAudio: () => void, toggleVideo: () => void, leaveRoom: () => void }) => {
-  const { muted, playing, toggleAudio, toggleVideo, leaveRoom } = props;
+const Controls = (props: { muted: boolean, playing: boolean, toggleAudio: () => void, toggleVideo: () => void, leaveRoom: () => void, speakerMuted: boolean, toggleSpeaker: () => void }) => {
+  const { muted, playing, toggleAudio, toggleVideo, leaveRoom, speakerMuted, toggleSpeaker } = props;
 
   const playClickSound = () => {
     try {
@@ -75,8 +75,11 @@ const Controls = (props: { muted: boolean, playing: boolean, toggleAudio: () => 
           <p className="text-[0.675rem] text-foreground/50">Cam</p>
         </div>
         <div className="flex flex-col gap-1 items-center">
-          <button className="flex items-center justify-center border border-call-border p-3 rounded-xl bg-call-primary text-lg font-medium cursor-pointer hover:bg-primary-hover transition-all duration-200">
-            <RxSpeakerLoud />
+          <button onClick={() => {
+            toggleSpeaker()
+            playClickSound()
+          }} className="flex items-center justify-center border border-call-border p-3 rounded-xl bg-call-primary text-lg font-medium cursor-pointer hover:bg-primary-hover transition-all duration-200">
+            {speakerMuted ? <RxSpeakerOff /> : <RxSpeakerLoud />}
           </button>
           <p className="text-[0.675rem] text-foreground/50">Speaker</p>
         </div>

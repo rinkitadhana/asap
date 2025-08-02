@@ -7,6 +7,7 @@ interface ServerToClientEvents {
   "user-connected": (userId: string) => void;
   "user-toggle-audio": (userId: string) => void;
   "user-toggle-video": (userId: string) => void;
+  "user-toggle-speaker": (userId: string) => void;
   "user-leave": (userId: string) => void;
 }
 
@@ -14,6 +15,7 @@ interface ClientToServerEvents {
   "join-room": (roomId: string, userId: string) => void;
   "user-toggle-audio": (userId: string, roomId: string) => void;
   "user-toggle-video": (userId: string, roomId: string) => void;
+  "user-toggle-speaker": (userId: string, roomId: string) => void;
   "user-leave": (userId: string, roomId: string) => void;
 }
 
@@ -39,10 +41,10 @@ export const SocketProvider = ({ children }: SocketProviderProps) => {
     const connection: SocketType = io("http://localhost:4000", {
       transports: ["websocket", "polling"],
       autoConnect: true,
-    }); 
-    
+    });
+
     console.log("Attempting to establish socket connection...");
-    
+
     connection.on("connect", () => {
       console.log("Socket connection established:", connection.id);
       setSocket(connection);

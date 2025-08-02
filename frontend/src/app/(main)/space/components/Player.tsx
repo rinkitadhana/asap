@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import { useEffect, useRef } from 'react';
 import { RiMicOffLine } from 'react-icons/ri';
+import { RxSpeakerOff } from 'react-icons/rx';
 
 interface PlayerProps {
     url: string | MediaStream | null;
@@ -10,9 +11,10 @@ interface PlayerProps {
     myVideo?: boolean;
     username?: string;
     userProfile?: string;
+    speakerMuted?: boolean;
 }
 
-const Player = ({ url, muted, playing, className, myVideo, username, userProfile }: PlayerProps) => {
+const Player = ({ url, muted, playing, className, myVideo, username, userProfile, speakerMuted = false }: PlayerProps) => {
     const videoRef = useRef<HTMLVideoElement>(null);
 
     useEffect(() => {
@@ -49,6 +51,13 @@ const Player = ({ url, muted, playing, className, myVideo, username, userProfile
             }
         }
     }, [playing, url]);
+
+    // Handle speaker muting - control volume of incoming audio
+    useEffect(() => {
+        if (videoRef.current) {
+            videoRef.current.volume = speakerMuted ? 0 : 1;
+        }
+    }, [speakerMuted]);
 
     if (!url) {
         return null;
@@ -130,11 +139,24 @@ const Player = ({ url, muted, playing, className, myVideo, username, userProfile
                     </div>
                 </div>
             )}
-            {muted && (
+            {muted && speakerMuted && (
+                <div className="absolute top-3 right-3 bg-call-primary/50 p-2 rounded-full flex gap-2.5">
+                    <RiMicOffLine size={18} className="text-foreground" />
+                    <RxSpeakerOff size={18} className="text-foreground" />
+                </div>
+            )
+            }
+            {muted && !speakerMuted && (
                 <div className="absolute top-3 right-3 bg-call-primary/50 p-2 rounded-full">
-                    <RiMicOffLine size={19} className="text-foreground" />
+                    <RiMicOffLine size={18} className="text-foreground" />
                 </div>
             )}
+            {speakerMuted && !muted && (
+                <div className="absolute top-3 right-3 bg-call-primary/50 p-2 rounded-full">
+                    <RxSpeakerOff size={18} className="text-foreground" />
+                </div>
+            )}
+
             {username && (
                 <div className="select-none absolute bottom-3 left-3 bg-call-primary/50 px-3 py-1 rounded-full text-foreground text-sm font-medium">
                     {username}

@@ -48,6 +48,11 @@ io.on("connection", (socket) => {
     socket.broadcast.to(roomId).emit("user-toggle-video", userId);
   });
 
+  socket.on("user-toggle-speaker", (userId, roomId) => {
+    console.log(`User ${userId} toggled speaker in room ${roomId}`);
+    socket.broadcast.to(roomId).emit("user-toggle-speaker", userId);
+  });
+
   socket.on("user-leave", (userId, roomId) => {
     console.log(`User ${userId} left room ${roomId}`);
     socket.broadcast.to(roomId).emit("user-leave", userId);

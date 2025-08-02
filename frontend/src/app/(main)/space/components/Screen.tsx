@@ -19,7 +19,7 @@ const Screen = () => {
   const roomId = params.roomId as string;
   const { peer, myId } = usePeer();
   const { stream } = useMediaStream();
-  const { players, setPlayers, playerHighlighted, nonHighlightedPlayers, toggleAudio, toggleVideo, leaveRoom } = usePlayer(myId || "", roomId || "", peer);
+  const { players, setPlayers, playerHighlighted, nonHighlightedPlayers, toggleAudio, toggleVideo, toggleSpeaker, leaveRoom } = usePlayer(myId || "", roomId || "", peer);
   const [currentPage, setCurrentPage] = useState(0);
   const [closeWaiting, setCloseWaiting] = useState(false);
   const [myFullScreen, setMyFullScreen] = useState(true);
@@ -61,6 +61,7 @@ const Screen = () => {
             url: incomingStream,
             muted: false,
             playing: true,
+            speakerMuted: false,
           }
         }))
 
@@ -99,6 +100,15 @@ const Screen = () => {
       });
     };
 
+    const handleToggleSpeaker = (userId: string) => {
+      console.log(`user with id ${userId} toggled speaker`);
+      setPlayers((prev) => {
+        const copy = cloneDeep(prev);
+        copy[userId].speakerMuted = !copy[userId].speakerMuted;
+        return { ...copy };
+      });
+    };
+
     const handleUserLeave = (userId: string) => {
       console.log(`user ${userId} is leaving the room`);
       users[userId]?.close()
@@ -108,10 +118,12 @@ const Screen = () => {
     }
     socket.on("user-toggle-audio", handleToggleAudio);
     socket.on("user-toggle-video", handleToggleVideo);
+    socket.on("user-toggle-speaker", handleToggleSpeaker);
     socket.on("user-leave", handleUserLeave);
     return () => {
       socket.off("user-toggle-audio", handleToggleAudio);
       socket.off("user-toggle-video", handleToggleVideo);
+      socket.off("user-toggle-speaker", handleToggleSpeaker);
       socket.off("user-leave", handleUserLeave);
     };
   }, [setPlayers, socket, users, players]);
@@ -130,6 +142,7 @@ const Screen = () => {
             url: incomingStream,
             muted: false,
             playing: true,
+            speakerMuted: false,
           }
         }))
         setUsers((prev) => ({
@@ -149,6 +162,7 @@ const Screen = () => {
         url: stream,
         muted: false,
         playing: true,
+        speakerMuted: false,
       }
     }))
   }, [stream, myId, setPlayers])
@@ -168,6 +182,7 @@ const Screen = () => {
             username={"Rinkit Adhana"}
             userProfile={"/img/test/mark.jpeg"}
             className={`h-full w-full ${myFullScreen ? 'object-cover' : 'object-contain'}`}
+            speakerMuted={playerHighlighted.speakerMuted}
           />
         </div>
         {playerHighlighted.playing &&
@@ -205,7 +220,7 @@ const Screen = () => {
               '1fr 1fr 1fr'
         }}>
           {visibleOtherPlayers.map((playerId, index) => {
-            const { url, muted, playing } = nonHighlightedPlayers[playerId];
+            const { url, muted, playing, speakerMuted } = nonHighlightedPlayers[playerId];
 
             // Special handling for 3 users layout (2 top, 1 bottom spanning full width)
             const isBottomSpanning = gridLayout.bottomSpan && index === 2;
@@ -222,6 +237,7 @@ const Screen = () => {
                   playing={playing}
                   username={`User ${index + 1 + (currentPage * USERS_PER_PAGE)}`}
                   className={`h-full w-full ${otherFullScreen ? 'object-cover' : 'object-contain'}`}
+                  speakerMuted={speakerMuted}
                 />
               </div>
             );
@@ -272,7 +288,7 @@ const Screen = () => {
         {renderOtherUsers()}
       </div>
       <div className="w-full flex-shrink-0 py-2">
-        <Controls muted={playerHighlighted?.muted} playing={playerHighlighted?.playing} toggleAudio={toggleAudio} toggleVideo={toggleVideo} leaveRoom={leaveRoom} />
+        <Controls muted={playerHighlighted?.muted} playing={playerHighlighted?.playing} toggleAudio={toggleAudio} toggleVideo={toggleVideo} leaveRoom={leaveRoom} speakerMuted={playerHighlighted?.speakerMuted} toggleSpeaker={toggleSpeaker} />
       </div>
     </div>
   )
