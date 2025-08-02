@@ -12,8 +12,13 @@ import Controls from "./Controls";
 import { cloneDeep } from 'lodash'
 import { MediaConnection } from 'peerjs';
 
+interface ScreenProps {
+  toggleSidebar: (sidebarType: SidebarType) => void
+  activeSidebar: SidebarType
+}
+type SidebarType = 'info' | 'users' | 'chat' | null
 
-const Screen = () => {
+const Screen = ({ toggleSidebar, activeSidebar }: ScreenProps) => {
   const socket = useSocket();
   const params = useParams();
   const roomId = params.roomId as string;
@@ -202,8 +207,8 @@ const Screen = () => {
           <div className="bg-call-primary border border-call-border rounded-2xl h-full w-full flex justify-center items-center">
             <div className="text-muted-foreground text-lg">Waiting for others to join...</div>
           </div>
-          <button onClick={() => setCloseWaiting(true)} className="select-none opacity-0 group-hover/close:opacity-100 absolute top-0 right-0 p-2 m-2 rounded-xl bg-secondary hover:bg-primary-hover border border-call-border cursor-pointer transition-all duration-300">
-            <X size={20} />
+          <button onClick={() => setCloseWaiting(true)} className="select-none opacity-0 group-hover/close:opacity-100 absolute top-0 right-0 p-1.5 m-2 rounded-full bg-secondary hover:bg-primary-hover border border-call-border cursor-pointer transition-all duration-300">
+            <X size={18} />
           </button>
         </div>
       );
@@ -288,7 +293,17 @@ const Screen = () => {
         {renderOtherUsers()}
       </div>
       <div className="w-full flex-shrink-0 py-2 ">
-        <Controls muted={playerHighlighted?.muted} playing={playerHighlighted?.playing} toggleAudio={toggleAudio} toggleVideo={toggleVideo} leaveRoom={leaveRoom} speakerMuted={playerHighlighted?.speakerMuted} toggleSpeaker={toggleSpeaker} />
+        <Controls
+          muted={playerHighlighted?.muted}
+          playing={playerHighlighted?.playing}
+          toggleAudio={toggleAudio}
+          toggleVideo={toggleVideo}
+          leaveRoom={leaveRoom}
+          speakerMuted={playerHighlighted?.speakerMuted}
+          toggleSpeaker={toggleSpeaker}
+          toggleSidebar={toggleSidebar}
+          activeSidebar={activeSidebar}
+        />
       </div>
     </div>
   )

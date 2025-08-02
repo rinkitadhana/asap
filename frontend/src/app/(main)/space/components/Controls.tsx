@@ -5,8 +5,23 @@ import { LuLayoutDashboard, LuScreenShare, LuUsers } from "react-icons/lu"
 import { RxSpeakerLoud, RxSpeakerOff } from "react-icons/rx"
 import DateComponent from "@/utils/Date"
 import { IoChatbubbleOutline } from "react-icons/io5"
-const Controls = (props: { muted: boolean, playing: boolean, toggleAudio: () => void, toggleVideo: () => void, leaveRoom: () => void, speakerMuted: boolean, toggleSpeaker: () => void }) => {
-  const { muted, playing, toggleAudio, toggleVideo, leaveRoom, speakerMuted, toggleSpeaker } = props;
+
+
+type SidebarType = 'info' | 'users' | 'chat' | null
+interface ControlsProps {
+  muted: boolean
+  playing: boolean
+  toggleAudio: () => void
+  toggleVideo: () => void
+  leaveRoom: () => void
+  speakerMuted: boolean
+  toggleSpeaker: () => void
+  toggleSidebar: (sidebarType: SidebarType) => void
+  activeSidebar: SidebarType
+}
+
+const Controls = (props: ControlsProps) => {
+  const { muted, playing, toggleAudio, toggleVideo, leaveRoom, speakerMuted, toggleSpeaker, toggleSidebar, activeSidebar } = props;
 
   const playClickSound = () => {
     try {
@@ -97,13 +112,7 @@ const Controls = (props: { muted: boolean, playing: boolean, toggleAudio: () => 
           <p className="text-[0.675rem] text-foreground/50">Leave</p>
         </div>
       </div>
-      <div className="flex items-center gap-2">
-        <div className="flex flex-col gap-1 items-center">
-          <button className="flex items-center justify-center border border-call-border p-3 rounded-xl bg-call-primary text-lg font-medium cursor-pointer hover:bg-primary-hover transition-all duration-200">
-            <BsInfoLg />
-          </button>
-          <p className="text-[0.675rem] text-foreground/50">Info</p>
-        </div>
+      <div className="flex items-center gap-2 select-none">
         <div className="flex flex-col gap-1 items-center">
           <button className="flex items-center justify-center border border-call-border p-3 rounded-xl bg-call-primary text-lg font-medium cursor-pointer hover:bg-primary-hover transition-all duration-200">
             <LuLayoutDashboard />
@@ -111,13 +120,43 @@ const Controls = (props: { muted: boolean, playing: boolean, toggleAudio: () => 
           <p className="text-[0.675rem] text-foreground/50">Layout</p>
         </div>
         <div className="flex flex-col gap-1 items-center">
-          <button className="flex items-center justify-center border border-call-border p-3 rounded-xl bg-call-primary text-lg font-medium cursor-pointer hover:bg-primary-hover transition-all duration-200">
-            <LuUsers />
+          <button
+            onClick={() => {
+              toggleSidebar('info')
+            }}
+            className={`flex items-center justify-center border p-3 rounded-xl text-lg font-medium cursor-pointer transition-all duration-200 ${activeSidebar === 'info'
+              ? 'bg-primary-hover'
+              : 'border-call-border bg-call-primary hover:bg-primary-hover'
+              }`}
+          >
+            <BsInfoLg />
           </button>
-          <p className="text-[0.675rem] text-foreground/50">Users</p>
+          <p className="text-[0.675rem] text-foreground/50">Info</p>
         </div>
         <div className="flex flex-col gap-1 items-center">
-          <button className="flex items-center justify-center border border-call-border p-3 rounded-xl bg-call-primary text-lg font-medium cursor-pointer hover:bg-primary-hover transition-all duration-200">
+          <button
+            onClick={() => {
+              toggleSidebar('users')
+            }}
+            className={`flex items-center justify-center border p-3 rounded-xl text-lg font-medium cursor-pointer transition-all duration-200 ${activeSidebar === 'users'
+              ? 'bg-primary-hover'
+              : 'border-call-border bg-call-primary hover:bg-primary-hover'
+              }`}
+          >
+            <LuUsers />
+          </button>
+          <p className="text-[0.675rem] text-foreground/50">People</p>
+        </div>
+        <div className="flex flex-col gap-1 items-center">
+          <button
+            onClick={() => {
+              toggleSidebar('chat')
+            }}
+            className={`flex items-center justify-center border p-3 rounded-xl text-lg font-medium cursor-pointer transition-all duration-200 ${activeSidebar === 'chat'
+              ? 'bg-primary-hover'
+              : 'border-call-border bg-call-primary hover:bg-primary-hover'
+              }`}
+          >
             <IoChatbubbleOutline />
           </button>
           <p className="text-[0.675rem] text-foreground/50">Chat</p>

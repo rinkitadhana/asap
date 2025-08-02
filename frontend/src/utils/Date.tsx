@@ -19,7 +19,7 @@ const DateComponent = ({ className }: { className?: string }) => {
   })
 
   return (
-    <div className={"font-medium text-base text-foreground/80 w-[70px] text-center" + (className ? ` ${className}` : "")}>
+    <div className={"select-none font-medium text-base text-foreground/80 w-[70px] text-center" + (className ? ` ${className}` : "")}>
       {formattedTime}
     </div>
   )
