@@ -65,7 +65,7 @@ const DashboardWrapper = ({ children }: { children: React.ReactNode }) => {
                 key={link.href}
                 href={link.href}
                 title={link.name}
-                className={`py-2 px-3 rounded-xl border  select-none transition-all duration-200 w-full flex items-center gap-2 font-medium ${pathname === link.href
+                className={`py-2 px-3 rounded-xl border  select-none transition-all duration-200 w-full flex items-center gap-2 ${pathname === link.href
                   ? "bg-call-primary  border-call-border "
                   : "hover:bg-call-primary border-transparent hover:border-call-border"
                   }`}
@@ -78,7 +78,7 @@ const DashboardWrapper = ({ children }: { children: React.ReactNode }) => {
         </div>
         <div className=" flex flex-col items-center justify-center gap-4 w-full select-none">
           {/* <div
-            className={`truncate flex gap-2 items-center  w-full font-medium rounded-md ${
+            className={`truncate flex gap-2 items-center  w-full rounded-md ${
               isOpen
                 ? " bg-secondary border border-secondary-border justify-between  py-1 px-2 "
                 : " justify-center"
@@ -87,7 +87,7 @@ const DashboardWrapper = ({ children }: { children: React.ReactNode }) => {
             {isOpen && <span className="truncate">Change theme</span>}
             <ThemeSwitcher scrolled={true} />
           </div> */}
-          <div className="flex items-center gap-2 hover:bg-call-primary rounded-xl border border-transparent hover:border-call-border py-2 px-3 cursor-pointer transition-all duration-200 font-medium w-full">
+          <div className="flex items-center gap-2 hover:bg-call-primary rounded-xl border border-transparent hover:border-call-border py-2 px-3 cursor-pointer transition-all duration-200 w-full">
             <div title="Rinkit Adhana">
               <User size={22} />
             </div>
