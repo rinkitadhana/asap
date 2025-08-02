@@ -10,26 +10,26 @@ const usePeer = () => {
     const [peer, setPeer] = useState<Peer | null>(null);
     const [myId, setMyId] = useState('');
     const isPeerSet = useRef(false);
-    
-    useEffect(()=>{
+
+    useEffect(() => {
         console.log('usePeer - roomId from params:', roomId);
         console.log('usePeer - socket available:', !!socket);
-        if(isPeerSet.current || !roomId || !socket) return;
+        if (isPeerSet.current || !roomId || !socket) return;
         isPeerSet.current = true;
-        (async function initPeer(){
+        (async function initPeer() {
             const myPeer = new (await import('peerjs')).default();
             setPeer(myPeer)
 
-            myPeer.on('open', (id)=>{
+            myPeer.on('open', (id) => {
                 console.log('My peer ID is: ', id);
                 console.log('Emitting join-room event for roomId:', roomId, 'userId:', id);
                 setMyId(id);
                 socket?.emit('join-room', roomId, id);
             })
         })()
-    },[roomId, socket])
+    }, [roomId, socket])
 
-    return{peer, myId}
+    return { peer, myId }
 
 }
 

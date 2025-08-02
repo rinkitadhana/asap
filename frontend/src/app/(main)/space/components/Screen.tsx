@@ -195,7 +195,6 @@ const Screen = ({ toggleSidebar, activeSidebar, preJoinSettings }: ScreenProps) 
             playing={playing}
             myVideo={true}
             username={playerHighlighted.username}
-            userProfile={"/img/test/mark.jpeg"}
             className={`h-full w-full ${myFullScreen ? 'object-cover' : 'object-contain'}`}
             speakerMuted={playerHighlighted.speakerMuted}
           />
