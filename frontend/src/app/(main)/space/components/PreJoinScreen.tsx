@@ -9,6 +9,7 @@ import Header from './Header';
 interface PreJoinSettings {
     videoEnabled: boolean;
     audioEnabled: boolean;
+    username: string;
 }
 
 interface PreJoinScreenProps {
@@ -21,6 +22,7 @@ const PreJoinScreen = ({ onJoinCall, roomId }: PreJoinScreenProps) => {
     const [stream, setStream] = useState<MediaStream | null>(null);
     const [videoEnabled, setVideoEnabled] = useState(true);
     const [audioEnabled, setAudioEnabled] = useState(true);
+    const [username, setUsername] = useState('');
     const [isLoading, setIsLoading] = useState(true);
     const [permissionError, setPermissionError] = useState<string | null>(null);
     const streamRef = useRef<MediaStream | null>(null);
@@ -105,7 +107,8 @@ const PreJoinScreen = ({ onJoinCall, roomId }: PreJoinScreenProps) => {
     const handleJoinCall = () => {
         onJoinCall({
             videoEnabled,
-            audioEnabled
+            audioEnabled,
+            username
         });
     };
 
@@ -212,13 +215,15 @@ const PreJoinScreen = ({ onJoinCall, roomId }: PreJoinScreenProps) => {
                                 type="text"
                                 id="username"
                                 placeholder="Enter your name"
+                                value={username}
+                                onChange={(e) => setUsername(e.target.value)}
                                 className="w-full px-3 py-2.5 bg-call-primary border border-call-border rounded-lg text-sm focus:outline-none transition-all duration-200"
                             />
                         </div>
                         <button
                             onClick={handleJoinCall}
-                            disabled={isLoading || !!permissionError}
-                            className="py-2.5 w-full select-none text-center bg-purple-400/80 hover:bg-purple-400/60 font-medium disabled:bg-gray-400 disabled:cursor-not-allowed text-sm rounded-lg cursor-pointer transition-all duration-200"
+                            disabled={isLoading || !!permissionError || !username.trim()}
+                            className="py-2.5 w-full select-none text-center bg-purple-400/80 hover:bg-purple-400/60 font-medium disabled:bg-purple-400/40 disabled:text-foreground/40 disabled:cursor-not-allowed text-sm rounded-lg cursor-pointer transition-all duration-200"
                         >
                             <span>Join Call</span>
                         </button>
