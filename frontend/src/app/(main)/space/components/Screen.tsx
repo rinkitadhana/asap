@@ -173,7 +173,7 @@ const Screen = () => {
     const { url, muted, playing } = playerHighlighted;
     return (
       <div className="flex-1 h-full min-w-0 relative group/my-screen overflow-hidden">
-        <div className="bg-call-primary overflow-hidden rounded-xl h-full w-full border border-call-border relative">
+        <div className="bg-call-primary overflow-hidden rounded-2xl h-full w-full border border-call-border relative">
           <Player
             url={url}
             muted={muted}
@@ -199,7 +199,7 @@ const Screen = () => {
     if (visibleOtherPlayers.length === 0) {
       return (
         <div className={`flex-1 h-full min-w-0 relative group/close overflow-hidden ${closeWaiting ? 'hidden' : ''}`}>
-          <div className="bg-call-primary border border-call-border rounded-xl h-full w-full flex justify-center items-center">
+          <div className="bg-call-primary border border-call-border rounded-2xl h-full w-full flex justify-center items-center">
             <div className="text-muted-foreground text-lg">Waiting for others to join...</div>
           </div>
           <button onClick={() => setCloseWaiting(true)} className="select-none opacity-0 group-hover/close:opacity-100 absolute top-0 right-0 p-2 m-2 rounded-xl bg-secondary hover:bg-primary-hover border border-call-border cursor-pointer transition-all duration-300">
@@ -287,7 +287,7 @@ const Screen = () => {
         {renderMainUser()}
         {renderOtherUsers()}
       </div>
-      <div className="w-full flex-shrink-0 py-2">
+      <div className="w-full flex-shrink-0 py-2 ">
         <Controls muted={playerHighlighted?.muted} playing={playerHighlighted?.playing} toggleAudio={toggleAudio} toggleVideo={toggleVideo} leaveRoom={leaveRoom} speakerMuted={playerHighlighted?.speakerMuted} toggleSpeaker={toggleSpeaker} />
       </div>
     </div>
