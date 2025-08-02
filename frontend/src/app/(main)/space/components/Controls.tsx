@@ -5,9 +5,44 @@ import { LuLayoutDashboard, LuScreenShare, LuUsers } from "react-icons/lu"
 import { RxSpeakerLoud } from "react-icons/rx"
 import DateComponent from "@/utils/Date"
 import { IoChatbubbleOutline } from "react-icons/io5"
-
 const Controls = (props: { muted: boolean, playing: boolean, toggleAudio: () => void, toggleVideo: () => void, leaveRoom: () => void }) => {
   const { muted, playing, toggleAudio, toggleVideo, leaveRoom } = props;
+
+  const playClickSound = () => {
+    try {
+      // Use Web Audio API for discrete sound effects that don't interfere with browser media controls
+      const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
+
+      fetch('/audio/click.mp3')
+        .then(response => response.arrayBuffer())
+        .then(data => audioContext.decodeAudioData(data))
+        .then(audioBuffer => {
+          const source = audioContext.createBufferSource();
+          const gainNode = audioContext.createGain();
+
+          source.buffer = audioBuffer;
+          gainNode.gain.value = 0.6; // Set volume to 60%
+
+          source.connect(gainNode);
+          gainNode.connect(audioContext.destination);
+
+          source.start(0);
+
+          // Clean up after audio finishes
+          source.onended = () => {
+            audioContext.close();
+          };
+        })
+        .catch(error => {
+          console.error("Error playing click sound:", error);
+        });
+    } catch (error) {
+      // Fallback to simple HTML5 audio if Web Audio API is not supported
+      const audio = new Audio('/audio/click.mp3');
+      audio.volume = 0.3;
+      audio.play().catch(err => console.error("Audio fallback error:", err));
+    }
+  }
 
   return (
     <div className="relative flex w-full justify-between items-center">
@@ -22,13 +57,19 @@ const Controls = (props: { muted: boolean, playing: boolean, toggleAudio: () => 
           <p className="text-[0.675rem] text-foreground/50">Start</p>
         </div>
         <div className="flex flex-col gap-1 items-center">
-          <button onClick={toggleAudio} className="flex items-center justify-center border border-call-border p-3 rounded-xl bg-call-primary text-lg font-medium cursor-pointer hover:bg-primary-hover transition-all duration-200">
+          <button onClick={() => {
+            toggleAudio()
+            playClickSound()
+          }} className="flex items-center justify-center border border-call-border p-3 rounded-xl bg-call-primary text-lg font-medium cursor-pointer hover:bg-primary-hover transition-all duration-200">
             {muted ? <RiMicOffLine /> : <RiMicLine />}
           </button>
           <p className="text-[0.675rem] text-foreground/50">Mic</p>
         </div>
         <div className="flex flex-col gap-1 items-center">
-          <button onClick={toggleVideo} className="flex items-center justify-center border border-call-border p-3 rounded-xl bg-call-primary text-lg font-medium cursor-pointer hover:bg-primary-hover transition-all duration-200">
+          <button onClick={() => {
+            toggleVideo()
+            playClickSound()
+          }} className="flex items-center justify-center border border-call-border p-3 rounded-xl bg-call-primary text-lg font-medium cursor-pointer hover:bg-primary-hover transition-all duration-200">
             {playing ? <FiVideo /> : <FiVideoOff />}
           </button>
           <p className="text-[0.675rem] text-foreground/50">Cam</p>
