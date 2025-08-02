@@ -26,12 +26,12 @@ const DashboardWrapper = ({ children }: { children: React.ReactNode }) => {
 
   const links = [
     {
-      icon: <House size={24} />,
+      icon: <House size={22} />,
       name: "Home",
       href: "/dashboard/home",
     },
     {
-      icon: <FolderClosed size={24} />,
+      icon: <FolderClosed size={22} />,
       name: "Project",
       href: "/dashboard/project",
     },
@@ -46,14 +46,14 @@ const DashboardWrapper = ({ children }: { children: React.ReactNode }) => {
       >
         <div className="flex flex-col items-center justify-center gap-6 w-full">
           <div
-            className={`flex gap-2  items-center w-full ${isOpen ? "justify-between" : "justify-center"
+            className={`flex gap-2 pl-1 items-center -pl-2 w-full ${isOpen ? "justify-between" : "justify-center"
               }`}
           >
             {isOpen && <Logo />}
             <button
               title={isOpen ? "Close sidebar" : "Open sidebar"}
               onClick={toggleSidebar}
-              className="hover:bg-primary-hover p-2 rounded-md cursor-pointer transition-all duration-200"
+              className="hover:bg-primary-hover p-2  rounded-md cursor-pointer transition-all duration-200"
             >
               <BsLayoutSidebarInset size={20} />
             </button>
@@ -65,9 +65,9 @@ const DashboardWrapper = ({ children }: { children: React.ReactNode }) => {
                 key={link.href}
                 href={link.href}
                 title={link.name}
-                className={`p-2 rounded-md select-none transition-all duration-200 w-full flex items-center gap-2 font-medium ${pathname === link.href
-                  ? "bg-primary-hover"
-                  : "hover:bg-primary-hover"
+                className={`py-2 px-3 rounded-xl border  select-none transition-all duration-200 w-full flex items-center gap-2 font-medium ${pathname === link.href
+                  ? "bg-call-primary  border-call-border "
+                  : "hover:bg-call-primary border-transparent hover:border-call-border"
                   }`}
               >
                 <span>{link.icon}</span>
@@ -87,7 +87,7 @@ const DashboardWrapper = ({ children }: { children: React.ReactNode }) => {
             {isOpen && <span className="truncate">Change theme</span>}
             <ThemeSwitcher scrolled={true} />
           </div> */}
-          <div className="flex items-center gap-2 hover:bg-primary-hover p-2 rounded-md cursor-pointer transition-all duration-200 font-medium w-full">
+          <div className="flex items-center gap-2 hover:bg-call-primary rounded-xl border border-transparent hover:border-call-border py-2 px-3 cursor-pointer transition-all duration-200 font-medium w-full">
             <div title="Rinkit Adhana">
               <User size={22} />
             </div>
@@ -99,11 +99,6 @@ const DashboardWrapper = ({ children }: { children: React.ReactNode }) => {
         className="flex-1 bg-call-primary overflow-hidden rounded-xl border border-call-border"
       >
         {children}
-      </div>
-      <div
-        className="absolute top-4 left-1/2 -translate-x-1/2 border rounded-xl w-[220px] py-0.5 px-2 bg-call-primary"
-      >
-        <ThemeSwitcher scrolled={false} />
       </div>
     </section>
   )
