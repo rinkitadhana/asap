@@ -11,6 +11,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
     const [isOpen, setIsOpen] = useState(false)
     const [isMounted, setIsMounted] = useState(false)
     const pathname = usePathname()
+    const route = pathname.split('/').pop();
 
     useEffect(() => {
         const savedSidebarState = localStorage.getItem("sidebarOpen")
@@ -84,16 +85,6 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
                     </nav>
                 </div>
                 <div className=" flex flex-col items-center justify-center gap-4 w-full select-none">
-                    {/* <div
-            className={`truncate flex gap-2 items-center  w-full rounded-md ${
-              isOpen
-                ? " bg-secondary border border-secondary-border justify-between  py-1 px-2 "
-                : " justify-center"
-            }`}
-          >
-            {isOpen && <span className="truncate">Change theme</span>}
-            <ThemeSwitcher scrolled={true} />
-          </div> */}
                     <div className="flex items-center gap-2 hover:bg-call-primary rounded-xl border border-transparent hover:border-call-border py-2 px-3 cursor-pointer transition-all duration-200 w-full">
                         <div title="Rinkit Adhana">
                             <User size={22} />
@@ -103,8 +94,14 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
                 </div>
             </div>
             <div
-                className="flex-1 bg-call-primary overflow-hidden rounded-xl border border-call-border"
+                className="relative flex-1 bg-call-primary overflow-hidden rounded-xl border border-call-border p-2"
             >
+                <div className="flex items-center gap-2 absolute top-2 right-2">
+                    <div className="border border-call-border rounded-xl w-fit py-2 px-3 select-none bg-call-background text-xs  ">
+                        dashboard/{route}
+                    </div>
+                    <ThemeSwitcher scrolled={true} size={16} className="border border-call-border rounded-xl w-fit py-2 px-3 select-none bg-call-background" />
+                </div>
                 {children}
             </div>
         </section>
