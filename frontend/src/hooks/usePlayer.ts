@@ -29,7 +29,7 @@ const usePlayer = (myId: string, roomId: string, peer: Peer | null) => {
     socket?.emit('user-leave', myId, roomId)
     console.log("leaving room", roomId)
     peer?.disconnect();
-    router.push('/dashboard')
+    router.push('/dashboard/home')
   }
 
   const toggleAudio = () => {
