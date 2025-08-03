@@ -3,6 +3,7 @@ import Navbar from "@/components/Navbar"
 import Hero from "@/components/Hero"
 import PageHead from "@/components/PageHead"
 import Stack from "@/components/Stack"
+import Footer from "@/components/Footer"
 const page = () => {
   return (
     <>
@@ -12,7 +13,7 @@ const page = () => {
       <div className="border-t-2 border-main-border border-dashed w-full" />
       <Stack />
       <div className="border-t-2 border-main-border border-dashed w-full" />
-      <div className="h-screen">hello china</div>
+      <Footer />
     </>
   )
 }

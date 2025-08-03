@@ -10,7 +10,7 @@
   --primary: #131313;
   --secondary: #ffffff;
   --primary-text: #ffffff;
-  --secondary-text: #6e6e6e;
+  --secondary-text: #5c5c5c;
   --primary-hover: #e0e0e0;
   --secondary-hover: #ececec;
   --primary-border: #dadada;
@@ -203,4 +203,18 @@
 
 .scrollbar-hide::-webkit-scrollbar {
   display: none; /* Chrome, Safari and Opera */
+}
+
+/* Infinite scroll animation */
+@keyframes infinite-scroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-infinite-scroll {
+  animation: infinite-scroll 30s linear infinite;
 }
