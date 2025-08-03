@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react"
+"use client"
+import React, { useState, useEffect } from 'react'
 
 const DateComponent = ({ className }: { className?: string }) => {
   const [currentDate, setCurrentDate] = useState<Date>(new Date())
@@ -11,16 +12,17 @@ const DateComponent = ({ className }: { className?: string }) => {
     return () => clearInterval(timer)
   }, [])
 
-  const formattedTime = currentDate.toLocaleTimeString([], {
-    hour: "2-digit",
-    minute: "2-digit",
-    second: "2-digit",
-    hour12: false,
-  })
+  const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
+  const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+
+  const day = days[currentDate.getDay()]
+  const date = currentDate.getDate()
+  const month = months[currentDate.getMonth()]
+  const year = currentDate.getFullYear()
 
   return (
-    <div className={"select-none font-medium text-base text-foreground/80 w-[70px] text-center" + (className ? ` ${className}` : "")}>
-      {formattedTime}
+    <div className={"select-none font-medium" + (className ? ` ${className}` : "")}>
+      {day}, {date} {month} {year}
     </div>
   )
 }
