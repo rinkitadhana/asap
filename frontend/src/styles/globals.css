@@ -13,7 +13,7 @@
   --secondary-text: #6e6e6e;
   --primary-hover: #e0e0e0;
   --secondary-hover: #ececec;
-  --primary-border: #b4b4b4;
+  --primary-border: #dadada;
   --secondary-border: #dfdfdf;
   --auth-border: #5f5f5f;
   --font-cal: "Cal Sans", sans-serif;
@@ -64,12 +64,12 @@
   --secondary-text: rgb(192, 192, 192);
   --primary-hover: #353535;
   --secondary-hover: #2c2c2c;
-  --primary-border: #444444;
+  --primary-border: #222222;
   --secondary-border: #363636;
   --auth-border: #4d4d4d;
   --font-cal: "Cal Sans", sans-serif;
   --font-inter: "Inter", sans-serif;
-  --primary-shadow: #272727;
+  --primary-shadow: #1d1d1d;
   --secondary-shadow: #ffffff;
   --selection-background: #ffffff;
   --selection-text: #0a0a0a;
@@ -179,10 +179,10 @@
 }
 
 .btn {
-  @apply select-none px-3.5 py-2.5 border border-foreground shadow-inner shadow-secondary/60  cursor-pointer rounded-[14px] hover:opacity-85 duration-200 bg-primary text-primary-text inline-flex items-center justify-center whitespace-nowrap  transition-all;
+  @apply select-none px-3.5 py-2.5 border border-foreground shadow-inner shadow-secondary/40  cursor-pointer rounded-[14px] hover:bg-primary/80 duration-200 bg-primary/95 text-primary-text inline-flex items-center justify-center whitespace-nowrap  transition-all;
 }
 .btn-secondary {
-  @apply select-none px-3.5 py-2.5 shadow-inner shadow-primary/60  cursor-pointer rounded-[14px] hover:opacity-85 duration-200 bg-background border border-foreground/40   inline-flex items-center justify-center whitespace-nowrap  transition-all;
+  @apply select-none px-3.5 py-2.5 cursor-pointer rounded-[14px] hover:bg-secondary-hover duration-200 bg-background border border-primary-border inline-flex items-center justify-center whitespace-nowrap  transition-all;
 }
 
 .sin-screen {

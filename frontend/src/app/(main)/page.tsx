@@ -9,9 +9,9 @@ const page = () => {
       <PageHead title="Home | bordre" />
       <Navbar />
       <Hero />
-      <div className="border-t border-main-border border-dashed w-full" />
+      <div className="border-t-2 border-main-border border-dashed w-full" />
       <Stack />
-      <div className="border-t border-main-border border-dashed w-full" />
+      <div className="border-t-2 border-main-border border-dashed w-full" />
       <div className="h-screen">hello china</div>
     </>
   )
