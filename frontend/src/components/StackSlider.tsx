@@ -21,62 +21,50 @@ const StackSlider = () => {
     {
       name: "Next.js",
       icon: SiNextdotjs,
-      color: "#000000"
     },
     {
       name: "React",
       icon: SiReact,
-      color: "#61DAFB"
     },
     {
       name: "TypeScript",
       icon: SiTypescript,
-      color: "#3178C6"
     },
     {
       name: "Tailwind CSS",
       icon: SiTailwindcss,
-      color: "#06B6D4"
     },
     {
       name: "Framer Motion",
       icon: SiFramer,
-      color: "#0055FF"
     },
     {
       name: "GSAP",
       icon: SiGreensock,
-      color: "#88CE02"
     },
     {
       name: "Node.js",
       icon: SiNodedotjs,
-      color: "#339933"
     },
     {
       name: "Socket.io",
       icon: SiSocketdotio,
-      color: "#010101"
     },
     {
       name: "PostgreSQL",
       icon: SiPostgresql,
-      color: "#4169E1"
     },
     {
       name: "Prisma",
       icon: SiPrisma,
-      color: "#2D3748"
     },
     {
       name: "Figma",
       icon: SiFigma,
-      color: "#F24E1E"
     },
     {
       name: "Vercel",
       icon: SiVercel,
-      color: "#000000"
     }
   ]
 
@@ -102,11 +90,14 @@ const StackSlider = () => {
                 className="flex-shrink-0 mx-6 flex flex-col items-center"
               >
                 <div className="h-18 flex items-center justify-center ">
-                  <IconComponent
-                    size={36}
-                    style={{ color: tech.color }}
-                    className="transition-transform duration-300"
-                  />
+                  <div className='flex gap-2 items-center'>
+
+                    <IconComponent
+                      size={24}
+                      className="transition-transform duration-300"
+                    />
+                    <p className='font-inter font-medium'>{tech.name}</p>
+                  </div>
                 </div>
               </div>
             )
