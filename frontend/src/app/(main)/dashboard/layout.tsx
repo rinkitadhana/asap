@@ -46,7 +46,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
     ]
     return (
         <section
-            className="flex bg-call-background gap-4 p-4 min-h-screen"
+            className="flex bg-call-background gap-4 p-4 min-h-screen fixed inset-0"
         >
             <div
                 className={`flex flex-col justify-between items-center py-2 ${isOpen ? "w-[180px]" : "w-fit"
@@ -94,7 +94,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
                 </div>
             </div>
             <div
-                className="relative flex-1 bg-call-primary overflow-hidden rounded-xl border border-call-border p-2"
+                className="relative flex-1 bg-call-primary overflow-auto scrollbar-hide rounded-xl border border-call-border p-2"
             >
                 <div className="flex items-center gap-2 absolute top-2 right-2">
                     <div className="border border-call-border rounded-xl w-fit py-2 px-3 select-none bg-call-background text-xs  ">
