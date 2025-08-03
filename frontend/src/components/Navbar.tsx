@@ -5,6 +5,7 @@ import GithubButton from "./GithubButton"
 import Version from "./ui/Version"
 import { useRouter } from "next/navigation"
 import { ThemeSwitcher } from "./ThemeSwitcher"
+import Image from "next/image"
 const Navbar = () => {
   const [scrolled, setScrolled] = useState(false)
   const router = useRouter()
@@ -34,19 +35,19 @@ const Navbar = () => {
     <section className="fixed z-10 top-3 left-0 right-0 ">
       <div
         className={`max-w-[1100px] mx-auto flex justify-between items-center w-full py-3 px-6 border shadow-sm rounded-2xl transition-all duration-300 
- ${
-   scrolled
-     ? "bg-secondary border-secondary-border shadow-primary-shadow"
-     : "border-transparent shadow-transparent"
- }`}
+ ${scrolled
+            ? "bg-secondary border-secondary-border shadow-primary-shadow"
+            : "border-transparent shadow-transparent"
+          }`}
       >
         <div className="flex items-center gap-10">
           <div className="flex items-center gap-3">
             <button
               onClick={() => router.push("/")}
-              className="text-2xl font-bold cursor-pointer"
+              className="text-2xl font-bold cursor-pointer flex items-center gap-3"
             >
-              bordre
+              <Image src="/img/logo/logo.png" alt="logo" width={40} height={40} className="size-7" />
+              <span className="text-2xl font-bold">bordre</span>
             </button>
             <Version text="BETA 0.0.1" />
           </div>
