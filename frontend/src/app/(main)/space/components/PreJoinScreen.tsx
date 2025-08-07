@@ -2,7 +2,6 @@ import React, { useEffect, useRef, useState } from 'react';
 import { RiMicLine, RiMicOffLine } from 'react-icons/ri';
 import { FiVideo, FiVideoOff } from 'react-icons/fi';
 import { Loader2 } from 'lucide-react';
-import { useRouter } from 'next/navigation';
 import Player from './Player';
 import Header from './Header';
 
@@ -18,7 +17,6 @@ interface PreJoinScreenProps {
 }
 
 const PreJoinScreen = ({ onJoinCall, roomId }: PreJoinScreenProps) => {
-    const router = useRouter();
     const [stream, setStream] = useState<MediaStream | null>(null);
     const [videoEnabled, setVideoEnabled] = useState(true);
     const [audioEnabled, setAudioEnabled] = useState(true);
@@ -26,6 +24,11 @@ const PreJoinScreen = ({ onJoinCall, roomId }: PreJoinScreenProps) => {
     const [isLoading, setIsLoading] = useState(true);
     const [permissionError, setPermissionError] = useState<string | null>(null);
     const streamRef = useRef<MediaStream | null>(null);
+
+    const [isRecording, setIsRecording] = useState(false);
+    const videoRef = useRef<HTMLVideoElement>(null);
+    const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+    const recordedChunks = useRef<Blob[]>([]);
 
     // Initialize media stream for preview
     useEffect(() => {
@@ -207,9 +210,13 @@ const PreJoinScreen = ({ onJoinCall, roomId }: PreJoinScreenProps) => {
 
                     <div className="flex flex-col items-start gap-4 w-full">
 
-                        <div className='flex flex-col gap-1.5 mb-4'>
+                        <div className='flex flex-col gap-1.5 mb-2'>
                             <p className='text-xs text-secondary-text font-medium'>You are about to join Rinkit Adhana's space</p>
                             <h1 className='text-xl font-semibold'>Let's check you cam and mic</h1>
+                        </div>
+                        <div className='flex w-full gap-2 items-center'>
+                            <div className='flex-1 flex items-center justify-center  text-foreground/80 gap-2 py-2.5 bg-call-primary border border-call-border rounded-lg w-full font-medium text-sm select-none cursor-pointer hover:bg-primary-hover transition-all duration-200'>AI quality check</div>
+                            <div className='flex-1 flex items-center justify-center text-foreground/80 gap-2 py-2.5 bg-call-primary border border-call-border rounded-lg w-full font-medium text-sm select-none cursor-not-allowed transition-all duration-200'>sample</div>
                         </div>
                         <div className="w-full">
                             <input
@@ -231,6 +238,10 @@ const PreJoinScreen = ({ onJoinCall, roomId }: PreJoinScreenProps) => {
 
                     </div>
                 </div>
+            </div>
+            <div className="absolute right-4 top-1/2 -translate-y-1/2 border border-call-border rounded-xl p-4 h-[500px] w-[400px] bg-call-primary">
+                <h1 className='font-medium text-lg text-center'>AI Quality Check</h1>
+                <div className="w-full h-[1px] bg-call-border my-4" />
             </div>
         </div>
     );
