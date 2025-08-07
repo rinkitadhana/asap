@@ -5,6 +5,7 @@ import { LuLayoutDashboard, LuScreenShare, LuUsers } from "react-icons/lu"
 import { RxSpeakerLoud, RxSpeakerOff } from "react-icons/rx"
 import DateComponent from "@/utils/Time"
 import { IoChatbubbleOutline } from "react-icons/io5"
+import playClickSound from "@/utils/ClickSound"
 
 
 type SidebarType = 'info' | 'users' | 'chat' | null
@@ -22,42 +23,6 @@ interface ControlsProps {
 
 const Controls = (props: ControlsProps) => {
   const { muted, playing, toggleAudio, toggleVideo, leaveRoom, speakerMuted, toggleSpeaker, toggleSidebar, activeSidebar } = props;
-
-  const playClickSound = () => {
-    try {
-      // Use Web Audio API for discrete sound effects that don't interfere with browser media controls
-      const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
-
-      fetch('/audio/click.mp3')
-        .then(response => response.arrayBuffer())
-        .then(data => audioContext.decodeAudioData(data))
-        .then(audioBuffer => {
-          const source = audioContext.createBufferSource();
-          const gainNode = audioContext.createGain();
-
-          source.buffer = audioBuffer;
-          gainNode.gain.value = 0.6; // Set volume to 60%
-
-          source.connect(gainNode);
-          gainNode.connect(audioContext.destination);
-
-          source.start(0);
-
-          // Clean up after audio finishes
-          source.onended = () => {
-            audioContext.close();
-          };
-        })
-        .catch(error => {
-          console.error("Error playing click sound:", error);
-        });
-    } catch (error) {
-      // Fallback to simple HTML5 audio if Web Audio API is not supported
-      const audio = new Audio('/audio/click.mp3');
-      audio.volume = 0.3;
-      audio.play().catch(err => console.error("Audio fallback error:", err));
-    }
-  }
 
   return (
     <div className="relative flex w-full justify-between items-center">

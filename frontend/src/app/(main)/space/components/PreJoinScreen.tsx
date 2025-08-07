@@ -4,6 +4,7 @@ import { FiVideo, FiVideoOff } from 'react-icons/fi';
 import { Loader2 } from 'lucide-react';
 import Player from './Player';
 import Header from './Header';
+import playClickSound from '@/utils/ClickSound';
 
 interface PreJoinSettings {
     videoEnabled: boolean;
@@ -29,13 +30,11 @@ const PreJoinScreen = ({ onJoinCall, roomId }: PreJoinScreenProps) => {
     const [recordingCountdown, setRecordingCountdown] = useState(0);
     const [isProcessing, setIsProcessing] = useState(false);
     const [isProcessingStarted, setIsProcessingStarted] = useState(false);
-    const videoRef = useRef<HTMLVideoElement>(null);
     const mediaRecorderRef = useRef<MediaRecorder | null>(null);
     const recordedChunks = useRef<Blob[]>([]);
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const [waitingMessage, setWaitingMessage] = useState(false);
 
-    // Initialize media stream for preview
     const initializeStream = async () => {
         try {
             setIsLoading(true);
@@ -49,7 +48,6 @@ const PreJoinScreen = ({ onJoinCall, roomId }: PreJoinScreenProps) => {
             streamRef.current = mediaStream;
             setStream(mediaStream);
 
-            // Apply initial preferences to tracks
             const videoTracks = mediaStream.getVideoTracks();
             const audioTracks = mediaStream.getAudioTracks();
 
@@ -79,8 +77,6 @@ const PreJoinScreen = ({ onJoinCall, roomId }: PreJoinScreenProps) => {
 
     useEffect(() => {
         initializeStream();
-
-        // Cleanup function
         return () => {
             if (streamRef.current) {
                 streamRef.current.getTracks().forEach(track => track.stop());
@@ -88,7 +84,6 @@ const PreJoinScreen = ({ onJoinCall, roomId }: PreJoinScreenProps) => {
         };
     }, [videoEnabled, audioEnabled]);
 
-    // Update stream tracks when preferences change
     useEffect(() => {
         if (!stream) return;
 
@@ -120,38 +115,6 @@ const PreJoinScreen = ({ onJoinCall, roomId }: PreJoinScreenProps) => {
         });
     };
 
-    const playClickSound = () => {
-        try {
-            const audioContext = new (window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext)();
-
-            fetch('/audio/click.mp3')
-                .then(response => response.arrayBuffer())
-                .then(data => audioContext.decodeAudioData(data))
-                .then(audioBuffer => {
-                    const source = audioContext.createBufferSource();
-                    const gainNode = audioContext.createGain();
-
-                    source.buffer = audioBuffer;
-                    gainNode.gain.value = 0.6;
-
-                    source.connect(gainNode);
-                    gainNode.connect(audioContext.destination);
-
-                    source.start(0);
-
-                    source.onended = () => {
-                        audioContext.close();
-                    };
-                })
-                .catch((error) => {
-                    console.error("Error playing click sound:", error);
-                });
-        } catch {
-            const audio = new Audio('/audio/click.mp3');
-            audio.volume = 0.3;
-            audio.play().catch(err => console.error("Audio fallback error:", err));
-        }
-    };
 
     const startRecording = async () => {
         if (!stream) {
@@ -165,7 +128,6 @@ const PreJoinScreen = ({ onJoinCall, roomId }: PreJoinScreenProps) => {
             setSidebarOpen(true);
             recordedChunks.current = [];
 
-            // Create MediaRecorder with the current stream
             const mediaRecorder = new MediaRecorder(stream, {
                 mimeType: 'video/webm;codecs=vp8,opus'
             });
@@ -183,12 +145,10 @@ const PreJoinScreen = ({ onJoinCall, roomId }: PreJoinScreenProps) => {
                 sendVideoToBackend(blob);
             };
 
-            // Start recording
             mediaRecorder.start();
             setIsRecording(true);
             setRecordingCountdown(5);
 
-            // Countdown timer
             const countdownInterval = setInterval(() => {
                 setRecordingCountdown(prev => {
                     if (prev <= 1) {
@@ -199,7 +159,6 @@ const PreJoinScreen = ({ onJoinCall, roomId }: PreJoinScreenProps) => {
                 });
             }, 1000);
 
-            // Stop recording after 5 seconds
             setTimeout(() => {
                 if (mediaRecorderRef.current && mediaRecorderRef.current.state === 'recording') {
                     mediaRecorderRef.current.stop();
@@ -236,12 +195,8 @@ const PreJoinScreen = ({ onJoinCall, roomId }: PreJoinScreenProps) => {
             const result = await response.json();
             console.log('Video sent successfully:', result);
 
-            // You can handle the response here, e.g., show success message
-            // or display the quality check results
-
         } catch (error) {
             console.error('Error sending video to backend:', error);
-            // You can show an error message to the user here
         } finally {
             setIsProcessing(false);
             setWaitingMessage(true);
@@ -392,7 +347,7 @@ const PreJoinScreen = ({ onJoinCall, roomId }: PreJoinScreenProps) => {
                         )}
                         {waitingMessage && (
                             <div className={`select-none flex items-center gap-2 ${waitingMessage ? 'animate-pulse' : ''}`}>
-                                <div className={`size-[10px] ${waitingMessage ? 'bg-red-500' : 'bg-green-500'} rounded-full rounded-full`}></div>
+                                <div className={`size-[10px] ${waitingMessage ? 'bg-red-500' : 'bg-green-500'} rounded-full`}></div>
                                 <span className="text-foreground/50 text-xs font-medium">
                                     {waitingMessage ? (
                                         'Waiting for AI to check your video and audio quality.'
