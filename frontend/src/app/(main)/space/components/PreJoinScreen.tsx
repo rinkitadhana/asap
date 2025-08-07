@@ -36,48 +36,48 @@ const PreJoinScreen = ({ onJoinCall, roomId }: PreJoinScreenProps) => {
     const [waitingMessage, setWaitingMessage] = useState(false);
 
     // Initialize media stream for preview
-    useEffect(() => {
-        const initializeStream = async () => {
-            try {
-                setIsLoading(true);
-                setPermissionError(null);
+    const initializeStream = async () => {
+        try {
+            setIsLoading(true);
+            setPermissionError(null);
 
-                const mediaStream = await navigator.mediaDevices.getUserMedia({
-                    video: true,
-                    audio: true
-                });
+            const mediaStream = await navigator.mediaDevices.getUserMedia({
+                video: true,
+                audio: true
+            });
 
-                streamRef.current = mediaStream;
-                setStream(mediaStream);
+            streamRef.current = mediaStream;
+            setStream(mediaStream);
 
-                // Apply initial preferences to tracks
-                const videoTracks = mediaStream.getVideoTracks();
-                const audioTracks = mediaStream.getAudioTracks();
+            // Apply initial preferences to tracks
+            const videoTracks = mediaStream.getVideoTracks();
+            const audioTracks = mediaStream.getAudioTracks();
 
-                videoTracks.forEach(track => {
-                    track.enabled = videoEnabled;
-                });
+            videoTracks.forEach(track => {
+                track.enabled = videoEnabled;
+            });
 
-                audioTracks.forEach(track => {
-                    track.enabled = audioEnabled;
-                });
+            audioTracks.forEach(track => {
+                track.enabled = audioEnabled;
+            });
 
-            } catch (error) {
-                console.error('Error accessing media devices:', error);
-                if (error instanceof Error) {
-                    if (error.name === 'NotAllowedError') {
-                        setPermissionError('Camera and microphone access denied. Please allow access and refresh the page.');
-                    } else if (error.name === 'NotFoundError') {
-                        setPermissionError('No camera or microphone found. Please check your devices.');
-                    } else {
-                        setPermissionError('Unable to access camera and microphone. Please check your devices and permissions.');
-                    }
+        } catch (error) {
+            console.error('Error accessing media devices:', error);
+            if (error instanceof Error) {
+                if (error.name === 'NotAllowedError') {
+                    setPermissionError('Camera and microphone access denied. Please allow access and try again.');
+                } else if (error.name === 'NotFoundError') {
+                    setPermissionError('No camera or microphone found. Please check your devices.');
+                } else {
+                    setPermissionError('Unable to access camera and microphone. Please check your devices and permissions.');
                 }
-            } finally {
-                setIsLoading(false);
             }
-        };
+        } finally {
+            setIsLoading(false);
+        }
+    };
 
+    useEffect(() => {
         initializeStream();
 
         // Cleanup function
@@ -265,7 +265,7 @@ const PreJoinScreen = ({ onJoinCall, roomId }: PreJoinScreenProps) => {
                                 <div className="w-full h-full flex flex-col items-center justify-center bg-call-primary/50 p-6">
                                     <div className="text-red-400 text-center text-sm mb-4">{permissionError}</div>
                                     <button
-                                        onClick={() => window.location.reload()}
+                                        onClick={initializeStream}
                                         className="px-4 py-2 bg-call-background border border-call-border cursor-pointer text-foreground rounded-xl hover:bg-call-primary transition-colors"
                                     >
                                         Retry
@@ -368,8 +368,8 @@ const PreJoinScreen = ({ onJoinCall, roomId }: PreJoinScreenProps) => {
                     <h1 className='font-medium  text-center'>AI Quality Check</h1>
                     <div className="w-full h-[1px] bg-call-border my-4" />
                     <div className='flex flex-col gap-2'>
-                        <div className="select-none flex items-center gap-2">
-                            <div className={`size-[10px] ${isRecording ? 'bg-red-500 animate-pulse' : 'bg-green-500'} rounded-full`}></div>
+                        <div className={`select-none flex items-center gap-2 ${isRecording ? 'animate-pulse' : ''}`}>
+                            <div className={`size-[10px] ${isRecording ? 'bg-red-500' : 'bg-green-500'} rounded-full`}></div>
                             <span className="text-foreground/50 text-xs font-medium">
                                 {isRecording ? (
                                     `Recording a ${recordingCountdown} second${recordingCountdown !== 1 ? 's' : ''} clip of your video and audio.`
@@ -379,8 +379,8 @@ const PreJoinScreen = ({ onJoinCall, roomId }: PreJoinScreenProps) => {
                             </span>
                         </div>
                         {isProcessingStarted && (
-                            <div className="select-none flex items-center gap-2">
-                                <div className={`size-[10px] ${isProcessing ? 'bg-red-500 animate-pulse' : 'bg-green-500'} rounded-full`}></div>
+                            <div className={`select-none flex items-center gap-2 ${isProcessing ? 'animate-pulse' : ''}`}>
+                                <div className={`size-[10px] ${isProcessing ? 'bg-red-500 ' : 'bg-green-500'} rounded-full`}></div>
                                 <span className="text-foreground/50 text-xs font-medium">
                                     {isProcessing ? (
                                         `Sending your video and audio to AI for quality check.`
@@ -391,8 +391,8 @@ const PreJoinScreen = ({ onJoinCall, roomId }: PreJoinScreenProps) => {
                             </div>
                         )}
                         {waitingMessage && (
-                            <div className="select-none flex items-center gap-2">
-                                <div className={`size-[10px] ${waitingMessage ? 'bg-red-500 animate-pulse' : 'bg-green-500'} rounded-full`}></div>
+                            <div className={`select-none flex items-center gap-2 ${waitingMessage ? 'animate-pulse' : ''}`}>
+                                <div className={`size-[10px] ${waitingMessage ? 'bg-red-500' : 'bg-green-500'} rounded-full rounded-full`}></div>
                                 <span className="text-foreground/50 text-xs font-medium">
                                     {waitingMessage ? (
                                         'Waiting for AI to check your video and audio quality.'
