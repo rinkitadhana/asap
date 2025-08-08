@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "bun --watch src/index.ts",
     "start": "bun src/index.ts",
-    "build": "bun build ./src/index.ts --outdir ./dist --minify",
+    "build": "bun build ./src/index.ts --outdir ./dist --minify --target bun",
     "test": "bun test",
     "lint": "bunx biome check src/",
     "format": "bunx biome format src/ --write"
