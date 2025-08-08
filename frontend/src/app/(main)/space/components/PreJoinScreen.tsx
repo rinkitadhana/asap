@@ -5,6 +5,7 @@ import { Loader2 } from 'lucide-react';
 import Player from './Player';
 import Header from './Header';
 import playClickSound from '@/utils/ClickSound';
+import { useQualityCheck, useQualityCheckResult } from '@/hooks/useQualityCheck';
 
 interface PreJoinSettings {
     videoEnabled: boolean;
@@ -34,6 +35,14 @@ const PreJoinScreen = ({ onJoinCall, roomId }: PreJoinScreenProps) => {
     const recordedChunks = useRef<Blob[]>([]);
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const [waitingMessage, setWaitingMessage] = useState(false);
+    const [qualityCheckRequestId, setQualityCheckRequestId] = useState<string | null>(null);
+
+    // Tanstack Query hooks
+    const { sendQualityCheck, isLoading: isSubmitting, data: submissionResponse, error: submissionError } = useQualityCheck();
+    const { data: qualityCheckResult, isLoading: isGettingResult, error: resultError } = useQualityCheckResult(
+        qualityCheckRequestId,
+        !!qualityCheckRequestId
+    );
 
     const initializeStream = async () => {
         try {
@@ -177,31 +186,44 @@ const PreJoinScreen = ({ onJoinCall, roomId }: PreJoinScreenProps) => {
     const sendVideoToBackend = async (videoBlob: Blob) => {
         setIsProcessing(true);
         setIsProcessingStarted(true);
-        try {
-            const formData = new FormData();
-            formData.append('video', videoBlob, `quality-check-${Date.now()}.webm`);
-            formData.append('roomId', roomId);
-            formData.append('username', username);
 
-            const response = await fetch('/api/quality-check', {
-                method: 'POST',
-                body: formData,
-            });
+        sendQualityCheck({
+            videoBlob,
+            roomId,
+            username,
+        });
+    };
 
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-
-            const result = await response.json();
-            console.log('Video sent successfully:', result);
-
-        } catch (error) {
-            console.error('Error sending video to backend:', error);
-        } finally {
+    // Effect to handle submission response
+    useEffect(() => {
+        if (submissionResponse) {
+            setQualityCheckRequestId(submissionResponse.requestId);
             setIsProcessing(false);
             setWaitingMessage(true);
         }
-    };
+    }, [submissionResponse]);
+
+    // Effect to handle submission errors
+    useEffect(() => {
+        if (submissionError) {
+            console.error('Error sending video to backend:', submissionError);
+            setIsProcessing(false);
+            setWaitingMessage(false);
+        }
+    }, [submissionError]);
+
+    // Log quality check results for debugging
+    useEffect(() => {
+        if (qualityCheckResult) {
+            console.log('Quality check result:', qualityCheckResult);
+
+            if (qualityCheckResult.status === 'completed') {
+                setWaitingMessage(false);
+                // You can add logic here to display the results to the user
+                // For example, showing recommendations or quality scores
+            }
+        }
+    }, [qualityCheckResult]);
 
     return (
         <div className="relative bg-call-background h-screen flex flex-col p-2">
@@ -290,10 +312,10 @@ const PreJoinScreen = ({ onJoinCall, roomId }: PreJoinScreenProps) => {
                         <div className='flex w-full gap-2 items-center'>
                             <button
                                 onClick={startRecording}
-                                disabled={isLoading || !!permissionError || isRecording || isProcessing || !stream}
+                                disabled={isLoading || !!permissionError || isRecording || isProcessing || isSubmitting || !stream}
                                 className='flex-1 flex items-center justify-center text-foreground/80 gap-2 py-2.5 bg-call-primary border border-call-border rounded-lg w-full font-medium text-sm select-none cursor-pointer hover:bg-primary-hover transition-all duration-200 disabled:cursor-not-allowed disabled:opacity-50'
                             >
-                                {isRecording ? `Recording ${recordingCountdown}s` : isProcessing ? 'Processing' : 'AI quality check'}
+                                {isRecording ? `Recording ${recordingCountdown}s` : (isProcessing || isSubmitting) ? 'Processing' : 'AI quality check'}
                             </button>
                             <div className='flex-1 flex items-center justify-center text-foreground/80 gap-2 py-2.5 bg-call-primary border border-call-border rounded-lg w-full font-medium text-sm select-none cursor-not-allowed transition-all duration-200'>sample</div>
                         </div>
@@ -355,6 +377,91 @@ const PreJoinScreen = ({ onJoinCall, roomId }: PreJoinScreenProps) => {
                                         'AI checked your video and audio quality.'
                                     )}
                                 </span>
+                            </div>
+                        )}
+
+                        {/* Quality Check Results */}
+                        {qualityCheckResult && qualityCheckResult.status === 'completed' && (
+                            <div className="mt-4 space-y-3">
+                                <div className="w-full h-[1px] bg-call-border" />
+                                <h3 className="text-sm font-medium text-center">Quality Check Results</h3>
+
+                                {/* Video Quality */}
+                                {qualityCheckResult.videoQuality && (
+                                    <div className="space-y-2">
+                                        <div className="flex items-center justify-between">
+                                            <span className="text-xs font-medium text-foreground/70">Video Quality:</span>
+                                            <span className={`text-xs px-2 py-1 rounded ${qualityCheckResult.videoQuality.overall === 'good'
+                                                ? 'bg-green-500/20 text-green-400'
+                                                : qualityCheckResult.videoQuality.overall === 'fair'
+                                                    ? 'bg-yellow-500/20 text-yellow-400'
+                                                    : 'bg-red-500/20 text-red-400'
+                                                }`}>
+                                                {qualityCheckResult.videoQuality.overall.toUpperCase()}
+                                            </span>
+                                        </div>
+                                        <div className="grid grid-cols-2 gap-2 text-xs">
+                                            <div className="flex justify-between">
+                                                <span className="text-foreground/50">Brightness:</span>
+                                                <span className="text-foreground/70">{qualityCheckResult.videoQuality.details.brightness}</span>
+                                            </div>
+                                            <div className="flex justify-between">
+                                                <span className="text-foreground/50">Clarity:</span>
+                                                <span className="text-foreground/70">{qualityCheckResult.videoQuality.details.clarity}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                )}
+
+                                {/* Audio Quality */}
+                                {qualityCheckResult.audioQuality && (
+                                    <div className="space-y-2">
+                                        <div className="flex items-center justify-between">
+                                            <span className="text-xs font-medium text-foreground/70">Audio Quality:</span>
+                                            <span className={`text-xs px-2 py-1 rounded ${qualityCheckResult.audioQuality.overall === 'good'
+                                                ? 'bg-green-500/20 text-green-400'
+                                                : qualityCheckResult.audioQuality.overall === 'fair'
+                                                    ? 'bg-yellow-500/20 text-yellow-400'
+                                                    : 'bg-red-500/20 text-red-400'
+                                                }`}>
+                                                {qualityCheckResult.audioQuality.overall.toUpperCase()}
+                                            </span>
+                                        </div>
+                                        <div className="grid grid-cols-2 gap-2 text-xs">
+                                            <div className="flex justify-between">
+                                                <span className="text-foreground/50">Clarity:</span>
+                                                <span className="text-foreground/70">{qualityCheckResult.audioQuality.details.clarity}</span>
+                                            </div>
+                                            <div className="flex justify-between">
+                                                <span className="text-foreground/50">Volume:</span>
+                                                <span className="text-foreground/70">{qualityCheckResult.audioQuality.details.volume}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                )}
+
+                                {/* Recommendations */}
+                                {qualityCheckResult.recommendations && qualityCheckResult.recommendations.length > 0 && (
+                                    <div className="space-y-2">
+                                        <div className="w-full h-[1px] bg-call-border" />
+                                        <h4 className="text-xs font-medium text-foreground/70">Recommendations:</h4>
+                                        <ul className="text-xs text-foreground/50 space-y-1">
+                                            {qualityCheckResult.recommendations.slice(0, 3).map((rec, index) => (
+                                                <li key={index} className="flex items-start gap-1">
+                                                    <span className="text-purple-400 mt-1">•</span>
+                                                    <span>{rec}</span>
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    </div>
+                                )}
+                            </div>
+                        )}
+
+                        {/* Error Display */}
+                        {(submissionError || resultError) && (
+                            <div className="mt-4 p-2 bg-red-500/10 border border-red-500/20 rounded text-xs text-red-400">
+                                {submissionError?.message || resultError?.message || 'An error occurred during quality check.'}
                             </div>
                         )}
                     </div>

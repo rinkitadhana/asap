@@ -105,7 +105,9 @@ export const getQualityCheckResult = async (req: Request, res: Response) => {
 
 async function processQualityCheckAsync(requestId: string, file: Express.Multer.File, fileType: string) {
     try {
-        const model = geminiClient.getGenerativeModel({ model: "gemini-2.5-flash" });
+        // Note: gemini-2.5-flash is not a valid model name
+        // Use gemini-pro-vision for image/video analysis
+        const model = geminiClient.getGenerativeModel({ model: "gemini-pro-vision" });
 
         // Create specific prompts based on file type
         const prompt = fileType === 'video' ? getVideoQualityPrompt() : getAudioQualityPrompt();
