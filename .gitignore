@@ -1,0 +1,295 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# ===========================
+# Dependencies & Package Managers
+# ===========================
+node_modules/
+apps/*/node_modules/
+packages/*/node_modules/
+.pnp
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
+.npm
+apps/*/.npm/
+packages/*/.npm/
+.eslintcache
+apps/*/.eslintcache
+packages/*/.eslintcache
+.cache
+apps/*/.cache/
+packages/*/.cache/
+*.tgz
+
+# ===========================
+# Environment Files
+# ===========================
+.env*
+!.env.example
+!.env.template
+
+# ===========================
+# Build Outputs & Distribution
+# ===========================
+# Root level builds
+.next/
+out/
+build/
+dist/
+
+# Monorepo app builds
+apps/*/.next/
+apps/*/out/
+apps/*/build/
+apps/*/dist/
+packages/*/.next/
+packages/*/out/
+packages/*/build/
+packages/*/dist/
+
+# TypeScript builds
+*.tsbuildinfo
+**/tsconfig.tsbuildinfo
+apps/*/tsconfig.tsbuildinfo
+packages/*/tsconfig.tsbuildinfo
+next-env.d.ts
+apps/*/next-env.d.ts
+
+# Bun specific outputs
+*.bun
+apps/*/bun.lockb
+packages/*/bun.lockb
+
+# Other build artifacts
+apps/*/storybook-static/
+packages/*/storybook-static/
+apps/*/.docusaurus/
+packages/*/.docusaurus/
+
+# ===========================
+# Testing & Coverage
+# ===========================
+coverage/
+apps/*/coverage/
+packages/*/coverage/
+*.lcov
+.nyc_output
+apps/*/.nyc_output
+packages/*/.nyc_output
+.jest
+apps/*/.jest
+packages/*/.jest
+junit.xml
+apps/*/junit.xml
+packages/*/junit.xml
+test-results/
+apps/*/test-results/
+packages/*/test-results/
+
+# ===========================
+# Logs & Debug
+# ===========================
+logs/
+apps/*/logs/
+packages/*/logs/
+*.log
+apps/*/*.log
+packages/*/*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+lerna-debug.log*
+bun-debug.log*
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# ===========================
+# Temporary Files
+# ===========================
+.tmp/
+tmp/
+temp/
+apps/*/.tmp/
+apps/*/tmp/
+apps/*/temp/
+packages/*/.tmp/
+packages/*/tmp/
+packages/*/temp/
+*.tmp
+*.temp
+.sass-cache/
+apps/*/.sass-cache/
+packages/*/.sass-cache/
+
+# ===========================
+# Operating System
+# ===========================
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon
+._*
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+*.stackdump
+[Dd]esktop.ini
+$RECYCLE.BIN/
+*.cab
+*.msi
+*.msix
+*.msm
+*.msp
+*.lnk
+
+# Linux
+*~
+.fuse_hidden*
+.directory
+.Trash-*
+.nfs*
+
+# ===========================
+# IDEs & Editors
+# ===========================
+# VSCode
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+!.vscode/*.code-snippets
+
+# IntelliJ IDEA
+.idea/
+*.swp
+*.swo
+*~
+
+# Vim
+[._]*.s[a-v][a-z]
+[._]*.sw[a-p]
+[._]s[a-rt-v][a-z]
+[._]ss[a-gi-z]
+[._]sw[a-p]
+
+# Emacs
+\#*\#
+/.emacs.desktop
+/.emacs.desktop.lock
+*.elc
+auto-save-list
+tramp
+.\#*
+
+# Sublime Text
+*.tmlanguage.cache
+*.tmPreferences.cache
+*.stTheme.cache
+*.sublime-workspace
+*.sublime-project
+
+# ===========================
+# Monorepo Tools & Caches
+# ===========================
+.turbo/
+apps/*/.turbo/
+packages/*/.turbo/
+.rush/
+.changeset/
+.nx/
+apps/*/.nx/
+packages/*/.nx/
+
+# Package manager cache & lock files
+.pnpm-store/
+.yarn/cache
+.yarn/unplugged
+.yarn/build-state.yml
+.yarn/install-state.gz
+.swc/
+apps/*/.swc/
+packages/*/.swc/
+
+# Development servers
+.vite/
+apps/*/.vite/
+packages/*/.vite/
+.parcel-cache/
+apps/*/.parcel-cache/
+packages/*/.parcel-cache/
+
+# ===========================
+# Cloud & Deployment
+# ===========================
+.vercel/
+apps/*/.vercel/
+packages/*/.vercel/
+.netlify/
+apps/*/.netlify/
+packages/*/.netlify/
+.serverless/
+apps/*/.serverless/
+packages/*/.serverless/
+.firebase/
+apps/*/.firebase/
+packages/*/.firebase/
+.amplify/
+apps/*/.amplify/
+packages/*/.amplify/
+
+# ===========================
+# Database
+# ===========================
+*.sqlite
+*.sqlite3
+*.db
+*.db-journal
+*.db-wal
+
+# ===========================
+# Security & Certificates
+# ===========================
+*.pem
+*.key
+*.p12
+*.crt
+*.cert
+*.ca
+secrets/
+.secrets
+
+# ===========================
+# Docker
+# ===========================
+.dockerignore
+Dockerfile*
+docker-compose*.yml
+.docker/
+
+# ===========================
+# Miscellaneous
+# ===========================
+.husky/_/
+.editorconfig
+*.tgz
+*.tar.gz
+report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
+.storybook-static/

@@ -1,0 +1,27 @@
+{
+  "name": "asap",
+  "private": true,
+  "scripts": {
+    "dev": "turbo run dev --parallel",
+    "dev:web": "turbo run dev --filter=web",
+    "dev:core": "turbo run dev --filter=core",
+
+    "build": "turbo run build",
+    "build:web": "turbo run build --filter=web",
+    "build:core": "turbo run build --filter=core",
+
+    "lint": "turbo run lint",
+ 
+    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "check-types": "turbo run check-types"
+  },
+  "devDependencies": {
+    "prettier": "^3.6.2",
+    "turbo": "^2.5.6",
+    "typescript": "5.9.2"
+  },
+  "packageManager": "pnpm@9.0.0",
+  "engines": {
+    "node": ">=18"
+  }
+}
