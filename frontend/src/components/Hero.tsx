@@ -33,7 +33,7 @@ const Hero = () => {
           <div className="flex-1 w-full h-full flex items-center justify-end">
             <div className="w-full h-[400px] border border-secondary-border rounded-l-2xl py-2 pl-2 bg-background">
               <div className="w-full h-full border-y border-l border-secondary-border rounded-l-2xl bg-secondary">
-                <div className="w-full h-full flex items-center justify-center bg-[url('/img/hero-img.png')] dark:bg-[url('/img/hero-img-dark.png')] rounded-l-xl bg-cover bg-center bg-no-repeat">
+                <div className="w-full h-full flex items-center justify-center ">
                 </div>
               </div>
             </div>

@@ -2,7 +2,7 @@ import express, { type Request, type Response } from "express"
 import { createServer } from "http"
 import cors from "cors"
 import { initSocket } from "./sockets/index.ts"
-import qualityCheckRouter from "./routes/qualityCheck-router.ts"
+// import qualityCheckRouter from "./routes/qualityCheck-router.ts"
 
 const app = express()
 const PORT = process.env.PORT || 4000
@@ -20,7 +20,7 @@ app.use(express.urlencoded({ extended: true, limit: '50mb' }))
 app.get("/", (req: Request, res: Response) => {
   res.send("bordre is live :D")
 })
-app.use("/api/quality-check", qualityCheckRouter)
+// app.use("/api/quality-check", qualityCheckRouter)
 
 
 const httpServer = createServer(app)
