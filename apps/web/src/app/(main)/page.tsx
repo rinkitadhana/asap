@@ -1,10 +1,10 @@
 import React from "react"
-import Navbar from "@/components/Navbar"
-import Hero from "@/components/Hero"
-import PageHead from "@/components/PageHead"
-import Stack from "@/components/Stack"
-import Footer from "@/components/Footer"
-import TempBox from "@/components/TempBox"
+import Navbar from "@/shared/components/Navbar"
+import Hero from "@/shared/components/Hero"
+import PageHead from "@/shared/components/PageHead"
+import Stack from "@/shared/components/Stack"
+import Footer from "@/shared/components/Footer"
+import TempBox from "@/shared/components/TempBox"
 const page = () => {
   return (
     <>

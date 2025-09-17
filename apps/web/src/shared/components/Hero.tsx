@@ -1,4 +1,4 @@
-import LayoutWrapper from "@/layout/LayoutWrapper"
+import LayoutWrapper from "@/shared/layout/LayoutWrapper"
 import React from "react"
 import Recording from "./ui/Recording"
 import { Disc2 } from "lucide-react"

@@ -3,9 +3,9 @@ import { RiMicLine, RiMicOffLine } from "react-icons/ri"
 import { FiVideo, FiVideoOff } from "react-icons/fi"
 import { LuLayoutDashboard, LuScreenShare, LuUsers } from "react-icons/lu"
 import { RxSpeakerLoud, RxSpeakerOff } from "react-icons/rx"
-import DateComponent from "@/utils/Time"
+import DateComponent from "@/shared/utils/Time"
 import { IoChatbubbleOutline } from "react-icons/io5"
-import playClickSound from "@/utils/ClickSound"
+import playClickSound from "@/shared/utils/ClickSound"
 
 
 type SidebarType = 'info' | 'users' | 'chat' | null

@@ -1,9 +1,9 @@
 "use client"
 import React, { useEffect, useState } from "react"
-import { useSocket } from "@/context/socket"
-import usePeer from "@/hooks/usePeer";
-import useMediaStream from "@/hooks/useMediaStream";
-import usePlayer from "@/hooks/usePlayer";
+import { useSocket } from "@/shared/context/socket"
+import usePeer from "@/shared/hooks/usePeer";
+import useMediaStream from "@/shared/hooks/useMediaStream";
+import usePlayer from "@/shared/hooks/usePlayer";
 import Player from "./Player";
 import { ChevronLeft, ChevronRight, X } from "lucide-react";
 import { RxEnterFullScreen, RxExitFullScreen } from "react-icons/rx";

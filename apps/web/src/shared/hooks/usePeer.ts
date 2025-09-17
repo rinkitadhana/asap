@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react"
 import { Peer } from 'peerjs';
-import { useSocket } from "@/context/socket";
+import { useSocket } from "@/shared/context/socket";
 import { useParams } from "next/navigation";
 
 const usePeer = () => {

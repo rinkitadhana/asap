@@ -1,6 +1,6 @@
 "use client"
-import Logo from "@/components/Logo"
-import { ThemeSwitcher } from "@/components/ThemeSwitcher"
+import Logo from "@/shared/components/Logo"
+import { ThemeSwitcher } from "@/shared/components/ThemeSwitcher"
 import { FolderClosed, House, User } from "lucide-react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"

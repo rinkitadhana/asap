@@ -1,7 +1,7 @@
 'use client'
 import { useRouter } from 'next/navigation'
 import React from 'react'
-import generateRoomId from '@/utils/GenerateRoomId'
+import generateRoomId from '@/shared/utils/GenerateRoomId'
 import { FaCalendarAlt, FaPlus, FaUserPlus, FaVideo } from 'react-icons/fa'
 
 const Options = () => {

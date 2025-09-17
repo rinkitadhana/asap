@@ -1,4 +1,4 @@
-import { SocketProvider } from "@/context/socket";
+import { SocketProvider } from "@/shared/context/socket";
 import React from "react";
 
 interface VideoCallLayoutProps {

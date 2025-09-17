@@ -4,7 +4,7 @@ import { FiVideo, FiVideoOff } from 'react-icons/fi';
 import { Loader2 } from 'lucide-react';
 import Player from './Player';
 import Header from './Header';
-import playClickSound from '@/utils/ClickSound';
+import playClickSound from '@/shared/utils/ClickSound';
 
 interface PreJoinSettings {
     videoEnabled: boolean;

@@ -1,6 +1,6 @@
 "use client"
-import PageHead from "@/components/PageHead"
-import FooterInfo from "@/components/FooterInfo"
+import PageHead from "@/shared/components/PageHead"
+import FooterInfo from "@/shared/components/FooterInfo"
 
 const LogIn = () => {
   return (

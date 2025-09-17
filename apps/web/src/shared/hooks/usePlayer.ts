@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { cloneDeep } from 'lodash'
-import { useSocket } from '@/context/socket';
+import { useSocket } from '@/shared/context/socket';
 import { useRouter } from 'next/navigation';
 import { Peer } from 'peerjs';
 

@@ -1,4 +1,4 @@
-import LayoutWrapper from '@/layout/LayoutWrapper'
+import LayoutWrapper from '@/shared/layout/LayoutWrapper'
 import { FaSquareXTwitter, FaGithub } from "react-icons/fa6";
 
 import Image from 'next/image'

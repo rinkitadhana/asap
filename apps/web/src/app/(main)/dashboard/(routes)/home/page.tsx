@@ -1,6 +1,6 @@
-import DateComponent from "@/utils/Date"
-import Options from "../components/Options"
-import TimeComponent from "@/utils/Time"
+import DateComponent from "@/shared/utils/Date"
+import Options from "./components/Options"
+import TimeComponent from "@/shared/utils/Time"
 
 const page = () => {
   return (
