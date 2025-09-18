@@ -6,11 +6,11 @@ const Logo = () => {
     <Image
       src="/img/logo/logo.png"
       className="size-7"
-      alt="bordre"
+      alt="Asap"
       width={40}
       height={40}
     />
-    <h1 className="text-xl font-semibold">bordre</h1>
+    <h1 className="text-xl font-semibold">Asap</h1>
   </div>
 }
 

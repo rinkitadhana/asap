@@ -1,21 +1,21 @@
 import LayoutWrapper from "@/shared/layout/LayoutWrapper"
 import React from "react"
-import Recording from "./ui/Recording"
 import { Disc2 } from "lucide-react"
 import Link from "next/link"
+import RecordingBadge from "./ui/RecordingBadge"
 
-const Hero = () => {
+const LandingHero = () => {
   return (
     <LayoutWrapper>
       <section className=" border-x-2 border-primary-border border-dashed p-4">
         <div className="h-[700px] flex items-center shadow-md shadow-primary-shadow justify-center border border-secondary-border rounded-xl mt-20 bg-[url('/img/hero.png')] dark:bg-[url('/img/hero-dark.png')] bg-cover bg-center">
           <div className="flex-1 w-full h-full flex flex-col gap-2 items-start justify-center p-10">
-            <Recording />
+            <RecordingBadge />
             <h1 className="text-[4.5rem] font-[950] font-cal leading-[1.05]">
               From Video Call to Podcast in Minutes
             </h1>
             <p className="text-secondary-text font-inter">
-              Bordre is an AI-native video calling app with built-in local recording, perfect for podcasts, content creation, and more. Its smart AI tools make every call effortless and productive.
+              Asap is an AI-native video calling app with built-in local recording, perfect for podcasts, content creation, and more. Its smart AI tools make every call effortless and productive.
             </p>
             <div className="flex flex-col gap-4 w-full my-4 pr-20 justify-start items-start">
               <Link href="/login" className="btn w-full font-medium flex gap-2.5 items-center justify-center text-sm">
@@ -44,4 +44,4 @@ const Hero = () => {
   )
 }
 
-export default Hero
+export default LandingHero

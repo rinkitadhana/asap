@@ -5,7 +5,7 @@ import FooterInfo from "@/shared/components/FooterInfo"
 const LogIn = () => {
   return (
     <section className="flex flex-col py-4 h-screen">
-      <PageHead title="Login | bordre" />
+      <PageHead title="Login | Asap" />
       <div className="flex-grow sin-screen ">
         login
       </div>

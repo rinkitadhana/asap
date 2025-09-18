@@ -1,24 +1,24 @@
 import React from "react"
-import Navbar from "@/shared/components/Navbar"
-import Hero from "@/shared/components/Hero"
 import PageHead from "@/shared/components/PageHead"
-import Stack from "@/shared/components/Stack"
-import Footer from "@/shared/components/Footer"
-import TempBox from "@/shared/components/TempBox"
+import LandingNavbar from "@/shared/components/landing/LandingNavbar"
+import LandingHero from "@/shared/components/landing/LandingHero"
+import LandingTechStack from "@/shared/components/landing/LandingTechStack"
+import LandingTemp from "@/shared/components/landing/LandingTemp"
+import LandingFooter from "@/shared/components/landing/LandingFooter"
 const page = () => {
   return (
     <>
-      <PageHead title="Home | bordre" />
-      <Navbar />
-      <Hero />
+      <PageHead title="Home | Asap" />
+      <LandingNavbar />
+      <LandingHero />
       <div className="border-t-2 border-main-border border-dashed w-full" />
-      <Stack />
+      <LandingTechStack />
       <div className="border-t-2 border-main-border border-dashed w-full" />
-      <TempBox />
+      <LandingTemp />
       <div className="border-t-2 border-main-border border-dashed w-full" />
-      <TempBox />
+      <LandingTemp />
       <div className="border-t-2 border-main-border border-dashed w-full" />
-      <Footer />
+      <LandingFooter />
     </>
   )
 }

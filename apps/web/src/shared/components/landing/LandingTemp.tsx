@@ -1,7 +1,7 @@
 import LayoutWrapper from '@/shared/layout/LayoutWrapper'
 import React from 'react'
 
-const TempBox = () => {
+const LandingTemp = () => {
     return (
         <LayoutWrapper>
             <div className='border-x-2 border-primary-border border-dashed p-4'>
@@ -12,4 +12,4 @@ const TempBox = () => {
     )
 }
 
-export default TempBox
+export default LandingTemp

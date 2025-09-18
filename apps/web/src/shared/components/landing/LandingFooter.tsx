@@ -1,12 +1,11 @@
 import LayoutWrapper from '@/shared/layout/LayoutWrapper'
 import { FaSquareXTwitter, FaGithub } from "react-icons/fa6";
-
 import Image from 'next/image'
 import Link from 'next/link'
 import React from 'react'
 import { FaLinkedin } from 'react-icons/fa'
 
-const Footer = () => {
+const LandingFooter = () => {
     return (
         <LayoutWrapper>
             <div className="border-x-2 border-primary-border border-dashed p-4" >
@@ -16,10 +15,10 @@ const Footer = () => {
                         <div className='flex flex-col gap-2 w-[28%]'>
                             <div className='flex items-center gap-2'>
                                 <Image src="/img/logo/logo.png" alt="logo" width={40} height={40} className='size-7' />
-                                <h1 className='text-2xl font-bold'>bordre</h1>
+                                <h1 className='text-2xl font-bold'>Asap</h1>
                             </div>
                             <p className=' font-inter text-sm text-secondary-text'>
-                                Bordre is an AI-native video calling app with built-in local recording.
+                                Asap is an AI-native video calling app with built-in local recording.
                             </p>
                             <div className='flex items-center gap-2 my-2'>
                                 <Link href="https://linkedin.com" className="hover:opacity-50 duration-200">
@@ -81,7 +80,7 @@ const Footer = () => {
                     </div>
                     <div className='w-full h-[1px] bg-primary-border my-4' />
                     <div className='flex items-center justify-between'>
-                        <p className='text-secondary-text text-sm'>© 2025 Bordre. All rights reserved.</p>
+                        <p className='text-secondary-text text-sm'>© 2025 Asap. All rights reserved.</p>
                         <div className='flex items-center gap-2 text-secondary-text text-xs'>
                             <Link href="/" className='font-inter hover:opacity-50 duration-200'>Privacy Policy</Link>
                             <Link href="/" className='font-inter hover:opacity-50 duration-200'>Terms of Service</Link>
@@ -91,10 +90,9 @@ const Footer = () => {
 
                 </div>
 
-
             </div>
         </LayoutWrapper>
     )
 }
 
-export default Footer
+export default LandingFooter

@@ -14,7 +14,7 @@ app.use(cors({
 }))
 
 app.get("/", (req: Request, res: Response) => {
-  res.send("bordre is live :D")
+  res.send("Asap is live :D")
 })
 
 

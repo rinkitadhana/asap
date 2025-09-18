@@ -1,7 +1,7 @@
 import LayoutWrapper from "@/shared/layout/LayoutWrapper"
 import React from "react"
-import StackSlider from "./StackSlider"
-const Stack = () => {
+import StackSlider from "../StackSlider"
+const LandingTechStack = () => {
   return (
     <LayoutWrapper>
       <section className="border-x-2 border-primary-border border-dashed p-6 flex gap-2">
@@ -16,4 +16,4 @@ const Stack = () => {
   )
 }
 
-export default Stack
+export default LandingTechStack

@@ -1,12 +1,13 @@
 "use client"
 import React, { useEffect, useState } from "react"
 import Link from "next/link"
-import GithubButton from "./GithubButton"
-import Version from "./ui/Version"
+import GithubButton from "./ui/GithubButton"
 import { useRouter } from "next/navigation"
-import { ThemeSwitcher } from "./ThemeSwitcher"
+import { ThemeSwitcher } from "../ThemeSwitcher"
+import VersionBadge from "./ui/VersionBadge"
 import Image from "next/image"
-const Navbar = () => {
+
+const LandingNavbar = () => {
   const [scrolled, setScrolled] = useState(false)
   const router = useRouter()
 
@@ -47,9 +48,9 @@ const Navbar = () => {
               className="text-2xl font-bold cursor-pointer flex items-center gap-3"
             >
               <Image src="/img/logo/logo.png" alt="logo" width={40} height={40} className="size-7" />
-              <span className="text-2xl font-bold">bordre</span>
+              <span className="text-2xl font-bold">Asap</span>
             </button>
-            <Version text="BETA 0.0.1" />
+            <VersionBadge text="BETA 0.0.1" />
           </div>
           <nav className="hidden md:flex gap-6">
             {links.map((link) => (
@@ -89,4 +90,4 @@ const Navbar = () => {
   )
 }
 
-export default Navbar
+export default LandingNavbar
