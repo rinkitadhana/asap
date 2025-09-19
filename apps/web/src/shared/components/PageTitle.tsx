@@ -3,12 +3,12 @@
 import { useEffect } from "react"
 import { usePathname } from "next/navigation"
 
-interface PageHeadProps {
+interface PageTitleProps {
   title: string
   description?: string
 }
 
-export default function PageHead({ title, description }: PageHeadProps) {
+export default function PageTitle({ title, description }: PageTitleProps) {
   const pathname = usePathname()
 
   useEffect(() => {

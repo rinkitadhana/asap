@@ -1,5 +1,5 @@
 import React from "react"
-import PageHead from "@/shared/components/PageHead"
+import PageTitle from "@/shared/components/PageTitle"
 import LandingNavbar from "@/shared/components/landing/LandingNavbar"
 import LandingHero from "@/shared/components/landing/LandingHero"
 import LandingTechStack from "@/shared/components/landing/LandingTechStack"
@@ -8,7 +8,7 @@ import LandingFooter from "@/shared/components/landing/LandingFooter"
 const page = () => {
   return (
     <>
-      <PageHead title="Home | Asap" />
+      <PageTitle title="Home | Asap" />
       <LandingNavbar />
       <LandingHero />
       <div className="border-t-2 border-main-border border-dashed w-full" />

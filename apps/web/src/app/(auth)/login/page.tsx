@@ -1,17 +1,16 @@
 "use client"
-import PageHead from "@/shared/components/PageHead"
-import FooterInfo from "@/shared/components/FooterInfo"
+import CopyrightBar from "@/shared/components/CopyrightBar"
 
-const LogIn = () => {
+const Login = () => {
+  
   return (
     <section className="flex flex-col py-4 h-screen">
-      <PageHead title="Login | Asap" />
       <div className="flex-grow sin-screen ">
         login
       </div>
-      <FooterInfo />
+      <CopyrightBar />
     </section>
   )
 }
 
-export default LogIn
+export default Login

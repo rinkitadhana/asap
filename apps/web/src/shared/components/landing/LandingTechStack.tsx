@@ -1,6 +1,6 @@
 import LayoutWrapper from "@/shared/layout/LayoutWrapper"
 import React from "react"
-import StackSlider from "../StackSlider"
+import StackSlider from "./StackSlider"
 const LandingTechStack = () => {
   return (
     <LayoutWrapper>
