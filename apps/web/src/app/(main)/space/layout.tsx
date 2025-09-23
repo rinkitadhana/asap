@@ -8,9 +8,9 @@ interface VideoCallLayoutProps {
 const VideoCallLayout: React.FC<VideoCallLayoutProps> = ({ children }) => {
   return (
     <SocketProvider>
-      <div>
+      <>
         {children}
-      </div>
+      </>
     </SocketProvider>
   );
 };

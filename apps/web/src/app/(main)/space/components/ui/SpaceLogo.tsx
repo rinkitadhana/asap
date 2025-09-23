@@ -1,7 +1,7 @@
 import Image from "next/image"
 import React from "react"
 
-const Logo = () => {
+const SpaceLogo = () => {
   return <div className="flex items-center gap-2">
     <Image
       src="/img/logo/logo.png"
@@ -14,4 +14,4 @@ const Logo = () => {
   </div>
 }
 
-export default Logo
+export default SpaceLogo

@@ -178,6 +178,10 @@
   }
 }
 
+html {
+  overscroll-behavior: none;
+}
+
 .btn {
   @apply select-none px-3.5 py-2.5 border border-foreground shadow-inner shadow-secondary/40  cursor-pointer rounded-[14px] hover:bg-primary/80 duration-200 bg-primary/95 text-primary-text inline-flex items-center justify-center whitespace-nowrap  transition-all;
 }

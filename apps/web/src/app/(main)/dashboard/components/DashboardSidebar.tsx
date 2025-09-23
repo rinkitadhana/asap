@@ -1,5 +1,5 @@
 "use client"
-import Logo from "@/shared/components/Logo"
+import Logo from "@/app/(main)/space/components/ui/SpaceLogo"
 import { FolderClosed, House, User } from "lucide-react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"

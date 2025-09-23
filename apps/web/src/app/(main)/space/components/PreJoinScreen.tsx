@@ -2,20 +2,11 @@ import React, { useEffect, useRef, useState } from 'react';
 import { RiMicLine, RiMicOffLine } from 'react-icons/ri';
 import { FiVideo, FiVideoOff } from 'react-icons/fi';
 import { Loader2 } from 'lucide-react';
-import Player from './Player';
-import Header from './Header';
+import Header from './SpaceHeader';
 import playClickSound from '@/shared/utils/ClickSound';
-
-interface PreJoinSettings {
-    videoEnabled: boolean;
-    audioEnabled: boolean;
-    username: string;
-}
-
-interface PreJoinScreenProps {
-    onJoinCall: (settings: PreJoinSettings) => void;
-    roomId: string;
-}
+import UserMedia from './UserMedia';
+import MediaPermissionError from './ui/MediaPermissionError';
+import { PreJoinScreenProps } from '../types';
 
 const PreJoinScreen = ({ onJoinCall }: PreJoinScreenProps) => {
     const [stream, setStream] = useState<MediaStream | null>(null);
@@ -116,17 +107,9 @@ const PreJoinScreen = ({ onJoinCall }: PreJoinScreenProps) => {
                                     </div>
                                 </div>
                             ) : permissionError ? (
-                                <div className="w-full h-full flex flex-col items-center justify-center bg-call-primary/50 p-6">
-                                    <div className="text-red-400 text-center text-sm mb-4">{permissionError}</div>
-                                    <button
-                                        onClick={initializeStream}
-                                        className="px-4 py-2 bg-call-background border border-call-border cursor-pointer text-foreground rounded-xl hover:bg-call-primary transition-colors"
-                                    >
-                                        Retry
-                                    </button>
-                                </div>
+                                <MediaPermissionError error={permissionError} onRetry={initializeStream} />
                             ) : (
-                                <Player
+                                <UserMedia
                                     url={stream}
                                     muted={true}
                                     playing={videoEnabled}
