@@ -1,4 +1,4 @@
-import { Geist, Geist_Mono } from "next/font/google"
+import { Geist, Geist_Mono, Inter} from "next/font/google"
 import type { Metadata } from "next"
 import "../styles/globals.css"
 import { ThemeProvider } from "@/shared/components/ThemeProvider"
@@ -13,6 +13,12 @@ const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
 })
+
+const inter = Inter({
+  variable: "--font-inter",
+  subsets: ["latin"],
+})
+
 
 export const metadata: Metadata = {
   title: "Asap",
@@ -41,7 +47,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} ${inter.variable} antialiased`}
       >
         <ThemeProvider
           attribute="class"
