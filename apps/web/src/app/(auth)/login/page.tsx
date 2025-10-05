@@ -12,7 +12,7 @@ const Login = () => {
   
   return (
     <LoginWrapper>
-      <div className="flex flex-row p-6 gap-6">
+      <div className="flex flex-row p-8 gap-6 h-full">
         <div className="flex flex-1 flex-col justify-between">
         <div className="flex flex-1 flex-col gap-9">
           <LoginLogo />

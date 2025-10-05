@@ -1,10 +1,11 @@
 import React from 'react'
 import { FcGoogle } from "react-icons/fc";
+import styles from '../styles/login.module.css';
 
 
 const LoginGoogle = () => {
   return (
-    <div className=' select-none flex flex-row items-center gap-2 border w-fit py-2 px-3 hover:bg-primary-hover transition duration-200 cursor-pointer'>
+    <div className={`select-none flex flex-row items-center gap-2 border w-fit py-2 px-3 hover:bg-primary-hover transition duration-200 cursor-pointer ${styles.shineButton}`}>
         <FcGoogle size={22} />
         <div>
             <p>Continue with Google</p>
