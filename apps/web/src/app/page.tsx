@@ -11,13 +11,13 @@ const page = () => {
       <PageTitle title="Home | Asap" />
       <LandingNavbar />
       <LandingHero />
-      <div className="border-t-2 border-main-border border-dashed w-full" />
+      <div className="border-t border-main-border w-full" />
       <LandingTechStack />
-      <div className="border-t-2 border-main-border border-dashed w-full" />
+      <div className="border-t border-main-border w-full" />
       <LandingTemp />
-      <div className="border-t-2 border-main-border border-dashed w-full" />
+      <div className="border-t border-main-border w-full" />
       <LandingTemp />
-      <div className="border-t-2 border-main-border border-dashed w-full" />
+      <div className="border-t border-main-border w-full" />
       <LandingFooter />
     </>
   )

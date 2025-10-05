@@ -7,7 +7,7 @@ import RecordingBadge from "./ui/RecordingBadge"
 const LandingHero = () => {
   return (
     <LayoutWrapper>
-      <section className=" border-x-2 border-primary-border border-dashed p-4">
+      <section className=" border-x border-primary-border p-4">
         <div className="h-[700px] flex items-center shadow-md shadow-primary-shadow justify-center border border-secondary-border rounded-xl mt-20 bg-[url('/img/hero.png')] dark:bg-[url('/img/hero-dark.png')] bg-cover bg-center">
           <div className="flex-1 w-full h-full flex flex-col gap-2 items-start justify-center p-10">
             <RecordingBadge />

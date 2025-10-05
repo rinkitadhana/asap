@@ -21,21 +21,21 @@ const LandingNavbar = () => {
   const links = [
     {
       label: "Home",
-      href: "/",
+      href: "#",
     },
     {
       label: "About",
-      href: "/about",
+      href: "#about",
     },
     {
       label: "Contact",
-      href: "/contact",
+      href: "#contact",
     },
   ]
   return (
     <section className="fixed z-10 top-3 left-0 right-0 ">
       <div
-        className={`max-w-[1100px] mx-auto flex justify-between items-center w-full py-3 px-6 border shadow-sm rounded-2xl transition-all duration-300 
+        className={`max-w-[1150px] mx-auto flex justify-between items-center w-full py-3 px-4 border shadow-sm rounded-2xl transition-all duration-300 
  ${scrolled
             ? "bg-secondary border-secondary-border shadow-primary-shadow"
             : "border-transparent shadow-transparent"
@@ -73,12 +73,6 @@ const LandingNavbar = () => {
           <div className="hidden md:flex gap-4">
             <button
               onClick={() => router.push("/login")}
-              className="select-none text-sm font-semibold cursor-pointer hover:opacity-80 transition-opacity duration-200"
-            >
-              Sign in
-            </button>
-            <button
-              onClick={() => router.push("/signup")}
               className="btn text-sm font-semibold"
             >
               Get Started
