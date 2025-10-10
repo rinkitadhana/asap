@@ -24,6 +24,9 @@
   --call-background: #ffffff;
   --call-primary: #f0f0f0;
 
+
+  --border: #d9d9d9;
+
   --radius: 0.625rem;
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.141 0.005 285.823);
@@ -74,6 +77,8 @@
   --call-background: #000000;
   --call-primary: #141414;
 
+  --border: #343434;
+
   --card: oklch(0.21 0.006 285.885);
   --card-foreground: oklch(0.985 0 0);
   --popover: oklch(0.21 0.006 285.885);
@@ -85,7 +90,6 @@
   --accent: oklch(0.274 0.006 286.033);
   --accent-foreground: oklch(0.985 0 0);
   --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
   --input: oklch(1 0 0 / 15%);
   --ring: oklch(0.552 0.016 285.938);
   --chart-1: oklch(0.488 0.243 264.376);
@@ -120,6 +124,10 @@
   --color-call-border: var(--call-border);
   --color-call-background: var(--call-background);
   --color-call-primary: var(--call-primary);
+
+  --color-border: var(--border);
+
+  
   --color-selection-background: var(--selection-background);
   --color-selection-text: var(--selection-text);
   --font-sans: var(--font-sans);
@@ -166,7 +174,7 @@
 
 @layer base {
   * {
-    @apply border-primary-border outline-ring/50;
+    @apply border-border outline-ring/50;
   }
   body {
     @apply bg-background text-foreground;
