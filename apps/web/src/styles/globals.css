@@ -5,7 +5,7 @@
 
 :root {
   --background: #f4f4f4;
-  --foreground: #212121;
+  --foreground: #131313;
   --primary: #131313;
   --secondary: #ffffff;
   --primary-text: #ffffff;
@@ -58,7 +58,7 @@
 
 .dark {
   --background: #131313;
-  --foreground: #fbfbfb;
+  --foreground: #f4f4f4;
   --primary: #f4f4f4;
   --secondary: #000000;
   --primary-text: #000000;
