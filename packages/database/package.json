@@ -1,0 +1,9 @@
+{
+    "name": "@repo/database",
+    "version": "1.0.0",
+    "private": true,
+    "scripts": {},
+    "devDependencies": {
+        "prisma": "^6.17.1"
+    }
+}
