@@ -1,24 +1,23 @@
-import { Geist, Geist_Mono, Inter} from "next/font/google"
-import type { Metadata } from "next"
-import "../styles/globals.css"
-import { ThemeProvider } from "@/shared/components/ThemeProvider"
-import { QueryProvider } from "@/shared/components/QueryProvider"
+import { Geist, Geist_Mono, Inter } from "next/font/google";
+import type { Metadata } from "next";
+import "../styles/globals.css";
+import { ThemeProvider } from "@/shared/components/ThemeProvider";
+import { QueryProvider } from "@/shared/components/QueryProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
-})
+});
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
-})
+});
 
 const inter = Inter({
   variable: "--font-inter",
   subsets: ["latin"],
-})
-
+});
 
 export const metadata: Metadata = {
   title: "Asap",
@@ -30,19 +29,33 @@ export const metadata: Metadata = {
       { url: "/icon/favicon.ico", sizes: "any" },
     ],
     apple: [
-      { url: "/icon/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
+      {
+        url: "/icon/apple-touch-icon.png",
+        sizes: "180x180",
+        type: "image/png",
+      },
     ],
     other: [
-      { url: "/icon/icon-192.png", sizes: "192x192", type: "image/png", rel: "icon" },
-      { url: "/icon/icon-512.png", sizes: "512x512", type: "image/png", rel: "icon" },
+      {
+        url: "/icon/icon-192.png",
+        sizes: "192x192",
+        type: "image/png",
+        rel: "icon",
+      },
+      {
+        url: "/icon/icon-512.png",
+        sizes: "512x512",
+        type: "image/png",
+        rel: "icon",
+      },
     ],
   },
-}
+};
 
 export default function RootLayout({
   children,
 }: Readonly<{
-  children: React.ReactNode
+  children: React.ReactNode;
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
@@ -55,11 +68,9 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <QueryProvider>
-            {children}
-          </QueryProvider>
+          <QueryProvider>{children}</QueryProvider>
         </ThemeProvider>
       </body>
     </html>
-  )
+  );
 }

@@ -1,5 +1,11 @@
-'use client'
-import { createContext, useContext, useEffect, useState, ReactNode } from "react";
+"use client";
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  ReactNode,
+} from "react";
 import { io, Socket } from "socket.io-client";
 
 // Define the events that our socket will handle

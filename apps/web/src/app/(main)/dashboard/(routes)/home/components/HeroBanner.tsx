@@ -1,5 +1,5 @@
-import DateComponent from "@/shared/utils/Date"
-import TimeComponent from "@/shared/utils/Time"
+import DateComponent from "@/shared/utils/Date";
+import TimeComponent from "@/shared/utils/Time";
 
 const HeroBanner = () => {
   return (
@@ -12,7 +12,7 @@ const HeroBanner = () => {
         <DateComponent className="text-white/80" />
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default HeroBanner
+export default HeroBanner;

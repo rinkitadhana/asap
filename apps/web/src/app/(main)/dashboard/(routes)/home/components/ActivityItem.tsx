@@ -1,7 +1,7 @@
 interface ActivityItemProps {
-  title: string
-  time: string
-  colorClass: string
+  title: string;
+  time: string;
+  colorClass: string;
 }
 
 const ActivityItem = ({ title, time, colorClass }: ActivityItemProps) => {
@@ -13,7 +13,7 @@ const ActivityItem = ({ title, time, colorClass }: ActivityItemProps) => {
       </div>
       <span className="text-xs text-secondary-text">{time}</span>
     </div>
-  )
-}
+  );
+};
 
-export default ActivityItem
+export default ActivityItem;

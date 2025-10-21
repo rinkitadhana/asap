@@ -1,5 +1,5 @@
-import React from 'react';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import React from "react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 interface PaginationControlsProps {
   currentPage: number;

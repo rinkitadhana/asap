@@ -1,25 +1,25 @@
-import ActivityItem from "./ActivityItem"
+import ActivityItem from "./ActivityItem";
 
 const activities = [
   {
     id: 1,
     title: "Meeting with John Doe",
     time: "8:30 PM",
-    colorClass: "bg-purple-400"
+    colorClass: "bg-purple-400",
   },
   {
     id: 2,
     title: "Team Standup",
     time: "10:00 PM",
-    colorClass: "bg-green-400"
+    colorClass: "bg-green-400",
   },
   {
     id: 3,
     title: "Project Review",
     time: "11:30 PM",
-    colorClass: "bg-orange-400"
-  }
-]
+    colorClass: "bg-orange-400",
+  },
+];
 
 const ActivityOverview = () => {
   return (
@@ -36,7 +36,7 @@ const ActivityOverview = () => {
         ))}
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default ActivityOverview
+export default ActivityOverview;

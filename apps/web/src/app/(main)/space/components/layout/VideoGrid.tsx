@@ -1,5 +1,5 @@
-import React from 'react';
-import { GridLayout } from '../../types';
+import React from "react";
+import { GridLayout } from "../../types";
 
 export const getGridLayout = (userCount: number): GridLayout => {
   if (userCount === 0) return { rows: 0, cols: 0 };
@@ -17,12 +17,10 @@ interface VideoGridProps {
 
 const VideoGrid: React.FC<VideoGridProps> = ({ children, layout }) => {
   const gridStyles = {
-    gridTemplateRows: layout.rows === 1 ? '1fr' :
-      layout.rows === 2 ? '1fr 1fr' :
-        '1fr 1fr 1fr',
-    gridTemplateColumns: layout.cols === 1 ? '1fr' :
-      layout.cols === 2 ? '1fr 1fr' :
-        '1fr 1fr 1fr'
+    gridTemplateRows:
+      layout.rows === 1 ? "1fr" : layout.rows === 2 ? "1fr 1fr" : "1fr 1fr 1fr",
+    gridTemplateColumns:
+      layout.cols === 1 ? "1fr" : layout.cols === 2 ? "1fr 1fr" : "1fr 1fr 1fr",
   };
 
   return (

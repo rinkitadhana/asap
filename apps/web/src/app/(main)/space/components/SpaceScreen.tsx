@@ -1,28 +1,41 @@
-"use client"
-import React, { useEffect, useState } from "react"
-import { useSocket } from "@/shared/context/socket"
+"use client";
+import React, { useEffect, useState } from "react";
+import { useSocket } from "@/shared/context/socket";
 import usePeer from "@/shared/hooks/usePeer";
 import useMediaStream from "@/shared/hooks/useMediaStream";
 import usePlayer from "@/shared/hooks/usePlayer";
 import { useParams } from "next/navigation";
-import { cloneDeep } from 'lodash'
-import { MediaConnection } from 'peerjs';
+import { cloneDeep } from "lodash";
+import { MediaConnection } from "peerjs";
 import VideoCallControls from "./VideoCallControls";
 import UserMedia from "./UserMedia";
 import VideoGrid, { getGridLayout } from "./layout/VideoGrid";
 import VideoContainer from "./layout/VideoContainer";
 import PaginationControls from "./ui/PaginationControls";
 import WaitingState from "./ui/WaitingState";
-import { SpaceScreenProps } from "../types"
+import { SpaceScreenProps } from "../types";
 import { RxEnterFullScreen, RxExitFullScreen } from "react-icons/rx";
 
-const SpaceScreen = ({ toggleSidebar, activeSidebar, preJoinSettings }: SpaceScreenProps) => {
+const SpaceScreen = ({
+  toggleSidebar,
+  activeSidebar,
+  preJoinSettings,
+}: SpaceScreenProps) => {
   const socket = useSocket();
   const params = useParams();
   const roomId = params.roomId as string;
   const { peer, myId } = usePeer();
   const { stream } = useMediaStream(preJoinSettings || undefined);
-  const { players, setPlayers, playerHighlighted, nonHighlightedPlayers, toggleAudio, toggleVideo, toggleSpeaker, leaveRoom } = usePlayer(myId || "", roomId || "", peer);
+  const {
+    players,
+    setPlayers,
+    playerHighlighted,
+    nonHighlightedPlayers,
+    toggleAudio,
+    toggleVideo,
+    toggleSpeaker,
+    leaveRoom,
+  } = usePlayer(myId || "", roomId || "", peer);
   const [currentPage, setCurrentPage] = useState(0);
   const [closeWaiting, setCloseWaiting] = useState(false);
   const [myFullScreen, setMyFullScreen] = useState(true);
@@ -33,7 +46,10 @@ const SpaceScreen = ({ toggleSidebar, activeSidebar, preJoinSettings }: SpaceScr
   const otherPlayerIds = Object.keys(nonHighlightedPlayers);
   const totalPages = Math.ceil(otherPlayerIds.length / USERS_PER_PAGE);
   const startIndex = currentPage * USERS_PER_PAGE;
-  const visibleOtherPlayers = otherPlayerIds.slice(startIndex, startIndex + USERS_PER_PAGE);
+  const visibleOtherPlayers = otherPlayerIds.slice(
+    startIndex,
+    startIndex + USERS_PER_PAGE,
+  );
 
   const gridLayout = getGridLayout(visibleOtherPlayers.length);
 
@@ -43,10 +59,10 @@ const SpaceScreen = ({ toggleSidebar, activeSidebar, preJoinSettings }: SpaceScr
       return;
     }
     const handleUserConnected = (newUserId: string) => {
-      console.log(`User connected in a room with userID: ${newUserId}`)
+      console.log(`User connected in a room with userID: ${newUserId}`);
       const call = peer.call(newUserId, stream);
 
-      call.on('stream', (incomingStream: MediaStream) => {
+      call.on("stream", (incomingStream: MediaStream) => {
         console.log(`Received stream from user ${newUserId}`);
         setPlayers((prev) => ({
           ...prev,
@@ -56,23 +72,22 @@ const SpaceScreen = ({ toggleSidebar, activeSidebar, preJoinSettings }: SpaceScr
             playing: true,
             speakerMuted: false,
             username: `User ${newUserId.slice(-4)}`,
-          }
-        }))
+          },
+        }));
 
         setUsers((prev) => ({
           ...prev,
-          [newUserId]: call
-        }))
-
-      })
-    }
+          [newUserId]: call,
+        }));
+      });
+    };
     socket.on("user-connected", handleUserConnected);
 
     return () => {
       console.log("Cleaning up user-connected listener");
       socket.off("user-connected", handleUserConnected);
-    }
-  }, [socket, peer, stream, setPlayers])
+    };
+  }, [socket, peer, stream, setPlayers]);
 
   useEffect(() => {
     if (!socket) return;
@@ -105,11 +120,11 @@ const SpaceScreen = ({ toggleSidebar, activeSidebar, preJoinSettings }: SpaceScr
 
     const handleUserLeave = (userId: string) => {
       console.log(`user ${userId} is leaving the room`);
-      users[userId]?.close()
+      users[userId]?.close();
       const playersCopy = cloneDeep(players);
       delete playersCopy[userId];
       setPlayers(playersCopy);
-    }
+    };
     socket.on("user-toggle-audio", handleToggleAudio);
     socket.on("user-toggle-video", handleToggleVideo);
     socket.on("user-toggle-speaker", handleToggleSpeaker);
@@ -128,7 +143,7 @@ const SpaceScreen = ({ toggleSidebar, activeSidebar, preJoinSettings }: SpaceScr
       const { peer: callerId } = call;
       call.answer(stream);
 
-      call.on('stream', (incomingStream: MediaStream) => {
+      call.on("stream", (incomingStream: MediaStream) => {
         console.log(`Received stream from user ${callerId}`);
         setPlayers((prev) => ({
           ...prev,
@@ -138,19 +153,22 @@ const SpaceScreen = ({ toggleSidebar, activeSidebar, preJoinSettings }: SpaceScr
             playing: true,
             speakerMuted: false,
             username: `User ${callerId.slice(-4)}`,
-          }
-        }))
+          },
+        }));
         setUsers((prev) => ({
           ...prev,
-          [callerId]: call
-        }))
-      })
-    })
-  }, [peer, stream, setPlayers])
+          [callerId]: call,
+        }));
+      });
+    });
+  }, [peer, stream, setPlayers]);
 
   useEffect(() => {
     if (!stream || !myId) return;
-    console.log(`Setting my stream ${myId} with pre-join settings:`, preJoinSettings);
+    console.log(
+      `Setting my stream ${myId} with pre-join settings:`,
+      preJoinSettings,
+    );
     setPlayers((prev) => ({
       ...prev,
       [myId]: {
@@ -158,9 +176,9 @@ const SpaceScreen = ({ toggleSidebar, activeSidebar, preJoinSettings }: SpaceScr
         muted: preJoinSettings ? !preJoinSettings.audioEnabled : false,
         playing: preJoinSettings ? preJoinSettings.videoEnabled : true,
         speakerMuted: false,
-        username: preJoinSettings?.username || 'You',
-      }
-    }))
+        username: preJoinSettings?.username || "You",
+      },
+    }));
   }, [stream, myId, preJoinSettings, setPlayers]);
 
   const renderMainUser = () => {
@@ -170,7 +188,7 @@ const SpaceScreen = ({ toggleSidebar, activeSidebar, preJoinSettings }: SpaceScr
     return (
       <VideoContainer
         isFullScreen={myFullScreen}
-        onToggleFullScreen={() => setMyFullScreen(prev => !prev)}
+        onToggleFullScreen={() => setMyFullScreen((prev) => !prev)}
         showFullScreenButton={playerHighlighted.playing}
         className="flex-1 h-full min-w-0"
       >
@@ -180,7 +198,7 @@ const SpaceScreen = ({ toggleSidebar, activeSidebar, preJoinSettings }: SpaceScr
           playing={playing}
           myVideo={true}
           username={playerHighlighted.username}
-          className={`h-full w-full ${myFullScreen ? 'object-cover' : 'object-contain'}`}
+          className={`h-full w-full ${myFullScreen ? "object-cover" : "object-contain"}`}
           speakerMuted={playerHighlighted.speakerMuted}
         />
       </VideoContainer>
@@ -190,9 +208,9 @@ const SpaceScreen = ({ toggleSidebar, activeSidebar, preJoinSettings }: SpaceScr
   const renderOtherUsers = () => {
     if (visibleOtherPlayers.length === 0) {
       return (
-        <WaitingState 
-          onClose={() => setCloseWaiting(true)} 
-          isVisible={!closeWaiting} 
+        <WaitingState
+          onClose={() => setCloseWaiting(true)}
+          isVisible={!closeWaiting}
         />
       );
     }
@@ -201,7 +219,8 @@ const SpaceScreen = ({ toggleSidebar, activeSidebar, preJoinSettings }: SpaceScr
       <div className="flex-1 h-full min-w-0 relative group/other-screen group/pagination overflow-hidden">
         <VideoGrid layout={gridLayout}>
           {visibleOtherPlayers.map((playerId, index) => {
-            const { url, muted, playing, speakerMuted } = nonHighlightedPlayers[playerId];
+            const { url, muted, playing, speakerMuted } =
+              nonHighlightedPlayers[playerId];
 
             // Special handling for 3 users layout (2 top, 1 bottom spanning full width)
             const isBottomSpanning = gridLayout.bottomSpan && index === 2;
@@ -209,15 +228,19 @@ const SpaceScreen = ({ toggleSidebar, activeSidebar, preJoinSettings }: SpaceScr
             return (
               <div
                 key={playerId}
-                className={`bg-call-primary overflow-hidden rounded-xl border border-call-border relative ${isBottomSpanning ? 'col-span-2' : ''
-                  }`}
+                className={`bg-call-primary overflow-hidden rounded-xl border border-call-border relative ${
+                  isBottomSpanning ? "col-span-2" : ""
+                }`}
               >
                 <UserMedia
                   url={url}
                   muted={muted}
                   playing={playing}
-                  username={nonHighlightedPlayers[playerId]?.username || `User ${index + 1 + (currentPage * USERS_PER_PAGE)}`}
-                  className={`h-full w-full ${otherFullScreen ? 'object-cover' : 'object-contain'}`}
+                  username={
+                    nonHighlightedPlayers[playerId]?.username ||
+                    `User ${index + 1 + currentPage * USERS_PER_PAGE}`
+                  }
+                  className={`h-full w-full ${otherFullScreen ? "object-cover" : "object-contain"}`}
                   speakerMuted={speakerMuted}
                 />
               </div>
@@ -225,11 +248,20 @@ const SpaceScreen = ({ toggleSidebar, activeSidebar, preJoinSettings }: SpaceScr
           })}
         </VideoGrid>
 
-        <button onClick={() => { setOtherFullScreen(prev => !prev) }} className="select-none opacity-0 group-hover/other-screen:opacity-100 absolute bottom-0 right-0 p-2 m-2 rounded-xl bg-secondary hover:bg-primary-hover border border-call-border cursor-pointer transition-all duration-300">
-          {otherFullScreen ? <RxExitFullScreen size={20} /> : <RxEnterFullScreen size={20} />}
+        <button
+          onClick={() => {
+            setOtherFullScreen((prev) => !prev);
+          }}
+          className="select-none opacity-0 group-hover/other-screen:opacity-100 absolute bottom-0 right-0 p-2 m-2 rounded-xl bg-secondary hover:bg-primary-hover border border-call-border cursor-pointer transition-all duration-300"
+        >
+          {otherFullScreen ? (
+            <RxExitFullScreen size={20} />
+          ) : (
+            <RxEnterFullScreen size={20} />
+          )}
         </button>
 
-        <PaginationControls 
+        <PaginationControls
           currentPage={currentPage}
           totalPages={totalPages}
           onPageChange={setCurrentPage}
@@ -258,7 +290,7 @@ const SpaceScreen = ({ toggleSidebar, activeSidebar, preJoinSettings }: SpaceScr
         />
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default SpaceScreen
+export default SpaceScreen;

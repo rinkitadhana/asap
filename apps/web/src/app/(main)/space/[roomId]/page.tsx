@@ -1,37 +1,38 @@
-"use client"
-import React, { useState } from "react"
-import SpaceWrapper from "../components/SpaceWrapper"
-import PreJoinScreen from "../components/PreJoinScreen"
-import { useParams } from "next/navigation"
-import SpaceScreen from "../components/SpaceScreen"
-import { SidebarType, PreJoinSettings } from "../types"
+"use client";
+import React, { useState } from "react";
+import SpaceWrapper from "../components/SpaceWrapper";
+import PreJoinScreen from "../components/PreJoinScreen";
+import { useParams } from "next/navigation";
+import SpaceScreen from "../components/SpaceScreen";
+import { SidebarType, PreJoinSettings } from "../types";
 
 const Room = () => {
-  const params = useParams()
-  const roomId = params.roomId as string
-  const [activeSidebar, setActiveSidebar] = useState<SidebarType>(null)
-  const [hasJoined, setHasJoined] = useState(false)
-  const [preJoinSettings, setPreJoinSettings] = useState<PreJoinSettings | null>(null)
+  const params = useParams();
+  const roomId = params.roomId as string;
+  const [activeSidebar, setActiveSidebar] = useState<SidebarType>(null);
+  const [hasJoined, setHasJoined] = useState(false);
+  const [preJoinSettings, setPreJoinSettings] =
+    useState<PreJoinSettings | null>(null);
 
   const toggleSidebar = (sidebarType: SidebarType) => {
     if (activeSidebar === sidebarType) {
-      setActiveSidebar(null)
+      setActiveSidebar(null);
     } else {
-      setActiveSidebar(sidebarType)
+      setActiveSidebar(sidebarType);
     }
-  }
+  };
 
   const closeSidebar = () => {
-    setActiveSidebar(null)
-  }
+    setActiveSidebar(null);
+  };
 
   const handleJoinCall = (settings: PreJoinSettings) => {
-    setPreJoinSettings(settings)
-    setHasJoined(true)
-  }
+    setPreJoinSettings(settings);
+    setHasJoined(true);
+  };
 
   if (!hasJoined) {
-    return <PreJoinScreen onJoinCall={handleJoinCall} roomId={roomId} />
+    return <PreJoinScreen onJoinCall={handleJoinCall} roomId={roomId} />;
   }
 
   return (
@@ -42,7 +43,7 @@ const Room = () => {
         preJoinSettings={preJoinSettings}
       />
     </SpaceWrapper>
-  )
-}
+  );
+};
 
-export default Room
+export default Room;

@@ -1,4 +1,4 @@
-import AIToolCard from "./AIToolCard"
+import AIToolCard from "./AIToolCard";
 
 const AIToolsSection = () => {
   return (
@@ -10,7 +10,7 @@ const AIToolsSection = () => {
         ))}
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default AIToolsSection
+export default AIToolsSection;

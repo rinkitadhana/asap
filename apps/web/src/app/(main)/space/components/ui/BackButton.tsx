@@ -1,9 +1,9 @@
-import { useRouter } from "next/navigation"
-import React from "react"
-import { MdArrowBackIosNew } from "react-icons/md"
+import { useRouter } from "next/navigation";
+import React from "react";
+import { MdArrowBackIosNew } from "react-icons/md";
 
 const BackButton = () => {
-  const router = useRouter()
+  const router = useRouter();
   return (
     <button
       onClick={() => router.push("/dashboard")}
@@ -12,7 +12,7 @@ const BackButton = () => {
     >
       <MdArrowBackIosNew size={17} />
     </button>
-  )
-}
+  );
+};
 
-export default BackButton
+export default BackButton;

@@ -1,13 +1,16 @@
-import React from 'react';
-import { RiMicOffLine } from 'react-icons/ri';
-import { RxSpeakerOff } from 'react-icons/rx';
+import React from "react";
+import { RiMicOffLine } from "react-icons/ri";
+import { RxSpeakerOff } from "react-icons/rx";
 
 interface StatusIndicatorsProps {
   muted: boolean;
   speakerMuted: boolean;
 }
 
-const StatusIndicators: React.FC<StatusIndicatorsProps> = ({ muted, speakerMuted }) => {
+const StatusIndicators: React.FC<StatusIndicatorsProps> = ({
+  muted,
+  speakerMuted,
+}) => {
   if (!muted && !speakerMuted) return null;
 
   return (

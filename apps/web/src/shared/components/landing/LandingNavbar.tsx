@@ -1,23 +1,23 @@
-"use client"
-import React, { useEffect, useState } from "react"
-import Link from "next/link"
-import GithubButton from "./ui/GithubButton"
-import { useRouter } from "next/navigation"
-import { ThemeSwitcher } from "../ThemeSwitcher"
-import VersionBadge from "./ui/VersionBadge"
-import Image from "next/image"
+"use client";
+import React, { useEffect, useState } from "react";
+import Link from "next/link";
+import GithubButton from "./ui/GithubButton";
+import { useRouter } from "next/navigation";
+import { ThemeSwitcher } from "../ThemeSwitcher";
+import VersionBadge from "./ui/VersionBadge";
+import Image from "next/image";
 
 const LandingNavbar = () => {
-  const [scrolled, setScrolled] = useState(false)
-  const router = useRouter()
+  const [scrolled, setScrolled] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     const onScroll = () => {
-      setScrolled(window.scrollY > 50)
-    }
-    window.addEventListener("scroll", onScroll)
-    return () => window.removeEventListener("scroll", onScroll)
-  }, [])
+      setScrolled(window.scrollY > 50);
+    };
+    window.addEventListener("scroll", onScroll);
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
   const links = [
     {
       label: "Home",
@@ -31,15 +31,16 @@ const LandingNavbar = () => {
       label: "Contact",
       href: "#contact",
     },
-  ]
+  ];
   return (
     <section className="fixed z-10 top-3 left-0 right-0 ">
       <div
         className={`max-w-[1150px] mx-auto flex justify-between items-center w-full py-3 px-4 border shadow-sm rounded-2xl transition-all duration-300 
- ${scrolled
-            ? "bg-secondary border-secondary-border shadow-primary-shadow"
-            : "border-transparent shadow-transparent"
-          }`}
+ ${
+   scrolled
+     ? "bg-secondary border-secondary-border shadow-primary-shadow"
+     : "border-transparent shadow-transparent"
+ }`}
       >
         <div className="flex items-center gap-10">
           <div className="flex items-center gap-3">
@@ -47,7 +48,13 @@ const LandingNavbar = () => {
               onClick={() => router.push("/")}
               className="text-2xl font-bold cursor-pointer flex items-center gap-3"
             >
-              <Image src="/img/logo/logo.png" alt="logo" width={40} height={40} className="size-7" />
+              <Image
+                src="/img/logo/logo.png"
+                alt="logo"
+                width={40}
+                height={40}
+                className="size-7"
+              />
               <span className="text-2xl font-bold">Asap</span>
             </button>
             <VersionBadge text="BETA 0.0.1" />
@@ -81,7 +88,7 @@ const LandingNavbar = () => {
         </div>
       </div>
     </section>
-  )
-}
+  );
+};
 
-export default LandingNavbar
+export default LandingNavbar;

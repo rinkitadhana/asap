@@ -1,11 +1,14 @@
-import React from 'react';
+import React from "react";
 
 interface MediaPermissionErrorProps {
   error: string;
   onRetry: () => void;
 }
 
-const MediaPermissionError: React.FC<MediaPermissionErrorProps> = ({ error, onRetry }) => {
+const MediaPermissionError: React.FC<MediaPermissionErrorProps> = ({
+  error,
+  onRetry,
+}) => {
   return (
     <div className="w-full h-full flex flex-col items-center justify-center bg-call-primary/50 p-6">
       <div className="text-red-400 text-center text-sm mb-4">{error}</div>

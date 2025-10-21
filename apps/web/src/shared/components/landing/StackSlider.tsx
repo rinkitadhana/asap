@@ -1,5 +1,5 @@
-"use client"
-import React from "react"
+"use client";
+import React from "react";
 import {
   SiNextdotjs,
   SiTailwindcss,
@@ -13,7 +13,7 @@ import {
   SiSocketdotio,
   SiVercel,
   SiNodedotjs,
-} from "react-icons/si"
+} from "react-icons/si";
 
 const StackSlider = () => {
   // Tech stack data with React icons
@@ -65,11 +65,11 @@ const StackSlider = () => {
     {
       name: "Vercel",
       icon: SiVercel,
-    }
-  ]
+    },
+  ];
 
   // Duplicate the array for seamless infinite scroll
-  const duplicatedStack = [...techStack, ...techStack]
+  const duplicatedStack = [...techStack, ...techStack];
 
   return (
     <div className="relative w-full h-full overflow-hidden flex items-center">
@@ -83,29 +83,28 @@ const StackSlider = () => {
       <div className="flex items-center w-full">
         <div className="flex animate-infinite-scroll items-center">
           {duplicatedStack.map((tech, index) => {
-            const IconComponent = tech.icon
+            const IconComponent = tech.icon;
             return (
               <div
                 key={`${tech.name}-${index}`}
                 className="flex-shrink-0 mx-6 flex flex-col items-center"
               >
                 <div className="h-18 flex items-center justify-center ">
-                  <div className='flex gap-2 items-center'>
-
+                  <div className="flex gap-2 items-center">
                     <IconComponent
                       size={24}
                       className="transition-transform duration-300"
                     />
-                    <p className='font-inter font-medium'>{tech.name}</p>
+                    <p className="font-inter font-medium">{tech.name}</p>
                   </div>
                 </div>
               </div>
-            )
+            );
           })}
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default StackSlider
+export default StackSlider;

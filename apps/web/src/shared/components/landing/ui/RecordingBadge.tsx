@@ -1,5 +1,5 @@
-import { Disc2 } from "lucide-react"
-import React from "react"
+import { Disc2 } from "lucide-react";
+import React from "react";
 
 const RecordingBadge = () => {
   return (
@@ -7,7 +7,7 @@ const RecordingBadge = () => {
       <Disc2 className="text-red-500 animate-pulse" size={14} />
       <span>Recording</span>
     </div>
-  )
-}
+  );
+};
 
-export default RecordingBadge 
+export default RecordingBadge;

@@ -1,16 +1,16 @@
-"use client"
-import React, { useState } from "react"
+"use client";
+import React, { useState } from "react";
 
 interface InputProps {
-  name?: string
-  text: string
-  type: string
-  value: string
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void
-  error?: boolean
-  ficon?: React.ReactNode
-  licon1?: React.ReactNode
-  licon2?: React.ReactNode
+  name?: string;
+  text: string;
+  type: string;
+  value: string;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  error?: boolean;
+  ficon?: React.ReactNode;
+  licon1?: React.ReactNode;
+  licon2?: React.ReactNode;
 }
 const Input: React.FC<InputProps> = ({
   name,
@@ -23,7 +23,7 @@ const Input: React.FC<InputProps> = ({
   licon1,
   licon2,
 }) => {
-  const [show, setShow] = useState(false)
+  const [show, setShow] = useState(false);
   return (
     <div
       className={`flex flex-row border  rounded-[14px] gap-3 py-2 px-3 border-auth-border  transition-colors duration-200 ${
@@ -50,7 +50,7 @@ const Input: React.FC<InputProps> = ({
         </div>
       )}
     </div>
-  )
-}
+  );
+};
 
-export default Input
+export default Input;

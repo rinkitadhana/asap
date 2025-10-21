@@ -1,5 +1,5 @@
-import React from "react"
-import { FaGithub } from "react-icons/fa"
+import React from "react";
+import { FaGithub } from "react-icons/fa";
 
 const GithubButton = ({ scrolled }: { scrolled: boolean }) => {
   return (
@@ -14,7 +14,7 @@ const GithubButton = ({ scrolled }: { scrolled: boolean }) => {
     >
       <FaGithub size={20} />
     </a>
-  )
-}
+  );
+};
 
-export default GithubButton
+export default GithubButton;

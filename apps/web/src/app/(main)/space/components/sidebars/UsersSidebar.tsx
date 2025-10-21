@@ -1,14 +1,14 @@
-import React from 'react';
-import { X } from 'lucide-react';
-import { SidebarContentProps } from '../../types';
+import React from "react";
+import { X } from "lucide-react";
+import { SidebarContentProps } from "../../types";
 
 const UsersSidebar: React.FC<SidebarContentProps> = ({ onClose }) => {
   return (
     <div className="p-4 flex flex-col h-full">
       <div className="flex items-center justify-between">
         <h3 className="text-lg font-semibold">People</h3>
-        <button 
-          onClick={onClose} 
+        <button
+          onClick={onClose}
           className="select-none p-1.5 rounded-full bg-call-background hover:bg-primary-hover border border-call-border cursor-pointer transition-all duration-300"
         >
           <X size={17} />

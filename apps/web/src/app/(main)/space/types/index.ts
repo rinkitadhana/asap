@@ -1,6 +1,6 @@
 // Centralized type definitions for the space module
 
-export type SidebarType = 'info' | 'users' | 'chat' | null;
+export type SidebarType = "info" | "users" | "chat" | null;
 
 export interface PreJoinSettings {
   videoEnabled: boolean;

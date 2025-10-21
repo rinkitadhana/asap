@@ -14,3 +14,146 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model User {
+  id             String   @id @default(cuid())
+  name           String?
+  email          String   @unique
+  image          String?
+  provider       String?         // "google", etc.
+  providerId     String?         // Google sub id
+  role           UserRole @default(USER)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  // Relations
+  refreshTokens  RefreshToken[]
+  meetingsHosted Meeting[]       @relation("MeetingsHosted")
+  participants   MeetingParticipant[]
+  recordings     Recording[]
+  chatMessages   ChatMessage[]
+}
+
+enum UserRole {
+  USER
+  ADMIN
+}
+
+model RefreshToken {
+  id          String   @id @default(cuid())
+  tokenHash   String
+  userId      String
+  revoked     Boolean  @default(false)
+  expiresAt   DateTime
+
+  user        User @relation(fields: [userId], references: [id])
+}
+
+model Meeting {
+  id           String   @id @default(cuid())
+  title        String
+  description  String?
+  code         String   @unique               // shareable join code
+  status       MeetingStatus @default(SCHEDULED)
+  createdById  String
+  scheduledAt  DateTime?                     // optional for future scheduling
+  startedAt    DateTime?
+  endedAt      DateTime?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  // Relations
+  createdBy    User      @relation("MeetingsHosted", fields: [createdById], references: [id])
+  participants MeetingParticipant[]
+  recordings   Recording[]
+  chatMessages ChatMessage[]
+}
+
+enum MeetingStatus {
+  SCHEDULED
+  ONGOING
+  ENDED
+  CANCELLED
+}
+
+model MeetingParticipant {
+  id            String   @id @default(cuid())
+  meetingId     String
+  userId        String?
+  displayName   String?             // For guests / editable name
+  role          ParticipantRole @default(GUEST)
+  joinedAt      DateTime @default(now())
+  leftAt        DateTime?
+  deviceInfo    Json?               // optional (camera/mic details)
+  networkStatus Json?               // optional (for quality metrics)
+
+  meeting       Meeting @relation(fields: [meetingId], references: [id])
+  user          User?   @relation(fields: [userId], references: [id])
+
+  @@index([meetingId])
+}
+
+enum ParticipantRole {
+  HOST
+  GUEST
+}
+
+model Recording {
+  id             String   @id @default(cuid())
+  meetingId      String?
+  userId         String?
+  title          String?
+  fileUrl        String?            // final merged file
+  uploadPath     String?            // temporary or raw upload location
+  size           Int?               // bytes
+  duration       Int?               // seconds
+  resolution     String?            // e.g. "1920x1080"
+  fps            Int?               // frames per second
+  status         RecordingStatus @default(PENDING)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  meeting        Meeting? @relation(fields: [meetingId], references: [id])
+  user           User?    @relation(fields: [userId], references: [id])
+  chunks         RecordingChunk[]
+}
+
+enum RecordingStatus {
+  PENDING
+  UPLOADING
+  PROCESSING
+  READY
+  FAILED
+}
+
+model RecordingChunk {
+  id           String   @id @default(cuid())
+  recordingId  String
+  chunkIndex   Int
+  fileUrl      String?       // each chunk stored in cloud
+  uploadedAt   DateTime @default(now())
+
+  recording    Recording @relation(fields: [recordingId], references: [id])
+
+  @@unique([recordingId, chunkIndex])
+}
+
+model ChatMessage {
+  id          String   @id @default(cuid())
+  meetingId   String
+  userId      String?
+  displayName String?
+  content     String
+  type        ChatMessageType @default(TEXT)
+  createdAt   DateTime @default(now())
+
+  meeting     Meeting @relation(fields: [meetingId], references: [id])
+  user        User?   @relation(fields: [userId], references: [id])
+
+  @@index([meetingId])
+}
+
+enum ChatMessageType {
+  TEXT
+  SYSTEM
+  FILE
+}
