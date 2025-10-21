@@ -34,6 +34,7 @@ const VideoCallControls = (props: ControlsProps) => {
         <ControlButton
           icon={<BsFillRecordCircleFill className="text-base" />}
           label="Start"
+          iconText="Record"
           variant="record"
         />
         <ControlButton

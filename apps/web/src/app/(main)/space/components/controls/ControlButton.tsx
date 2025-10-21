@@ -9,6 +9,7 @@ interface ControlButtonProps {
   className?: string;
   showLabel?: boolean;
   disabled?: boolean;
+  iconText?: string;
 }
 
 const ControlButton: React.FC<ControlButtonProps> = ({
@@ -19,6 +20,7 @@ const ControlButton: React.FC<ControlButtonProps> = ({
   className = "",
   showLabel = true,
   disabled = false,
+  iconText
 }) => {
   const handleClick = () => {
     if (onClick && !disabled) {
@@ -53,9 +55,9 @@ const ControlButton: React.FC<ControlButtonProps> = ({
         className={`${baseClasses} ${getVariantClasses()} ${className} ${disabled ? "opacity-50 cursor-not-allowed" : ""}`}
       >
         {icon}
-        {variant === "record" && <span>{label}</span>}
+        {variant === "record" && iconText && <span>{iconText}</span>}
       </button>
-      {showLabel && variant !== "record" && (
+      {showLabel && (
         <p className="text-[0.675rem] text-foreground/50">{label}</p>
       )}
     </div>
