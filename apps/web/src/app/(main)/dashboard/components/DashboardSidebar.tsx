@@ -1,15 +1,38 @@
 "use client";
 import Logo from "@/shared/components/ui/AsapLogo";
-import { FolderClosed, House, User } from "lucide-react";
+import { supabase } from "@/shared/lib/supabaseClient";
+import { FolderClosed, House, User as UserIcon } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React, { useState, useEffect } from "react";
 import { BsLayoutSidebarInset } from "react-icons/bs";
+import Image from "next/image";
+
 
 const DashboardSidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
   const pathname = usePathname();
+  const [userName, setUserName] = useState<string | null>(null)
+  const [userAvatar, setUserAvatar] = useState<string | null>(null)
+
+  useEffect(() => {
+    const getUser = async () => {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser()
+      
+      if (user) {
+        // Extract user data from user_metadata (Google OAuth stores it here)
+        const name = user.user_metadata?.full_name || user.user_metadata?.name || user.email?.split('@')[0] || 'User'
+        const avatar = user.user_metadata?.avatar_url || user.user_metadata?.picture || null
+        
+        setUserName(name)
+        setUserAvatar(avatar)
+      }
+    }
+    getUser()
+  }, [])
 
   useEffect(() => {
     const savedSidebarState = localStorage.getItem("sidebarOpen");
@@ -85,10 +108,20 @@ const DashboardSidebar = () => {
       </div>
       <div className="flex flex-col items-center justify-center gap-4 w-full select-none">
         <div className="flex items-center gap-2 hover:bg-call-primary rounded-xl border border-transparent hover:border-call-border py-2 px-3 cursor-pointer transition-all duration-200 w-full">
-          <div title="Rinkit Adhana">
-            <User size={22} />
+          <div title={userName || "User"}>
+            {userAvatar ? (
+              <Image
+                src={userAvatar}
+                alt={userName || "User"}
+                width={30}
+                height={30}
+                className="rounded-full object-cover"
+              />
+            ) : (
+              <UserIcon size={22} />
+            )}
           </div>
-          {isOpen && <span className="truncate">Rinkit Adhana</span>}
+          {isOpen && <span className="truncate">{userName || "User"}</span>}
         </div>
       </div>
     </div>
