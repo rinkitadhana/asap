@@ -1,38 +1,29 @@
 "use client";
 import Logo from "@/shared/components/ui/AsapLogo";
-import { supabase } from "@/shared/lib/supabaseClient";
-import { FolderClosed, House, User as UserIcon } from "lucide-react";
+import { FolderClosed, House, User as UserIcon, Settings, LogOut } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React, { useState, useEffect } from "react";
 import { BsLayoutSidebarInset } from "react-icons/bs";
 import Image from "next/image";
+import { useGetMe } from "@/shared/hooks/useUserQuery";
+import { useAuth } from "@/shared/hooks/useAuth";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/shared/components/ui/dropdown-menu";
 
 
 const DashboardSidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
   const pathname = usePathname();
-  const [userName, setUserName] = useState<string | null>(null)
-  const [userAvatar, setUserAvatar] = useState<string | null>(null)
+  const { data: user, isLoading } = useGetMe();
+  const { logout } = useAuth();
 
-  useEffect(() => {
-    const getUser = async () => {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser()
-      
-      if (user) {
-        // Extract user data from user_metadata (Google OAuth stores it here)
-        const name = user.user_metadata?.full_name || user.user_metadata?.name || user.email?.split('@')[0] || 'User'
-        const avatar = user.user_metadata?.avatar_url || user.user_metadata?.picture || null
-        
-        setUserName(name)
-        setUserAvatar(avatar)
-      }
-    }
-    getUser()
-  }, [])
 
   useEffect(() => {
     const savedSidebarState = localStorage.getItem("sidebarOpen");
@@ -107,22 +98,48 @@ const DashboardSidebar = () => {
         </nav>
       </div>
       <div className="flex flex-col items-center justify-center gap-4 w-full select-none">
-        <div className="flex items-center gap-2 hover:bg-call-primary rounded-xl border border-transparent hover:border-call-border py-2 px-3 cursor-pointer transition-all duration-200 w-full">
-          <div title={userName || "User"}>
-            {userAvatar ? (
-              <Image
-                src={userAvatar}
-                alt={userName || "User"}
-                width={30}
-                height={30}
-                className="rounded-full object-cover"
-              />
-            ) : (
-              <UserIcon size={22} />
-            )}
-          </div>
-          {isOpen && <span className="truncate">{userName || "User"}</span>}
-        </div>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <div className="flex items-center gap-2 hover:bg-call-primary rounded-xl border border-transparent hover:border-call-border py-2 px-3 cursor-pointer transition-all duration-200 w-full">
+              <div title={user?.name || "User"}>
+                {isLoading ? (
+                  <UserIcon size={22} />
+                ) : user?.avatar_url ? (
+                  <Image
+                    src={user?.avatar_url}
+                    alt={user?.name || "User"}
+                    width={30}
+                    height={30}
+                    className="rounded-full object-cover"
+                  />
+                ) : (
+                  <UserIcon size={22} />
+                )}
+              </div>
+              {isOpen && (
+                isLoading ? (
+                  <span className="h-4 w-20 bg-gray-200 dark:bg-gray-700 rounded animate-pulse" />
+                ) : (
+                  <span className="truncate">{user?.name || "User"}</span>
+                )
+              )}
+            </div>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="center" side="top" className="w-56">
+            <DropdownMenuItem className="cursor-pointer">
+              <Settings className="mr-2 h-4 w-4" />
+              <span>Settings</span>
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem 
+              className="cursor-pointer text-red-600 dark:text-red-400 focus:text-red-600 dark:focus:text-red-400" 
+              onClick={logout}
+            >
+              <LogOut className="mr-2 h-4 w-4" />
+              <span>Logout</span>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
     </div>
   );

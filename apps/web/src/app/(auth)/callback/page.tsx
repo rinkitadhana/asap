@@ -1,30 +1,22 @@
 "use client"
-import { useEffect } from "react"
+
 import { useRouter } from "next/navigation"
-import { supabase } from "@/shared/lib/supabaseClient"
+import { useEffect } from "react"
+import { useUserStore } from "@/shared/store/userStore"
+import api from "@/shared/lib/axiosInstance"
 
 export default function CallbackPage() {
   const router = useRouter()
+  const fetchUser = useUserStore((s) => s.fetchUser)
 
   useEffect(() => {
-    const getSession = async () => {
-      const {
-        data: { session },
-        error,
-      } = await supabase.auth.getSession()
-
-      if (error) {
-        console.error("Session error:", error)
-      }
-
-      if (session) {
-        localStorage.setItem("supabase_token", session.access_token)
-        router.push("/dashboard")
-      }
+    const handleAuth = async () => {
+      await fetchUser()
+      await api.post("/auth/sync-user")
+      router.push("/dashboard")
     }
+    handleAuth()
+  }, [fetchUser, router])
 
-    getSession()
-  }, [router])
-
-  return <p style={{ textAlign: "center" }}>Logging you in...</p>
+  return <p>Redirecting...</p>
 }

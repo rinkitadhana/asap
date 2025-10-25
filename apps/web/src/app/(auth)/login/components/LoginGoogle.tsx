@@ -1,16 +1,11 @@
 import React from "react";
 import { FcGoogle } from "react-icons/fc";
 import styles from "../styles/login.module.css";
-import { supabase } from "@/shared/lib/supabaseClient";
-
+import { useAuth } from "@/shared/hooks/useAuth";
 const LoginGoogle = () => {
+  const { loginWithGoogle } = useAuth()
   const handleLogin = async () => {
-    await supabase.auth.signInWithOAuth({
-      provider: "google",
-      options: {
-        redirectTo: process.env.NEXT_PUBLIC_REDIRECT_URL,
-      },
-    })
+    await loginWithGoogle() 
   }
   return (
     <div
