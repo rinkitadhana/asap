@@ -8,7 +8,7 @@ const LoginGoogle = () => {
     await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
-        redirectTo: "http://localhost:3000/callback",
+        redirectTo: process.env.NEXT_PUBLIC_REDIRECT_URL,
       },
     })
   }
