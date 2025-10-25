@@ -12,8 +12,8 @@ export default function CallbackPage() {
   useEffect(() => {
     const handleAuth = async () => {
       await fetchUser()
-      await api.post("/auth/sync-user")
       router.push("/dashboard")
+      await api.post("/auth/sync-user")
     }
     handleAuth()
   }, [fetchUser, router])

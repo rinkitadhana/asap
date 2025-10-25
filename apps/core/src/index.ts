@@ -5,7 +5,7 @@ import { initSocket } from "./sockets/index.ts";
 import authRouter from "./routes/auth.route.ts";
 
 const app = express();
-const PORT = process.env.PORT || 4000;
+const PORT = 4000;
 
 
 app.use(express.json())

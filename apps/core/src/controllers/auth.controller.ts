@@ -8,7 +8,7 @@ export async function getMe(req: AuthenticatedRequest, res: Response): Promise<v
       res.status(401).json({ error: "Failed to get user", details: "No user context" });
       return;
     }
-    const user = req.user;
+    const user = await findOrCreateUser(req.user);
     res.status(200).json({ user });
   } catch (error: unknown) {
     const errorMessage = error instanceof Error ? error.message : "Unknown error";
