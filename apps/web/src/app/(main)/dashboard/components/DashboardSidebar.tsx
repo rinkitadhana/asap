@@ -104,15 +104,15 @@ const DashboardSidebar = () => {
               <div title={user?.name || "User"}>
                 {isLoading ? (
                   <UserIcon size={22} />
-                ) : user?.avatar_url ? (
-                  <Image
-                    src={user?.avatar_url}
-                    alt={user?.name || "User"}
-                    width={30}
-                    height={30}
-                    className="rounded-full object-cover"
-                  />
-                ) : (
+              ) : user?.avatarUrl ? (
+                <Image
+                  src={user?.avatarUrl}
+                  alt={user?.name || "User"}
+                  width={30}
+                  height={30}
+                  className="rounded-full object-cover"
+                />
+              ) : (
                   <UserIcon size={22} />
                 )}
               </div>
