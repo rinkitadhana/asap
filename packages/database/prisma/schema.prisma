@@ -15,15 +15,14 @@ datasource db {
 }
 
 model User {
-  id             String   @id @default(cuid())
-  name           String?
-  email          String   @unique
-  image          String?
-  provider       String?         // "google", etc.
-  providerId     String?         // Google sub id
-  role           UserRole @default(USER)
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
+  id           String   @id @default(cuid())
+  supabaseId   String   @unique
+  email        String?
+  name         String?
+  avatarUrl    String?
+  role         String   @default("user")
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 
   // Relations
   refreshTokens  RefreshToken[]
