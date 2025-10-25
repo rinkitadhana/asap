@@ -4,7 +4,8 @@ import cors from "cors";
 import { initSocket } from "./sockets/index.ts";
 
 const app = express();
-const PORT = 4000;
+const PORT = process.env.PORT || 4000;
+
 
 app.use(express.json())
 app.use(
