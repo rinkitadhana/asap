@@ -8,7 +8,7 @@ export const useGetMe = () => {
       const { data } = await api.get("/auth/me")
       return data.user
     },
-    staleTime: 1000 * 60 * 5,
+    staleTime: Infinity,
   })
 }
 

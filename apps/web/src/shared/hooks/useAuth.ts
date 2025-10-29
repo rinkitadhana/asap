@@ -1,6 +1,8 @@
 import { supabase } from "@/shared/lib/supabaseClient"
 import { useRouter } from "next/navigation"
+import { useQueryClient } from "@tanstack/react-query"
 export function useAuth() {
+  const queryClient = useQueryClient()
   const router = useRouter()
   const loginWithGoogle = async () => {
     await supabase.auth.signInWithOAuth({
@@ -11,6 +13,7 @@ export function useAuth() {
 
   const logout = async () => {
     await supabase.auth.signOut()
+    queryClient.removeQueries({ queryKey: ["get-me"] })
     router.push("/")
   }
 

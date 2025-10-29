@@ -1,16 +1,12 @@
 "use client"
 
-import { useUserStore } from "@/shared/store/userStore"
+import { useGetMe } from "@/shared/hooks/useUserQuery"
 import { useRouter } from "next/navigation"
 import { useEffect } from "react"
 
 export default function ProtectedRoute({ children }: { children: React.ReactNode }) {
-  const { user, isLoading, fetchUser } = useUserStore()
+  const { data: user, isLoading } = useGetMe()
   const router = useRouter()
-
-  useEffect(() => {
-    fetchUser()
-  }, [fetchUser])
 
   useEffect(() => {
     if (!isLoading && !user) {
