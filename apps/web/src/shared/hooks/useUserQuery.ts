@@ -9,6 +9,7 @@ export const useGetMe = () => {
       return data.user
     },
     staleTime: Infinity,
+    retry: false,
   })
 }
 

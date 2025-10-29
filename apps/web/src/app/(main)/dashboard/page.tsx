@@ -1,7 +1,6 @@
 "use client";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
-import ProtectedRoute from "@/shared/components/ProtectedRoute";
 
 const Main = () => {
   const router = useRouter();
@@ -10,11 +9,7 @@ const Main = () => {
     router.push("/dashboard/home");
   }, [router]);
 
-  return (
-    <ProtectedRoute>
-      {null}
-    </ProtectedRoute>
-  );
+  return null;
 };
 
 export default Main;
