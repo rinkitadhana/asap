@@ -1,7 +1,7 @@
 import QuickActions from "./components/QuickActions";
 import HeroBanner from "./components/HeroBanner";
 import ActivityOverview from "./components/ActivityOverview";
-import AIToolsSection from "./components/AIToolsSection";
+import AIToolsSection from "./components/RecentCreationsSection";
 
 const DashboardHome = () => {
   return (
