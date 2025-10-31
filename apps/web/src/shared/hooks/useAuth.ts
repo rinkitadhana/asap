@@ -1,3 +1,4 @@
+"use client"
 import { supabase } from "@/shared/lib/supabaseClient"
 import { useRouter } from "next/navigation"
 import { useQueryClient } from "@tanstack/react-query"

@@ -5,7 +5,8 @@ import LandingHero from "@/shared/components/landing/LandingHero";
 import LandingTechStack from "@/shared/components/landing/LandingTechStack";
 import LandingTemp from "@/shared/components/landing/LandingTemp";
 import LandingFooter from "@/shared/components/landing/LandingFooter";
-const page = () => {
+
+const LandingPage = () => {
   return (
     <>
       <PageTitle title="Home | Asap" />
@@ -23,4 +24,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default LandingPage;
