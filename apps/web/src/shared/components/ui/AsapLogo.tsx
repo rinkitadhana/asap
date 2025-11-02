@@ -1,19 +1,26 @@
+import { useTheme } from "next-themes";
 import Image from "next/image";
 import React from "react";
 
-const AsapLogo = ({ icon }: { icon?: boolean }) => {
+const AsapLogo = ({ icon, name }: { icon?: boolean, name?: boolean }) => {
+  const { theme } = useTheme();
+  const darkMode = theme === "dark";
   return (
     <div className="flex items-center gap-2">
       {icon && (
         <Image
-          src="/img/logo/logo.png"
-          className="size-7"
+          src= {darkMode ? "/img/logo/rounded-logo-dark.png" : "/img/logo/rounded-logo-light.png"}
+          className="size-[32px]"
           alt="Asap"
           width={40}
           height={40}
         />
       )}
-      <h1 className="text-xl font-semibold">Asap</h1>
+      {
+        name && (
+          <h1 className="text-xl font-bold">Asap</h1>
+        )
+      }
     </div>
   );
 };

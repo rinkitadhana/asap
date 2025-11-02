@@ -5,7 +5,7 @@ import GithubButton from "./ui/GithubButton";
 import { useRouter } from "next/navigation";
 import { ThemeSwitcher } from "../ThemeSwitcher";
 import VersionBadge from "./ui/VersionBadge";
-import Image from "next/image";
+import AsapLogo from "../ui/AsapLogo";
 
 const LandingNavbar = () => {
   const [scrolled, setScrolled] = useState(false);
@@ -48,14 +48,7 @@ const LandingNavbar = () => {
               onClick={() => router.push("/")}
               className="text-2xl font-bold cursor-pointer flex items-center gap-3"
             >
-              <Image
-                src="/img/logo/logo.png"
-                alt="logo"
-                width={40}
-                height={40}
-                className="size-7"
-              />
-              <span className="text-2xl font-bold">Asap</span>
+              <AsapLogo name icon />
             </button>
             <VersionBadge text="BETA 0.0.1" />
           </div>

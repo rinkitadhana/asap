@@ -1,5 +1,4 @@
 "use client";
-import Logo from "@/shared/components/ui/AsapLogo";
 import { FolderClosed, House, User as UserIcon, Settings, LogOut } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -15,6 +14,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/shared/components/ui/dropdown-menu";
+import AsapLogo from "@/shared/components/ui/AsapLogo";
 
 
 const DashboardSidebar = () => {
@@ -69,7 +69,7 @@ const DashboardSidebar = () => {
             isOpen ? "justify-between" : "justify-center"
           }`}
         >
-          {isOpen && <Logo />}
+          {isOpen && <AsapLogo name icon />}
           <button
             title={isOpen ? "Close sidebar" : "Open sidebar"}
             onClick={toggleSidebar}

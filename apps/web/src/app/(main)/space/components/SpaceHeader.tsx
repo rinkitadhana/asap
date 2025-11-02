@@ -11,7 +11,7 @@ const SpaceHeader = ({ prejoin }: { prejoin?: boolean }) => {
       <div className="flex items-center justify-between py-2 w-full rounded-xl">
         <div className="flex items-center gap-2">
           <BackButton />
-          <AsapLogo />
+          <AsapLogo icon name />
           <div className="h-6 border-l border-primary-border mx-1" />
           <div className=" text-secondary-text text-sm">
             Rinkit Adhana&apos;s Space
