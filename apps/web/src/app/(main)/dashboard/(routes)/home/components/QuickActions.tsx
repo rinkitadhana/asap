@@ -10,7 +10,7 @@ const QuickActions = () => {
 
   const handleJoinRoom = () => {
     const roomId = generateRoomId();
-    router.push(`/space/${roomId}`);
+    router.push(`/${roomId}`);
   };
 
   const actions = [
