@@ -1,30 +1,28 @@
-import { useTheme } from "next-themes";
 import Image from "next/image";
-import React, { useEffect, useState } from "react";
+import React from "react";
 
 const AsapLogo = ({ icon, name }: { icon?: boolean, name?: boolean }) => {
-  const { resolvedTheme } = useTheme();
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  const darkMode = resolvedTheme === "dark";
-
   return (
     <div className="flex items-center gap-2">
-      {icon && mounted && (
-        <Image
-          src={darkMode ? "/logo/rounded-logo-dark.png" : "/logo/rounded-logo-light.png"}
-          className="size-[32px] select-none"
-          alt="Asap"
-          width={40}
-          height={40}
-        />
-      )}
-      {icon && !mounted && (
-        <div className="size-[32px]" />
+      {icon && (
+        <>
+          <Image
+            src="/logo/rounded-logo-light.png"
+            className="size-[32px] select-none dark:hidden"
+            alt="Asap"
+            width={40}
+            height={40}
+            priority
+          />
+          <Image
+            src="/logo/rounded-logo-dark.png"
+            className="size-[32px] select-none hidden dark:block"
+            alt="Asap"
+            width={40}
+            height={40}
+            priority
+          />
+        </>
       )}
       {
         name && (
