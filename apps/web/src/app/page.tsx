@@ -17,8 +17,6 @@ const LandingPage = () => {
       <div className="border-t border-main-border w-full" />
       <LandingTemp />
       <div className="border-t border-main-border w-full" />
-      <LandingTemp />
-      <div className="border-t border-main-border w-full" />
       <LandingFooter />
     </>
   );
