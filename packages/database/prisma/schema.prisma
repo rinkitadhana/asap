@@ -14,37 +14,26 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum Plan {
+  FREE
+  PRO
+  BUSINESS
+}
+
 model User {
   id           String   @id @default(cuid())
   supabaseId   String   @unique
   email        String?
   name         String?
-  avatarUrl    String?
-  role         String   @default("user")
+  avatar    String?
+  plan         Plan @default(FREE)
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 
-  // Relations
-  refreshTokens  RefreshToken[]
   meetingsHosted Meeting[]       @relation("MeetingsHosted")
   participants   MeetingParticipant[]
   recordings     Recording[]
   chatMessages   ChatMessage[]
-}
-
-enum UserRole {
-  USER
-  ADMIN
-}
-
-model RefreshToken {
-  id          String   @id @default(cuid())
-  tokenHash   String
-  userId      String
-  revoked     Boolean  @default(false)
-  expiresAt   DateTime
-
-  user        User @relation(fields: [userId], references: [id])
 }
 
 model Meeting {

@@ -104,9 +104,9 @@ const DashboardSidebar = () => {
               <div title={user?.name || "User"}>
                 {isLoading ? (
                   <UserIcon size={22} />
-              ) : user?.avatarUrl ? (
+              ) : user?.avatar ? (
                 <Image
-                  src={user?.avatarUrl}
+                  src={user?.avatar}
                   alt={user?.name || "User"}
                   width={30}
                   height={30}

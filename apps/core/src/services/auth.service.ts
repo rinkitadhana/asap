@@ -12,7 +12,7 @@ export async function findOrCreateUser(supabaseUser: SupabaseUser) {
         supabaseId,
         email,
         name: user_metadata?.full_name || "",
-        avatarUrl: user_metadata?.avatar_url || "",
+        avatar: user_metadata?.avatar_url || "",
       },
     });
   }
