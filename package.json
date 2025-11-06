@@ -19,7 +19,8 @@
     "db:push": "cd packages/database && npm run db:push",
     "db:migrate": "cd packages/database && npm run db:migrate",
     "db:studio": "cd packages/database && npm run db:studio",
-    "db:seed": "cd packages/database && npm run db:seed"
+    "db:seed": "cd packages/database && npm run db:seed",
+    "prisma:format": "cd packages/database && npx prisma format"
   },
   "devDependencies": {
     "dotenv-cli": "^7.4.2",
