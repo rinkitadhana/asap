@@ -1,12 +1,5 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
-  output   = "../generated/prisma"
 }
 
 datasource db {
@@ -14,134 +7,145 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-enum Plan {
+model User {
+  id        String   @id @default(cuid())
+  name      String
+  email     String   @unique
+  avatar    String?
+  plan      PlanType @default(FREE)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  spacesCreated     Space[]            @relation("HostSpaces")
+  spaceParticipants SpaceParticipant[]
+  finalOutputs      FinalOutput[]
+  planUsages        PlanUsage[]
+}
+
+enum PlanType {
   FREE
   PRO
   BUSINESS
 }
 
-model User {
-  id           String   @id @default(cuid())
-  supabaseId   String   @unique
-  email        String?
-  name         String?
-  avatar    String?
-  plan         Plan @default(FREE)
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+model Space {
+  id                  String          @id @default(cuid())
+  hostId              String
+  host                User            @relation("HostSpaces", fields: [hostId], references: [id])
+  coHostId            String?
+  title               String
+  description         String?
+  joinCode            String          @unique
+  status              SpaceStatus     @default(LIVE)
+  recordingStatus     RecordingStatus @default(IDLE)
+  startTime           DateTime?
+  endTime             DateTime?
+  duration            Int? // seconds
+  planUsed            PlanType        @default(FREE)
+  totalRecordingHours Float?
+  createdAt           DateTime        @default(now())
+  updatedAt           DateTime        @updatedAt
 
-  meetingsHosted Meeting[]       @relation("MeetingsHosted")
-  participants   MeetingParticipant[]
-  recordings     Recording[]
-  chatMessages   ChatMessage[]
-}
-
-model Meeting {
-  id           String   @id @default(cuid())
-  title        String
-  description  String?
-  code         String   @unique               // shareable join code
-  status       MeetingStatus @default(SCHEDULED)
-  createdById  String
-  scheduledAt  DateTime?                     // optional for future scheduling
-  startedAt    DateTime?
-  endedAt      DateTime?
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-
-  // Relations
-  createdBy    User      @relation("MeetingsHosted", fields: [createdById], references: [id])
-  participants MeetingParticipant[]
+  participants SpaceParticipant[]
   recordings   Recording[]
-  chatMessages ChatMessage[]
+  finalOutputs FinalOutput[]
 }
 
-enum MeetingStatus {
-  SCHEDULED
-  ONGOING
-  ENDED
-  CANCELLED
+enum SpaceStatus {
+  LIVE // meeting active, users connected
+  ENDED // host ended meeting
+  PROCESSING // backend merging recordings
+  READY // meeting + final output ready
 }
 
-model MeetingParticipant {
-  id            String   @id @default(cuid())
-  meetingId     String
-  userId        String?
-  displayName   String?             // For guests / editable name
-  role          ParticipantRole @default(GUEST)
-  joinedAt      DateTime @default(now())
-  leftAt        DateTime?
-  deviceInfo    Json?               // optional (camera/mic details)
-  networkStatus Json?               // optional (for quality metrics)
+enum RecordingStatus {
+  IDLE // recording not started
+  RECORDING // recording active
+  STOPPED // recording stopped
+}
 
-  meeting       Meeting @relation(fields: [meetingId], references: [id])
-  user          User?   @relation(fields: [userId], references: [id])
-
-  @@index([meetingId])
+model SpaceParticipant {
+  id           String          @id @default(cuid())
+  spaceId      String
+  space        Space           @relation(fields: [spaceId], references: [id])
+  userId       String
+  user         User            @relation(fields: [userId], references: [id])
+  role         ParticipantRole
+  joinedAt     DateTime        @default(now())
+  leftAt       DateTime?
+  hasRecording Boolean         @default(false)
+  recordings   Recording[]
 }
 
 enum ParticipantRole {
   HOST
+  CO_HOST
   GUEST
 }
 
 model Recording {
-  id             String   @id @default(cuid())
-  meetingId      String?
-  userId         String?
-  title          String?
-  fileUrl        String?            // final merged file
-  uploadPath     String?            // temporary or raw upload location
-  size           Int?               // bytes
-  duration       Int?               // seconds
-  resolution     String?            // e.g. "1920x1080"
-  fps            Int?               // frames per second
-  status         RecordingStatus @default(PENDING)
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
-
-  meeting        Meeting? @relation(fields: [meetingId], references: [id])
-  user           User?    @relation(fields: [userId], references: [id])
-  chunks         RecordingChunk[]
+  id            String              @id @default(cuid())
+  spaceId       String
+  space         Space               @relation(fields: [spaceId], references: [id])
+  participantId String
+  participant   SpaceParticipant    @relation(fields: [participantId], references: [id])
+  type          RecordingType
+  chunks        Json // list of uploaded chunk URLs
+  fileUrl       String? // final single track file (webm/mp4)
+  status        RecordingFileStatus @default(UPLOADING)
+  startTime     DateTime
+  endTime       DateTime
+  duration      Int // in seconds
+  quality       QualityType         @default(P720)
+  localUpload   Boolean             @default(true)
+  createdAt     DateTime            @default(now())
+  updatedAt     DateTime            @updatedAt
 }
 
-enum RecordingStatus {
-  PENDING
+enum RecordingType {
+  AUDIO
+  VIDEO
+}
+
+enum RecordingFileStatus {
   UPLOADING
+  UPLOADED
+  MERGED
+}
+
+enum QualityType {
+  P720
+  P1080
+  P4K
+}
+
+model FinalOutput {
+  id               String       @id @default(cuid())
+  spaceId          String
+  space            Space        @relation(fields: [spaceId], references: [id])
+  hostId           String
+  host             User         @relation(fields: [hostId], references: [id])
+  mergedAt         DateTime     @default(now())
+  status           OutputStatus @default(PROCESSING)
+  mixedUrl         String? // merged AV file
+  audioOnly        String?
+  individualTracks Json? // for pro users (unlocked)
+  duration         Int? // seconds
+  quality          QualityType  @default(P1080)
+  createdAt        DateTime     @default(now())
+}
+
+enum OutputStatus {
   PROCESSING
   READY
-  FAILED
 }
 
-model RecordingChunk {
-  id           String   @id @default(cuid())
-  recordingId  String
-  chunkIndex   Int
-  fileUrl      String?       // each chunk stored in cloud
-  uploadedAt   DateTime @default(now())
-
-  recording    Recording @relation(fields: [recordingId], references: [id])
-
-  @@unique([recordingId, chunkIndex])
-}
-
-model ChatMessage {
-  id          String   @id @default(cuid())
-  meetingId   String
-  userId      String?
-  displayName String?
-  content     String
-  type        ChatMessageType @default(TEXT)
-  createdAt   DateTime @default(now())
-
-  meeting     Meeting @relation(fields: [meetingId], references: [id])
-  user        User?   @relation(fields: [userId], references: [id])
-
-  @@index([meetingId])
-}
-
-enum ChatMessageType {
-  TEXT
-  SYSTEM
-  FILE
+model PlanUsage {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  month     String // e.g. "2025-11"
+  hoursUsed Float    @default(0)
+  hoursCap  Float
+  createdAt DateTime @default(now())
 }
