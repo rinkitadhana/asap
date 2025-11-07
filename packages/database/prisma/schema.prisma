@@ -1,5 +1,6 @@
 generator client {
   provider = "prisma-client-js"
+  output   = "../generated/prisma"
 }
 
 datasource db {
@@ -8,13 +9,14 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(cuid())
-  name      String
-  email     String   @unique
-  avatar    String?
-  plan      PlanType @default(FREE)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id         String   @id @default(cuid())
+  supabaseId String   @unique
+  name       String
+  email      String   @unique
+  avatar     String?
+  plan       PlanType @default(FREE)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 
   spacesCreated     Space[]            @relation("HostSpaces")
   spaceParticipants SpaceParticipant[]
