@@ -20,7 +20,6 @@ model User {
 
   spacesCreated     Space[]            @relation("HostSpaces")
   spaceParticipants SpaceParticipant[]
-  finalOutputs      FinalOutput[]
   planUsages        PlanUsage[]
 }
 
@@ -34,7 +33,6 @@ model Space {
   id                  String          @id @default(cuid())
   hostId              String
   host                User            @relation("HostSpaces", fields: [hostId], references: [id])
-  coHostId            String?
   title               String
   description         String?
   joinCode            String          @unique
@@ -48,9 +46,9 @@ model Space {
   createdAt           DateTime        @default(now())
   updatedAt           DateTime        @updatedAt
 
-  participants SpaceParticipant[]
-  recordings   Recording[]
-  finalOutputs FinalOutput[]
+  participants    SpaceParticipant[]
+  recordings      Recording[]
+  finalRecordings FinalRecording[]
 }
 
 enum SpaceStatus {
@@ -77,6 +75,10 @@ model SpaceParticipant {
   leftAt       DateTime?
   hasRecording Boolean         @default(false)
   recordings   Recording[]
+
+  @@unique([userId, spaceId])
+  @@index([spaceId])
+  @@index([userId])
 }
 
 enum ParticipantRole {
@@ -91,17 +93,24 @@ model Recording {
   space         Space               @relation(fields: [spaceId], references: [id])
   participantId String
   participant   SpaceParticipant    @relation(fields: [participantId], references: [id])
-  type          RecordingType
-  chunks        Json // list of uploaded chunk URLs
-  fileUrl       String? // final single track file (webm/mp4)
-  status        RecordingFileStatus @default(UPLOADING)
-  startTime     DateTime
-  endTime       DateTime
-  duration      Int // in seconds
-  quality       QualityType         @default(P720)
-  localUpload   Boolean             @default(true)
-  createdAt     DateTime            @default(now())
-  updatedAt     DateTime            @updatedAt
+
+  type           RecordingType
+  videoQuality   VideoQuality?       // only for VIDEO type
+  audioQuality   AudioQuality?       // only for AUDIO type
+  uploadedChunks Json                // array of uploaded chunk URLs [{url, timestamp, size}]
+  fileUrl        String?             // final merged file URL for this specific track
+  fileSize       BigInt?             // file size in bytes
+  status         RecordingFileStatus @default(UPLOADING)
+  startedAt      DateTime
+  endedAt        DateTime?
+  duration       Int?                // seconds
+  localUpload    Boolean             @default(true)
+  createdAt      DateTime            @default(now())
+  updatedAt      DateTime            @updatedAt
+
+  @@index([spaceId])
+  @@index([participantId])
+  @@index([type])
 }
 
 enum RecordingType {
@@ -110,44 +119,75 @@ enum RecordingType {
 }
 
 enum RecordingFileStatus {
-  UPLOADING
-  UPLOADED
-  MERGED
+  UPLOADING     // chunks being uploaded
+  UPLOADED      // all chunks uploaded
+  PROCESSING    // backend processing/merging chunks
+  READY         // final file ready
+  FAILED        // processing failed
 }
 
-enum QualityType {
-  P720
-  P1080
-  P4K
+enum VideoQuality {
+  P720          // 1280x720
+  P1080         // 1920x1080
+  P1440         // 2560x1440
+  P4K           // 3840x2160
 }
 
-model FinalOutput {
-  id               String       @id @default(cuid())
-  spaceId          String
-  space            Space        @relation(fields: [spaceId], references: [id])
-  hostId           String
-  host             User         @relation(fields: [hostId], references: [id])
-  mergedAt         DateTime     @default(now())
-  status           OutputStatus @default(PROCESSING)
-  mixedUrl         String? // merged AV file
-  audioOnly        String?
-  individualTracks Json? // for pro users (unlocked)
-  duration         Int? // seconds
-  quality          QualityType  @default(P1080)
-  createdAt        DateTime     @default(now())
+enum AudioQuality {
+  SR_44100      // 44.1 kHz (CD quality)
+  SR_48000      // 48 kHz (professional standard)
+  SR_96000      // 96 kHz (high-res audio)
+}
+
+model FinalRecording {
+  id                 String         @id @default(cuid())
+  spaceId            String         @unique
+  space              Space          @relation(fields: [spaceId], references: [id])
+  status             OutputStatus   @default(PROCESSING)
+  
+  // Primary output - single video file with audio mixed in (ready to use/download)
+  finalVideo         String?        // complete video with all participants + audio combined
+  videoQuality       VideoQuality   @default(P1080)
+  audioQuality       AudioQuality   @default(SR_48000)
+  duration           Int?           // seconds
+  fileSize           BigInt?        // file size in bytes
+  
+  // Optional: Audio-only export (for users who want just audio)
+  finalAudio         String?        // extracted audio track from final video
+  
+  // Individual participant tracks for separate downloads
+  // Structure: { participantId: { video: {P720: "recordingId", P1080: "recordingId"}, audio: {SR_48000: "recordingId"} } }
+  // Frontend can fetch Recording entries using these IDs to get download URLs
+  separateTracks     Json?          // maps to Recording IDs per participant
+  
+  processingStarted  DateTime?
+  processingEnded    DateTime?
+  errorMessage       String?        // if status is FAILED
+  
+  createdAt          DateTime       @default(now())
+  updatedAt          DateTime       @updatedAt
+
+  @@index([spaceId])
+  @@index([status])
 }
 
 enum OutputStatus {
-  PROCESSING
-  READY
+  QUEUED           // waiting to start processing
+  PROCESSING       // actively merging recordings
+  READY            // final output available
+  FAILED           // processing failed
 }
 
 model PlanUsage {
   id        String   @id @default(cuid())
   userId    String
   user      User     @relation(fields: [userId], references: [id])
+  
   month     String // e.g. "2025-11"
   hoursUsed Float    @default(0)
   hoursCap  Float
   createdAt DateTime @default(now())
+
+  @@unique([userId, month])
+  @@index([userId])
 }
