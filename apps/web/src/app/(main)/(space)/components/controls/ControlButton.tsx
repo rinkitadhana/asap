@@ -10,6 +10,7 @@ interface ControlButtonProps {
   showLabel?: boolean;
   disabled?: boolean;
   iconText?: string;
+  sound?: boolean
 }
 
 const ControlButton: React.FC<ControlButtonProps> = ({
@@ -20,11 +21,14 @@ const ControlButton: React.FC<ControlButtonProps> = ({
   className = "",
   showLabel = true,
   disabled = false,
+  sound = true,
   iconText
 }) => {
   const handleClick = () => {
     if (onClick && !disabled) {
-      playClickSound();
+      if (sound) {
+        playClickSound();
+      }
       onClick();
     }
   };

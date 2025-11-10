@@ -66,18 +66,21 @@ const VideoCallControls = (props: ControlsProps) => {
         <ControlButton
           icon={<BsInfoLg />}
           label="Info"
+          sound={false}
           onClick={() => toggleSidebar("info")}
           variant={activeSidebar === "info" ? "active" : "default"}
         />
         <ControlButton
           icon={<LuUsers />}
           label="People"
+          sound={false}
           onClick={() => toggleSidebar("users")}
           variant={activeSidebar === "users" ? "active" : "default"}
         />
         <ControlButton
           icon={<IoChatbubbleOutline />}
           label="Chat"
+          sound={false}
           onClick={() => toggleSidebar("chat")}
           variant={activeSidebar === "chat" ? "active" : "default"}
         />
