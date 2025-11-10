@@ -44,7 +44,7 @@ export const SocketProvider = ({ children }: SocketProviderProps) => {
 
   useEffect(() => {
     // Connect to the backend socket server
-    const connection: SocketType = io("http://localhost:4000", {
+    const connection: SocketType = io(process.env.NEXT_PUBLIC_API_SOCKET_URL || "http://localhost:4000", {
       transports: ["websocket", "polling"],
       autoConnect: true,
     });
