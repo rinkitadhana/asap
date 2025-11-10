@@ -42,7 +42,7 @@ export async function verifySupabaseJWT(token: string): Promise<SupabaseUser> {
     email: user.email || '',
     user_metadata: user.user_metadata,
     aud: user.aud,
-    exp: Math.floor(Date.now() / 1000) + 3600, // Add 1 hour
+    exp: Math.floor(Date.now() / 1000),
     iat: Math.floor(Date.now() / 1000),
     iss: `https://${process.env.SUPABASE_PROJECT_ID}.supabase.co/auth/v1`
   } as SupabaseUser;
