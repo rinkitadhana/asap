@@ -10,6 +10,7 @@ interface Player {
   playing: boolean;
   speakerMuted: boolean;
   username?: string;
+  avatar?: string;
 }
 
 interface Players {
@@ -95,3 +96,4 @@ const usePlayer = (myId: string, roomId: string, peer: Peer | null) => {
 };
 
 export default usePlayer;
+

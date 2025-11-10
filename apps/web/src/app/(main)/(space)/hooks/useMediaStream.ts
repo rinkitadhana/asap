@@ -45,3 +45,4 @@ const useMediaStream = (initialSettings?: MediaStreamSettings) => {
 };
 
 export default useMediaStream;
+
