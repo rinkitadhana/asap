@@ -1,19 +1,14 @@
+import crypto from "crypto";
+
 const generateRoomId = (): string => {
-  const characters = "abcdefghijklmnopqrstuvwxyz";
-  const segmentLength = 3;
-  const segments = 3;
+  const alphabet = "abcdefghijklmnopqrstuvwxyz";
+  
+  const randomString = (length: number) =>
+    Array.from(crypto.randomFillSync(new Uint8Array(length)))
+      .map((n) => alphabet[n % alphabet.length])
+      .join("");
 
-  let roomId = "";
-  for (let i = 0; i < segments; i++) {
-    let segment = "";
-    for (let j = 0; j < segmentLength; j++) {
-      const randomIndex = Math.floor(Math.random() * characters.length);
-      segment += characters[randomIndex];
-    }
-    roomId += segment + (i < segments - 1 ? "-" : "");
-  }
-
-  return roomId;
+  return `${randomString(3)}-${randomString(4)}-${randomString(3)}`;
 };
 
 export default generateRoomId;
