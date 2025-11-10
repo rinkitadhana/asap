@@ -20,7 +20,6 @@ model User {
 
   spacesCreated     Space[]            @relation("HostSpaces")
   spaceParticipants SpaceParticipant[]
-  planUsages        PlanUsage[]
 }
 
 enum PlanType {
@@ -104,7 +103,6 @@ model Recording {
   startedAt      DateTime
   endedAt        DateTime?
   duration       Int?                // seconds
-  localUpload    Boolean             @default(true)
   createdAt      DateTime            @default(now())
   updatedAt      DateTime            @updatedAt
 
@@ -167,7 +165,6 @@ model FinalRecording {
   createdAt          DateTime       @default(now())
   updatedAt          DateTime       @updatedAt
 
-  @@index([spaceId])
   @@index([status])
 }
 
@@ -176,18 +173,4 @@ enum OutputStatus {
   PROCESSING       // actively merging recordings
   READY            // final output available
   FAILED           // processing failed
-}
-
-model PlanUsage {
-  id        String   @id @default(cuid())
-  userId    String
-  user      User     @relation(fields: [userId], references: [id])
-  
-  month     String // e.g. "2025-11"
-  hoursUsed Float    @default(0)
-  hoursCap  Float
-  createdAt DateTime @default(now())
-
-  @@unique([userId, month])
-  @@index([userId])
 }
