@@ -2,7 +2,7 @@ import express, { type Request, type Response } from "express";
 import { createServer } from "http";
 import cors from "cors";
 import { initSocket } from "./sockets/index.ts";
-import authRouter from "./routes/auth.route.ts";
+import authRouter from "./routes/auth-route.ts";
 
 const app = express();
 const PORT = 4000;

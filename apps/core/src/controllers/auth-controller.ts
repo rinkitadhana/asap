@@ -1,6 +1,6 @@
 import type { Request, Response } from "express";
-import type { AuthenticatedRequest } from "../middlewares/auth.middleware";
-import { findOrCreateUser } from "../services/auth.service";
+import type { AuthenticatedRequest } from "../middlewares/auth-middleware";
+import { findOrCreateUser } from "../services/auth-service";
 
 export async function getMe(req: AuthenticatedRequest, res: Response): Promise<void> {
   try {
