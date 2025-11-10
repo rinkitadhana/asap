@@ -127,6 +127,7 @@ const PreJoinScreen = ({ onJoinCall }: PreJoinScreenProps) => {
                   className="w-full h-full object-cover"
                   myVideo={true}
                   username={username}
+                  preJoin={true}
                   hideElements={true}
                 />
               )}

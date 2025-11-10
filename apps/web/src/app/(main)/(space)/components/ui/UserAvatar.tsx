@@ -3,9 +3,10 @@ import Image from "next/image";
 
 interface UserAvatarProps {
   username?: string;
-  userProfile?: string;
+  userProfile: string;
   size?: "small" | "medium" | "large";
   className?: string;
+  preJoin?: boolean;
 }
 
 const UserAvatar: React.FC<UserAvatarProps> = ({
@@ -13,36 +14,23 @@ const UserAvatar: React.FC<UserAvatarProps> = ({
   userProfile,
   size = "large",
   className = "",
+  preJoin = false,
 }) => {
-  const sizeClasses = {
-    small: "size-[40px] text-lg",
-    medium: "size-[60px] text-2xl",
-    large: "size-[100px] text-4xl",
-  };
-
-  if (userProfile) {
-    return (
+  return (
+    <div className="flex flex-col items-center justify-center gap-3">
+      {preJoin ? (
+        <div className="w-full h-full bg-call-primary/50 flex items-center justify-center font-semibold">
+           Camera is off!
+        </div>
+      ) : (
       <Image
         src={userProfile}
-        alt="User Profile"
+        alt={username ? `${username}'s profile` : "User Profile"}
         width={size === "small" ? 40 : size === "medium" ? 60 : 100}
         height={size === "small" ? 40 : size === "medium" ? 60 : 100}
         className={`rounded-full ${className}`}
       />
-    );
-  }
-
-  return (
-    <div className="select-none rounded-full bg-green-400/20 flex items-center justify-center">
-      <div className={`${sizeClasses[size]} flex items-center justify-center`}>
-        {username ? (
-          <span className="text-foreground font-medium">
-            {username.charAt(0).toUpperCase()}
-          </span>
-        ) : (
-          <span className="text-foreground font-medium">?</span>
-        )}
-      </div>
+      )}
     </div>
   );
 };

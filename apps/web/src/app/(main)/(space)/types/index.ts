@@ -57,6 +57,7 @@ export interface UserMediaProps {
   myVideo?: boolean;
   username?: string;
   userProfile?: string;
+  preJoin?: boolean;
   speakerMuted?: boolean;
   hideElements?: boolean;
 }

@@ -11,6 +11,7 @@ const UserMedia = ({
   myVideo,
   username,
   userProfile,
+  preJoin = false,
   speakerMuted = false,
   hideElements = false,
 }: UserMediaProps) => {
@@ -101,7 +102,8 @@ const UserMedia = ({
             <div className="select-none w-full h-full bg-call-primary/50 flex items-center justify-center">
               <UserAvatar
                 username={username}
-                userProfile={userProfile}
+                userProfile={userProfile || ""}
+                preJoin={preJoin}
                 size="large"
               />
             </div>
@@ -114,7 +116,8 @@ const UserMedia = ({
         <div className="select-none w-full h-full bg-call-primary/50 flex items-center justify-center">
           <UserAvatar
             username={username}
-            userProfile={userProfile}
+            userProfile={userProfile || ""} 
+            preJoin={preJoin}
             size="large"
           />
         </div>
