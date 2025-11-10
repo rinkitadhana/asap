@@ -9,8 +9,8 @@ const UserMedia = ({
   playing,
   className,
   myVideo,
-  username,
-  userProfile,
+  name,
+  avatar,
   preJoin = false,
   speakerMuted = false,
   hideElements = false,
@@ -101,8 +101,8 @@ const UserMedia = ({
           {!playing && (
             <div className="select-none w-full h-full bg-call-primary/50 flex items-center justify-center">
               <UserAvatar
-                username={username}
-                userProfile={userProfile || ""}
+                name={name}
+                avatar={avatar || ""}
                 preJoin={preJoin}
                 size="large"
               />
@@ -115,8 +115,8 @@ const UserMedia = ({
       ) : (
         <div className="select-none w-full h-full bg-call-primary/50 flex items-center justify-center">
           <UserAvatar
-            username={username}
-            userProfile={userProfile || ""} 
+            name={name}
+            avatar={avatar || ""} 
             preJoin={preJoin}
             size="large"
           />
@@ -125,9 +125,9 @@ const UserMedia = ({
       {!hideElements && (
         <StatusIndicators muted={muted} speakerMuted={speakerMuted} />
       )}
-      {!hideElements && username && (
+      {!hideElements && name && (
         <div className="select-none absolute bottom-3 left-3 bg-call-primary/50 px-3 py-1 rounded-full text-foreground text-sm font-medium">
-          {username}
+          {name}
         </div>
       )}
     </div>

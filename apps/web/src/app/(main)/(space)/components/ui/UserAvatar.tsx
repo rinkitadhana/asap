@@ -2,16 +2,16 @@ import React from "react";
 import Image from "next/image";
 
 interface UserAvatarProps {
-  username?: string;
-  userProfile: string;
+  name?: string;
+  avatar: string;
   size?: "small" | "medium" | "large";
   className?: string;
   preJoin?: boolean;
 }
 
 const UserAvatar: React.FC<UserAvatarProps> = ({
-  username,
-  userProfile,
+  name,
+  avatar,
   size = "large",
   className = "",
   preJoin = false,
@@ -24,8 +24,8 @@ const UserAvatar: React.FC<UserAvatarProps> = ({
         </div>
       ) : (
       <Image
-        src={userProfile}
-        alt={username ? `${username}'s profile` : "User Profile"}
+        src={avatar}
+        alt={name ? `${name}'s profile` : "User Profile"}
         width={size === "small" ? 40 : size === "medium" ? 60 : 100}
         height={size === "small" ? 40 : size === "medium" ? 60 : 100}
         className={`rounded-full ${className}`}

@@ -197,7 +197,7 @@ const SpaceScreen = ({
           muted={muted}
           playing={playing}
           myVideo={true}
-          username={playerHighlighted.username}
+          name={playerHighlighted.username}
           className={`h-full w-full ${myFullScreen ? "object-cover" : "object-contain"}`}
           speakerMuted={playerHighlighted.speakerMuted}
         />
@@ -236,7 +236,7 @@ const SpaceScreen = ({
                   url={url}
                   muted={muted}
                   playing={playing}
-                  username={
+                  name={
                     nonHighlightedPlayers[playerId]?.username ||
                     `User ${index + 1 + currentPage * USERS_PER_PAGE}`
                   }

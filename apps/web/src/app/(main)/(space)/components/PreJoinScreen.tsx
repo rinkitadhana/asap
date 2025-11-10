@@ -126,7 +126,7 @@ const PreJoinScreen = ({ onJoinCall }: PreJoinScreenProps) => {
                   playing={videoEnabled}
                   className="w-full h-full object-cover"
                   myVideo={true}
-                  username={username}
+                  name={username}
                   preJoin={true}
                   hideElements={true}
                 />

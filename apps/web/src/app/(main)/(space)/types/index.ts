@@ -55,8 +55,8 @@ export interface UserMediaProps {
   playing: boolean;
   className: string;
   myVideo?: boolean;
-  username?: string;
-  userProfile?: string;
+  name?: string;
+  avatar?: string;
   preJoin?: boolean;
   speakerMuted?: boolean;
   hideElements?: boolean;
