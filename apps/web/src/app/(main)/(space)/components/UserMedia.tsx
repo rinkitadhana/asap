@@ -104,7 +104,6 @@ const UserMedia = ({
                 name={name}
                 avatar={avatar || ""}
                 preJoin={preJoin}
-                size="large"
               />
             </div>
           )}
@@ -118,7 +117,6 @@ const UserMedia = ({
             name={name}
             avatar={avatar || ""} 
             preJoin={preJoin}
-            size="large"
           />
         </div>
       )}

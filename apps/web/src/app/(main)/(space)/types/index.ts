@@ -6,14 +6,16 @@ export interface PreJoinSettings {
   videoEnabled: boolean;
   audioEnabled: boolean;
   name: string;
+  avatar?: string;
 }
 
 export interface Player {
-  url: MediaStream;
+  url: MediaStream | string;
   muted: boolean;
   playing: boolean;
   speakerMuted: boolean;
-  name: string;
+  name?: string;
+  avatar?: string;
 }
 
 export interface Players {

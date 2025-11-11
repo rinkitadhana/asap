@@ -7,8 +7,10 @@ import playClickSound from "@/shared/utils/ClickSound";
 import UserMedia from "./UserMedia";
 import MediaPermissionError from "./ui/MediaPermissionError";
 import { PreJoinScreenProps } from "../types";
+import { useGetMe } from "@/shared/hooks/useUserQuery";
 
 const PreJoinScreen = ({ onJoinCall }: PreJoinScreenProps) => {
+  const { data: user } = useGetMe();
   const [stream, setStream] = useState<MediaStream | null>(null);
   const [videoEnabled, setVideoEnabled] = useState(true);
   const [audioEnabled, setAudioEnabled] = useState(true);
@@ -67,6 +69,13 @@ const PreJoinScreen = ({ onJoinCall }: PreJoinScreenProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // Auto-fill user's name from backend
+  useEffect(() => {
+    if (user?.name) {
+      setName(user.name);
+    }
+  }, [user]);
+
   useEffect(() => {
     if (!stream) return;
 
@@ -95,6 +104,7 @@ const PreJoinScreen = ({ onJoinCall }: PreJoinScreenProps) => {
       videoEnabled,
       audioEnabled,
       name,
+      avatar: user?.avatar,
     });
   };
 
@@ -127,6 +137,7 @@ const PreJoinScreen = ({ onJoinCall }: PreJoinScreenProps) => {
                   className="w-full h-full object-cover"
                   myVideo={true}
                   name={name}
+                  avatar={user?.avatar}
                   preJoin={true}
                   hideElements={true}
                 />

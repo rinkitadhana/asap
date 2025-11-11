@@ -4,7 +4,6 @@ import Image from "next/image";
 interface UserAvatarProps {
   name?: string;
   avatar: string;
-  size?: "small" | "medium" | "large";
   className?: string;
   preJoin?: boolean;
 }
@@ -12,24 +11,40 @@ interface UserAvatarProps {
 const UserAvatar: React.FC<UserAvatarProps> = ({
   name,
   avatar,
-  size = "large",
   className = "",
   preJoin = false,
 }) => {
+  const getInitials = (name?: string) => {
+    if (!name) return "?";
+    const words = name.trim().split(" ");
+    if (words.length >= 2) {
+      return (words[0][0] + words[1][0]).toUpperCase();
+    }
+    return name.slice(0, 2).toUpperCase();
+  };
+
   return (
-    <div className="flex flex-col items-center justify-center gap-3">
+    <div className="flex flex-col items-center justify-center w-full h-full">
       {preJoin ? (
-        <div className="w-full h-full bg-call-primary/50 flex items-center justify-center font-semibold">
+        <div className="w-full h-full bg-call-primary/50 flex items-center justify-center font-semibold text-base md:text-lg">
            Camera is off!
         </div>
+      ) : avatar ? (
+        <div className="relative w-[35%] aspect-square max-w-[150px]">
+          <Image
+            src={avatar}
+            alt={name ? `${name}'s profile` : "User Profile"}
+            fill
+            className={`rounded-full object-cover ${className}`}
+          />
+        </div>
       ) : (
-      <Image
-        src={avatar}
-        alt={name ? `${name}'s profile` : "User Profile"}
-        width={size === "small" ? 40 : size === "medium" ? 60 : 100}
-        height={size === "small" ? 40 : size === "medium" ? 60 : 100}
-        className={`rounded-full ${className}`}
-      />
+        <div
+          className={`rounded-full bg-purple-500/80 flex items-center justify-center font-bold text-white w-[35%] aspect-square max-w-[150px] ${className}`}
+          style={{ fontSize: 'clamp(1.5rem, 4vw, 3rem)' }}
+        >
+          {getInitials(name)}
+        </div>
       )}
     </div>
   );

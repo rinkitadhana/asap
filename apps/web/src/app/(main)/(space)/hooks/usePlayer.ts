@@ -3,18 +3,7 @@ import { cloneDeep } from "lodash";
 import { useSocket } from "@/shared/context/socket";
 import { useRouter } from "next/navigation";
 import { Peer } from "peerjs";
-
-interface Player {
-  url: MediaStream | string;
-  muted: boolean;
-  playing: boolean;
-  speakerMuted: boolean;
-  name?: string;
-}
-
-interface Players {
-  [key: string]: Player;
-}
+import { Players } from "../types";
 
 const usePlayer = (myId: string, roomId: string, peer: Peer | null) => {
   const socket = useSocket();

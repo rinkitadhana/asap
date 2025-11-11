@@ -72,6 +72,7 @@ const SpaceScreen = ({
             playing: true,
             speakerMuted: false,
             name: `User ${newUserId.slice(-4)}`,
+            avatar: undefined,
           },
         }));
 
@@ -153,6 +154,7 @@ const SpaceScreen = ({
             playing: true,
             speakerMuted: false,
             name: `User ${callerId.slice(-4)}`,
+            avatar: undefined,
           },
         }));
         setUsers((prev) => ({
@@ -177,6 +179,7 @@ const SpaceScreen = ({
         playing: preJoinSettings ? preJoinSettings.videoEnabled : true,
         speakerMuted: false,
         name: preJoinSettings?.name || "You",
+        avatar: preJoinSettings?.avatar,
       },
     }));
   }, [stream, myId, preJoinSettings, setPlayers]);
@@ -198,6 +201,7 @@ const SpaceScreen = ({
           playing={playing}
           myVideo={true}
           name={playerHighlighted.name}
+          avatar={playerHighlighted.avatar}
           className={`h-full w-full ${myFullScreen ? "object-cover" : "object-contain"}`}
           speakerMuted={playerHighlighted.speakerMuted}
         />
@@ -219,7 +223,7 @@ const SpaceScreen = ({
       <div className="flex-1 h-full min-w-0 relative group/other-screen group/pagination overflow-hidden">
         <VideoGrid layout={gridLayout}>
           {visibleOtherPlayers.map((playerId, index) => {
-            const { url, muted, playing, speakerMuted } =
+            const { url, muted, playing, speakerMuted, avatar } =
               nonHighlightedPlayers[playerId];
 
             // Special handling for 3 users layout (2 top, 1 bottom spanning full width)
@@ -240,6 +244,7 @@ const SpaceScreen = ({
                     nonHighlightedPlayers[playerId]?.name ||
                     `User ${index + 1 + currentPage * USERS_PER_PAGE}`
                   }
+                  avatar={avatar}
                   className={`h-full w-full ${otherFullScreen ? "object-cover" : "object-contain"}`}
                   speakerMuted={speakerMuted}
                 />
