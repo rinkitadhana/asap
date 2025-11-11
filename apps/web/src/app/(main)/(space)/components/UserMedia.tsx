@@ -1,5 +1,4 @@
 import { useEffect, useRef } from "react";
-import Image from "next/image";
 import StatusIndicators from "./ui/StatusIndicators";
 import UserAvatar from "./ui/UserAvatar";
 import { UserMediaProps } from "../types";
@@ -100,68 +99,22 @@ const UserMedia = ({
           />
           {/* Show fallback UI when video is off */}
           {!playing && (
-            <div className="select-none w-full h-full relative flex items-center justify-center overflow-hidden">
-              {/* Blurred background */}
-              {avatar ? (
-                <>
-                  <div className="absolute inset-0 w-full h-full z-0">
-                    <Image
-                      src={avatar}
-                      alt="background"
-                      fill
-                      className="object-cover blur-3xl scale-110"
-                    />
-                  </div>
-                  {/* Dark overlay for better contrast */}
-                  <div className="absolute inset-0 bg-black/50 z-[1]" />
-                </>
-              ) : (
-                <div className="absolute inset-0 bg-call-primary" />
-              )}
-              
-              {/* Avatar on top */}
-              <div className="relative z-10 w-full h-full flex items-center justify-center">
-                <UserAvatar
-                  name={name}
-                  avatar={avatar || ""}
-                  preJoin={preJoin}
-                />
-              </div>
-            </div>
+            <UserAvatar
+              name={name}
+              avatar={avatar || ""}
+              preJoin={preJoin}
+            />
           )}
         </>
       ) : playing ? (
         // For non-MediaStream URLs (like recorded videos)
         videoElement
       ) : (
-        <div className="select-none w-full h-full relative flex items-center justify-center overflow-hidden">
-          {/* Blurred background */}
-          {avatar ? (
-            <>
-              <div className="absolute inset-0 w-full h-full z-0">
-                <Image
-                  src={avatar}
-                  alt="background"
-                  fill
-                  className="object-cover blur-3xl scale-110"
-                />
-              </div>
-              {/* Dark overlay for better contrast */}
-              <div className="absolute inset-0 bg-black/50 z-[1]" />
-            </>
-          ) : (
-            <div className="absolute inset-0 bg-call-primary z-0" />
-          )}
-          
-          {/* Avatar on top */}
-          <div className="relative z-10 w-full h-full flex items-center justify-center">
-            <UserAvatar
-              name={name}
-              avatar={avatar || ""} 
-              preJoin={preJoin}
-            />
-          </div>
-        </div>
+        <UserAvatar
+          name={name}
+          avatar={avatar || ""}
+          preJoin={preJoin}
+        />
       )}
       {!hideElements && (
         <StatusIndicators muted={muted} speakerMuted={speakerMuted} />
