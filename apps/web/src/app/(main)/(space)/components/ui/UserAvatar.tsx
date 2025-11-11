@@ -30,7 +30,7 @@ const UserAvatar: React.FC<UserAvatarProps> = ({
            Camera is off!
         </div>
       ) : avatar ? (
-        <div className="relative w-[35%] aspect-square max-w-[150px]">
+        <div className="relative w-[25%] aspect-square max-w-[150px]">
           <Image
             src={avatar}
             alt={name ? `${name}'s profile` : "User Profile"}
