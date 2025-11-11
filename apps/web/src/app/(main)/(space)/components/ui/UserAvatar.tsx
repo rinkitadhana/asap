@@ -16,11 +16,7 @@ const UserAvatar: React.FC<UserAvatarProps> = ({
 }) => {
   const getInitials = (name?: string) => {
     if (!name) return "?";
-    const words = name.trim().split(" ");
-    if (words.length >= 2) {
-      return (words[0][0] + words[1][0]).toUpperCase();
-    }
-    return name.slice(0, 2).toUpperCase();
+    return name.trim()[0].toUpperCase();
   };
 
   return (
@@ -40,7 +36,7 @@ const UserAvatar: React.FC<UserAvatarProps> = ({
         </div>
       ) : (
         <div
-          className={`rounded-full bg-purple-500 flex items-center justify-center font-bold text-white w-[40%] min-w-[120px] aspect-square max-w-[120px] ${className}`}
+          className={`rounded-full bg-purple-500 flex items-center justify-center font-semibold text-white w-[40%] min-w-[120px] aspect-square max-w-[120px] ${className}`}
           style={{ fontSize: 'clamp(1.5rem, 5vw, 3.5rem)' }}
         >
           {getInitials(name)}

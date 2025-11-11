@@ -116,7 +116,7 @@ const UserMedia = ({
                   <div className="absolute inset-0 bg-black/50 z-[1]" />
                 </>
               ) : (
-                <div className="absolute inset-0 bg-gradient-to-br from-purple-500/30 via-call-primary/50 to-blue-500/30 z-0" />
+                <div className="absolute inset-0 bg-call-primary" />
               )}
               
               {/* Avatar on top */}
@@ -150,7 +150,7 @@ const UserMedia = ({
               <div className="absolute inset-0 bg-black/50 z-[1]" />
             </>
           ) : (
-            <div className="absolute inset-0 bg-gradient-to-br from-purple-500/30 via-call-primary/50 to-blue-500/30 z-0" />
+            <div className="absolute inset-0 bg-call-primary z-0" />
           )}
           
           {/* Avatar on top */}
