@@ -5,7 +5,7 @@ export type SidebarType = "info" | "users" | "chat" | null;
 export interface PreJoinSettings {
   videoEnabled: boolean;
   audioEnabled: boolean;
-  username: string;
+  name: string;
 }
 
 export interface Player {
@@ -13,7 +13,7 @@ export interface Player {
   muted: boolean;
   playing: boolean;
   speakerMuted: boolean;
-  username: string;
+  name: string;
 }
 
 export interface Players {

@@ -71,7 +71,7 @@ const SpaceScreen = ({
             muted: false,
             playing: true,
             speakerMuted: false,
-            username: `User ${newUserId.slice(-4)}`,
+            name: `User ${newUserId.slice(-4)}`,
           },
         }));
 
@@ -152,7 +152,7 @@ const SpaceScreen = ({
             muted: false,
             playing: true,
             speakerMuted: false,
-            username: `User ${callerId.slice(-4)}`,
+            name: `User ${callerId.slice(-4)}`,
           },
         }));
         setUsers((prev) => ({
@@ -176,7 +176,7 @@ const SpaceScreen = ({
         muted: preJoinSettings ? !preJoinSettings.audioEnabled : false,
         playing: preJoinSettings ? preJoinSettings.videoEnabled : true,
         speakerMuted: false,
-        username: preJoinSettings?.username || "You",
+        name: preJoinSettings?.name || "You",
       },
     }));
   }, [stream, myId, preJoinSettings, setPlayers]);
@@ -197,7 +197,7 @@ const SpaceScreen = ({
           muted={muted}
           playing={playing}
           myVideo={true}
-          name={playerHighlighted.username}
+          name={playerHighlighted.name}
           className={`h-full w-full ${myFullScreen ? "object-cover" : "object-contain"}`}
           speakerMuted={playerHighlighted.speakerMuted}
         />
@@ -237,7 +237,7 @@ const SpaceScreen = ({
                   muted={muted}
                   playing={playing}
                   name={
-                    nonHighlightedPlayers[playerId]?.username ||
+                    nonHighlightedPlayers[playerId]?.name ||
                     `User ${index + 1 + currentPage * USERS_PER_PAGE}`
                   }
                   className={`h-full w-full ${otherFullScreen ? "object-cover" : "object-contain"}`}

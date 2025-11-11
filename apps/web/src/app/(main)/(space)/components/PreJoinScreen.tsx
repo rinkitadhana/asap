@@ -12,7 +12,7 @@ const PreJoinScreen = ({ onJoinCall }: PreJoinScreenProps) => {
   const [stream, setStream] = useState<MediaStream | null>(null);
   const [videoEnabled, setVideoEnabled] = useState(true);
   const [audioEnabled, setAudioEnabled] = useState(true);
-  const [username, setUsername] = useState("");
+  const [name, setName] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [permissionError, setPermissionError] = useState<string | null>(null);
   const streamRef = useRef<MediaStream | null>(null);
@@ -94,7 +94,7 @@ const PreJoinScreen = ({ onJoinCall }: PreJoinScreenProps) => {
     onJoinCall({
       videoEnabled,
       audioEnabled,
-      username,
+      name,
     });
   };
 
@@ -126,7 +126,7 @@ const PreJoinScreen = ({ onJoinCall }: PreJoinScreenProps) => {
                   playing={videoEnabled}
                   className="w-full h-full object-cover"
                   myVideo={true}
-                  name={username}
+                  name={name}
                   preJoin={true}
                   hideElements={true}
                 />
@@ -177,16 +177,16 @@ const PreJoinScreen = ({ onJoinCall }: PreJoinScreenProps) => {
             <div className="w-full">
               <input
                 type="text"
-                id="username"
+                id="name"
                 placeholder="Enter your name"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
+                value={name}
+                onChange={(e) => setName(e.target.value)}
                 className="w-full px-3 py-2.5 bg-call-primary border border-call-border rounded-lg text-sm focus:outline-none transition-all duration-200"
               />
             </div>
             <button
               onClick={handleJoinCall}
-              disabled={isLoading || !!permissionError || !username.trim()}
+              disabled={isLoading || !!permissionError || !name.trim()}
               className="py-2.5 w-full select-none text-center bg-purple-400/80 hover:bg-purple-400/60 font-medium disabled:bg-purple-400/40 disabled:text-foreground/40 disabled:cursor-not-allowed text-sm rounded-lg cursor-pointer transition-all duration-200"
             >
               <span>Join Call</span>
