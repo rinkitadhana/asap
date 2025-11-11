@@ -30,7 +30,7 @@ const UserAvatar: React.FC<UserAvatarProps> = ({
            Camera is off!
         </div>
       ) : avatar ? (
-        <div className="relative w-[30%] aspect-square max-w-[150px]">
+        <div className="relative w-[40%] min-w-[120px] aspect-square max-w-[120px] rounded-full">
           <Image
             src={avatar}
             alt={name ? `${name}'s profile` : "User Profile"}
@@ -40,8 +40,8 @@ const UserAvatar: React.FC<UserAvatarProps> = ({
         </div>
       ) : (
         <div
-          className={`rounded-full bg-purple-500/80 flex items-center justify-center font-bold text-white w-[30%] aspect-square max-w-[150px] ${className}`}
-          style={{ fontSize: 'clamp(1.5rem, 4vw, 3rem)' }}
+          className={`rounded-full bg-purple-500 flex items-center justify-center font-bold text-white w-[40%] min-w-[120px] aspect-square max-w-[120px] ${className}`}
+          style={{ fontSize: 'clamp(1.5rem, 5vw, 3.5rem)' }}
         >
           {getInitials(name)}
         </div>
