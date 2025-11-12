@@ -40,7 +40,6 @@ model Space {
   startTime           DateTime?
   endTime             DateTime?
   duration            Int? // seconds
-  planUsed            PlanType        @default(FREE)
   totalRecordingHours Float?
   createdAt           DateTime        @default(now())
   updatedAt           DateTime        @updatedAt
@@ -67,17 +66,23 @@ model SpaceParticipant {
   id           String          @id @default(cuid())
   spaceId      String
   space        Space           @relation(fields: [spaceId], references: [id])
-  userId       String
-  user         User            @relation(fields: [userId], references: [id])
-  role         ParticipantRole
+  userId       String?
+  user         User?            @relation(fields: [userId], references: [id])
+  sessionId    String?
+  displayName  String?
+  isUnAuthenticated  Boolean         @default(false)
+  isActive     Boolean         @default(true)
+  role         ParticipantRole @default(GUEST)
   joinedAt     DateTime        @default(now())
   leftAt       DateTime?
   hasRecording Boolean         @default(false)
+
   recordings   Recording[]
 
-  @@unique([userId, spaceId])
   @@index([spaceId])
   @@index([userId])
+  @@index([sessionId])
+  @@index([spaceId, isActive])
 }
 
 enum ParticipantRole {
