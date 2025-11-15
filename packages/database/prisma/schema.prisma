@@ -39,14 +39,14 @@ model Space {
   recordingStatus     RecordingStatus @default(IDLE)
   startTime           DateTime?
   endTime             DateTime?
-  duration            Int? // seconds
+  duration            Int? // milliseconds
   totalRecordingHours Float?
   createdAt           DateTime        @default(now())
   updatedAt           DateTime        @updatedAt
 
-  participants    SpaceParticipant[]
-  recordings      Recording[]
-  finalRecordings FinalRecording[]
+  participants         SpaceParticipant[]
+  recordingSessions    RecordingSession[]
+  finalOutputs         FinalOutput[]
 }
 
 enum SpaceStatus {
@@ -63,25 +63,25 @@ enum RecordingStatus {
 }
 
 model SpaceParticipant {
-  id           String          @id @default(cuid())
-  spaceId      String
-  space        Space           @relation(fields: [spaceId], references: [id])
-  userId       String?
-  user         User?            @relation(fields: [userId], references: [id])
-  sessionId    String?
-  displayName  String?
-  isUnAuthenticated  Boolean         @default(false)
-  isActive     Boolean         @default(true)
-  role         ParticipantRole @default(GUEST)
-  joinedAt     DateTime        @default(now())
-  leftAt       DateTime?
-  hasRecording Boolean         @default(false)
+  id                  String          @id @default(cuid())
+  spaceId             String
+  space               Space           @relation(fields: [spaceId], references: [id])
+  userId              String?
+  user                User?           @relation(fields: [userId], references: [id])
+  participantSessionId           String?
+  displayName         String?
+  isUnAuthenticated   Boolean         @default(false)
+  isActive            Boolean         @default(true)
+  role                ParticipantRole @default(GUEST)
+  joinedAt            DateTime        @default(now())
+  leftAt              DateTime?
+  hasRecording        Boolean         @default(false)
 
-  recordings   Recording[]
+  recordings          ParticipantRecording[]
 
   @@index([spaceId])
   @@index([userId])
-  @@index([sessionId])
+  @@index([participantSessionId])
   @@index([spaceId, isActive])
 }
 
@@ -91,29 +91,77 @@ enum ParticipantRole {
   GUEST
 }
 
-model Recording {
-  id            String              @id @default(cuid())
-  spaceId       String
-  space         Space               @relation(fields: [spaceId], references: [id])
-  participantId String
-  participant   SpaceParticipant    @relation(fields: [participantId], references: [id])
+model RecordingSession {
+  id         String   @id @default(cuid())
+  spaceId    String
+  space      Space    @relation(fields: [spaceId], references: [id])
+  recordingSessionId        String   @unique
+  startedAt  DateTime @default(now())
+  stoppedAt  DateTime?
+  status     RecordingSessionStatus @default(ACTIVE)
+  createdAt  DateTime @default(now())
+
+  participantRecordings ParticipantRecording[]
+  finalOutputs          FinalOutput[]
+}
+
+enum RecordingSessionStatus {
+  ACTIVE
+  STOPPED
+  PROCESSING
+  READY
+  FAILED
+}
+
+model ParticipantRecording {
+  id             String           @id @default(cuid())
+  recordingSessionId      String
+  recordingSession        RecordingSession @relation(fields: [recordingSessionId], references: [id])
+  participantId  String
+  participant    SpaceParticipant @relation(fields: [participantId], references: [id])
 
   type           RecordingType
-  videoQuality   VideoQuality?       // only for VIDEO type
-  audioQuality   AudioQuality?       // only for AUDIO type
-  uploadedChunks Json                // array of uploaded chunk URLs [{url, timestamp, size}]
-  fileUrl        String?             // final merged file URL for this specific track
-  fileSize       BigInt?             // file size in bytes
-  status         RecordingFileStatus @default(UPLOADING)
-  startedAt      DateTime
-  endedAt        DateTime?
-  duration       Int?                // seconds
-  createdAt      DateTime            @default(now())
-  updatedAt      DateTime            @updatedAt
+  isScreenShare  Boolean          @default(false)
 
-  @@index([spaceId])
+  //metadata
+  container      String?
+  codec          String?
+  width          Int?
+  height         Int?
+  fps            Int?
+  bitrate        Int?
+  sampleRate     Int?
+  channels       Int?
+  hasAudio       Boolean          @default(false)
+  hasVideo       Boolean          @default(false)
+
+  //quality (for UI)
+  videoQuality VideoQuality?   
+  audioQuality AudioQuality?   
+  videoLabel   String?         // "1080p • 30fps • 4.8 Mbps"
+  audioLabel   String?         // "48 kHz • Stereo • 192 kbps"
+
+  // timeline & processing state
+  startOffsetMs  Int?
+  durationMs     Int?
+  lastChunkAt    DateTime?
+  fileKey        String? // S3 key for uploaded chunk
+  fileSize       BigInt?
+  checksum       String? // sha256 checksum of the uploaded chunk
+  mimeType       String? 
+  status         RecordingFileStatus @default(UPLOADING)
+  processingJobId String?
+  processingError String?
+
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  segments       RecordingSegment[]
+  finalOutputs   FinalOutput[]
+
+  @@index([recordingSessionId])
   @@index([participantId])
-  @@index([type])
+  @@index([status])
 }
 
 enum RecordingType {
@@ -122,60 +170,161 @@ enum RecordingType {
 }
 
 enum RecordingFileStatus {
-  UPLOADING     // chunks being uploaded
-  UPLOADED      // all chunks uploaded
-  PROCESSING    // backend processing/merging chunks
-  READY         // final file ready
-  FAILED        // processing failed
+  UPLOADING
+  UPLOADED
+  PROCESSING
+  READY
+  FAILED
 }
 
-enum VideoQuality {
-  P720          // 1280x720
-  P1080         // 1920x1080
-  P1440         // 2560x1440
-  P4K           // 3840x2160
-}
+model RecordingSegment {
+  id                     String @id @default(cuid())
+  participantRecordingId String
+  participantRecording   ParticipantRecording @relation(fields: [participantRecordingId], references: [id])
 
-enum AudioQuality {
-  SR_44100      // 44.1 kHz (CD quality)
-  SR_48000      // 48 kHz (professional standard)
-  SR_96000      // 96 kHz (high-res audio)
-}
+  recordingSessionId     String
+  spaceId                String
+  participantId          String
 
-model FinalRecording {
-  id                 String         @id @default(cuid())
-  spaceId            String         @unique
-  space              Space          @relation(fields: [spaceId], references: [id])
-  status             OutputStatus   @default(PROCESSING)
-  
-  // Primary output - single video file with audio mixed in (ready to use/download)
-  finalVideo         String?        // complete video with all participants + audio combined
-  videoQuality       VideoQuality   @default(P1080)
-  audioQuality       AudioQuality   @default(SR_48000)
-  duration           Int?           // seconds
-  fileSize           BigInt?        // file size in bytes
-  
-  // Optional: Audio-only export (for users who want just audio)
-  finalAudio         String?        // extracted audio track from final video
-  
-  // Individual participant tracks for separate downloads
-  // Structure: { participantId: { video: {P720: "recordingId", P1080: "recordingId"}, audio: {SR_48000: "recordingId"} } }
-  // Frontend can fetch Recording entries using these IDs to get download URLs
-  separateTracks     Json?          // maps to Recording IDs per participant
-  
-  processingStarted  DateTime?
-  processingEnded    DateTime?
-  errorMessage       String?        // if status is FAILED
-  
-  createdAt          DateTime       @default(now())
-  updatedAt          DateTime       @updatedAt
+  assetKey               String               // S3 key for uploaded chunk
+  startMs                Int                  // offset from session start in milliseconds
+  durationMs             Int                  // duration in milliseconds
+  sizeBytes              BigInt
+  checksum               String?              // optional sha256
+  uploadedAt             DateTime @default(now())
+  status                 SegmentStatus @default(UPLOADED)
 
+  @@index([participantRecordingId]) 
+  @@index([participantRecordingId, startMs])
+  @@index([recordingSessionId])
+  @@index([participantId])
   @@index([status])
 }
 
+enum SegmentStatus {
+  UPLOADED
+  PROCESSING
+  PROCESSED
+  FAILED
+}
+
+/// Final output (logical exported file: composite or per-participant)
+model FinalOutput {
+  id                 String   @id @default(cuid())
+  recordingSessionId String
+  recordingSession   RecordingSession @relation(fields: [recordingSessionId], references: [id])
+  spaceId            String
+  space              Space    @relation(fields: [spaceId], references: [id])
+
+  // WHAT this output is and WHAT it contains
+  type               FinalOutputType
+  mode               FinalOutputMode   @default(MIXED) // MIXED = video+audio, VIDEO_ONLY, AUDIO_ONLY
+
+  // WHO/WHERE it came from (nullable)
+  targetParticipantId String?                 // SpaceParticipant.id when type = PER_PARTICIPANT
+  sourceRecordingId   String?                 // ParticipantRecording.id if derived from a single participant master
+  sourceRecording     ParticipantRecording?  @relation(fields: [sourceRecordingId], references: [id])
+
+  // master metadata (actual properties of the produced master file)
+  width          Int?
+  height         Int?
+  fps            Int?
+  bitrate        Int?
+  sampleRate     Int?
+  channels       Int?
+  hasAudio       Boolean?    // true if master contains audio
+  hasVideo       Boolean?    // true if master contains video
+
+  // derived convenience fields (set by worker when master ready)
+  videoQuality   VideoQuality?   // enum (P360..P2160)
+  audioQuality   AudioQuality?   // enum (SR_22050..SR_96000)
+  videoLabel     String?         // "1080p • 30fps • 4.8 Mbps"
+  audioLabel     String?         // "48 kHz • Stereo • 192 kbps"
+
+  //preview image
+  thumbnailKey   String?         // s3 key for a thumbnail image
+
+  // result (master final file)
+  masterKey          String?          // S3 key of result (composite or single)
+  mimeType           String?
+  durationMs         Int?
+  fileSize           BigInt?
+  checksum           String?
+  status             OutputStatus @default(QUEUED)
+  processingJobId    String?
+  errorMessage       String?
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  renditions         FinalOutputRendition[]
+
+  @@index([recordingSessionId])
+  @@index([spaceId])
+  @@index([status])
+  @@index([targetParticipantId])
+}
+
+enum FinalOutputType {
+  COMPOSITE
+  PER_PARTICIPANT
+}
+
+enum FinalOutputMode {
+  MIXED       // video + audio
+  VIDEO_ONLY
+  AUDIO_ONLY
+}
+
 enum OutputStatus {
-  QUEUED           // waiting to start processing
-  PROCESSING       // actively merging recordings
-  READY            // final output available
-  FAILED           // processing failed
+  QUEUED
+  PROCESSING
+  READY
+  FAILED
+}
+
+
+/// Cached / generated renditions (different resolutions / bitrates)
+model FinalOutputRendition {
+  id            String @id @default(cuid())
+  finalOutputId String
+  finalOutput   FinalOutput @relation(fields: [finalOutputId], references: [id])
+
+  // rendition properties
+  width         Int?
+  height        Int?
+  bitrate       Int?        // bits per second
+  codec         String?
+  container     String?
+  assetKey      String?     // s3 key for this rendition
+  sizeBytes     BigInt?
+  status        RenditionStatus @default(GENERATING) 
+  jobId         String?     // worker job id
+  createdAt     DateTime @default(now())
+
+  @@index([finalOutputId, width, height])
+  @@index([assetKey])
+  @@unique([finalOutputId, width, height])
+}
+
+enum RenditionStatus {
+  READY
+  GENERATING
+  FAILED
+}
+
+
+enum VideoQuality {
+  P360
+  P480
+  P720
+  P1080
+  P1440
+  P2160   // 4K
+}
+
+enum AudioQuality {
+  SR_22050
+  SR_44100
+  SR_48000
+  SR_96000
 }
