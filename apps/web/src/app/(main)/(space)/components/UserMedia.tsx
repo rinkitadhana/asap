@@ -99,28 +99,20 @@ const UserMedia = ({
           />
           {/* Show fallback UI when video is off */}
           {!playing && (
-            <UserAvatar
-              name={name}
-              avatar={avatar || ""}
-              preJoin={preJoin}
-            />
+            <UserAvatar name={name} avatar={avatar || ""} preJoin={preJoin} />
           )}
         </>
       ) : playing ? (
         // For non-MediaStream URLs (like recorded videos)
         videoElement
       ) : (
-        <UserAvatar
-          name={name}
-          avatar={avatar || ""}
-          preJoin={preJoin}
-        />
+        <UserAvatar name={name} avatar={avatar || ""} preJoin={preJoin} />
       )}
       {!hideElements && (
         <StatusIndicators muted={muted} speakerMuted={speakerMuted} />
       )}
       {!hideElements && name && (
-        <div className="select-none absolute bottom-3 left-3 bg-call-primary/50 px-3 py-1 rounded-full text-foreground text-sm font-medium">
+        <div className="select-none absolute bottom-3 left-3 bg-call-primary/80 px-3 py-1 rounded-full text-foreground text-sm font-medium">
           {name}
         </div>
       )}
