@@ -27,10 +27,10 @@ const LandingNavbar = () => {
       label: "About",
       href: "#about",
     },
-    {
-      label: "Contact",
-      href: "#contact",
-    },
+    // {
+    //   label: "Contact",
+    //   href: "#contact",
+    // },
   ];
   return (
     <section className="fixed z-10 top-3 left-0 right-0 ">
