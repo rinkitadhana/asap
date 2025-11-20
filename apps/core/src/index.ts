@@ -3,6 +3,7 @@ import { createServer } from "http";
 import cors from "cors";
 import { initSocket } from "./sockets/index.ts";
 import authRouter from "./routes/auth-route.ts";
+import recordingRouter from "./routes/recording-route.ts";
 
 const app = express();
 const PORT = 4000;
@@ -21,7 +22,9 @@ app.use(
 app.get("/", (req: Request, res: Response) => {
   res.send("Asap is live :D");
 });
+
 app.use("/api/auth", authRouter);
+app.use("/api/recording", recordingRouter);
 
 const httpServer = createServer(app);
 
