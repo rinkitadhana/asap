@@ -8,7 +8,7 @@ import recordingRouter from "./routes/recording-route.ts";
 const app = express();
 const PORT = 4000;
 
-
+//middleware
 app.use(express.json())
 app.use(
   cors({
@@ -19,12 +19,13 @@ app.use(
   }),
 );
 
+//routes
 app.get("/", (req: Request, res: Response) => {
-  res.send("Asap is live :D");
-});
+  res.send("Asap is live :D")
+})
+app.use("/api/auth", authRouter)
+app.use("/api/recording", recordingRouter)
 
-app.use("/api/auth", authRouter);
-app.use("/api/recording", recordingRouter);
 
 const httpServer = createServer(app);
 
