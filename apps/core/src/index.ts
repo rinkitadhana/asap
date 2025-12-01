@@ -4,6 +4,7 @@ import cors from "cors";
 import { initSocket } from "./sockets/index.ts";
 import authRouter from "./routes/auth-route.ts";
 import recordingRouter from "./routes/recording-route.ts";
+import spaceRouter from "./routes/space-route.ts";
 
 const app = express();
 const PORT = 4000;
@@ -25,6 +26,7 @@ app.get("/", (req: Request, res: Response) => {
 })
 app.use("/api/auth", authRouter)
 app.use("/api/recording", recordingRouter)
+app.use("/api/space", spaceRouter)
 
 
 const httpServer = createServer(app);
