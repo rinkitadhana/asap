@@ -9,7 +9,9 @@
         "db:push": "dotenv -e ../../.env -- prisma db push",
         "db:migrate": "dotenv -e ../../.env -- prisma migrate dev",
         "db:studio": "dotenv -e ../../.env -- prisma studio",
-        "db:seed": "dotenv -e ../../.env -- tsx prisma/seed.ts"
+        "db:seed": "dotenv -e ../../.env -- tsx prisma/seed.ts",
+        "db:status": "dotenv -e ../../.env -- prisma migrate status",
+        "db:reset": "dotenv -e ../../.env -- prisma migrate reset --force"
     },
     "devDependencies": {
         "@repo/typescript-config": "workspace:*",
