@@ -1,9 +1,9 @@
 import LayoutWrapper from "@/shared/layout/LayoutWrapper";
 import { FaSquareXTwitter, FaGithub } from "react-icons/fa6";
-import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 import { FaLinkedin } from "react-icons/fa";
+import AsapLogo from "../ui/AsapLogo";
 
 const LandingFooter = () => {
   return (
@@ -12,16 +12,7 @@ const LandingFooter = () => {
         <div className="flex  flex-col min-h-[200px]  shadow-md shadow-primary-shadow justify-between w-full border border-primary-border rounded-xl p-8 bg-secondary">
           <div className="flex gap-8">
             <div className="flex flex-col gap-2 w-[28%]">
-              <div className="flex items-center gap-2">
-                <Image
-                  src="/img/logo/logo.png"
-                  alt="logo"
-                  width={40}
-                  height={40}
-                  className="size-7"
-                />
-                <h1 className="text-2xl font-bold">Asap</h1>
-              </div>
+              <AsapLogo icon name />
               <p className=" font-inter text-sm text-secondary-text">
                 Asap is an AI-native video calling app with built-in local
                 recording.
