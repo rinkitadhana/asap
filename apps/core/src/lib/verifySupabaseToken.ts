@@ -12,7 +12,7 @@ export interface SupabaseUser extends JwtPayload {
 
 const supabase = createClient(
   `https://${process.env.SUPABASE_PROJECT_ID}.supabase.co`,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '',
+  process.env.SUPABASE_ANON_KEY || '',
   {
     auth: {
       autoRefreshToken: false,
