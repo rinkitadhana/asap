@@ -32,3 +32,27 @@ export async function authMiddleware(
     return;
   }
 }
+
+export async function optionalAuthMiddleware(
+  req: AuthenticatedRequest,
+  res: Response,
+  next: NextFunction
+): Promise<void> {
+  const authHeader = req.headers.authorization;
+
+  if (!authHeader) {
+    next();
+    return;
+  }
+
+  try {
+    const token = authHeader.split(" ")[1];
+    if (token) {
+      const decoded = await verifySupabaseJWT(token);
+      req.user = decoded;
+    }
+    next();
+  } catch {
+    next();
+  }
+}
