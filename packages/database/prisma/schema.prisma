@@ -68,9 +68,9 @@ model SpaceParticipant {
   space                Space           @relation(fields: [spaceId], references: [id])
   userId               String?
   user                 User?           @relation(fields: [userId], references: [id])
-  participantSessionId String?
-  displayName          String?
-  isUnAuthenticated    Boolean         @default(false)
+  participantSessionId String
+  guestName            String?
+  isGuest              Boolean         @default(false)
   isActive             Boolean         @default(true)
   role                 ParticipantRole @default(GUEST)
   joinedAt             DateTime        @default(now())
