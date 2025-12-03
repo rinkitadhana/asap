@@ -5,6 +5,7 @@ import { initSocket } from "./sockets/index.ts";
 import authRouter from "./routes/auth-route.ts";
 import recordingRouter from "./routes/recording-route.ts";
 import spaceRouter from "./routes/space-route.ts";
+import participantRouter from "./routes/participant-route.ts";
 
 const app = express();
 const PORT = 4000;
@@ -27,6 +28,7 @@ app.get("/", (req: Request, res: Response) => {
 app.use("/api/auth", authRouter)
 app.use("/api/recording", recordingRouter)
 app.use("/api/space", spaceRouter)
+app.use("/api/participant", participantRouter)
 
 
 const httpServer = createServer(app);
