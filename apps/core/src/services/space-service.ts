@@ -1,11 +1,12 @@
 import { prisma } from "@repo/database";
-import type { SpaceStatus } from "@repo/database";
 
 interface CreateSpaceData {
   title: string;
   description?: string;
   joinCode: string;
   hostId: string;
+  hostName: string;
+  hostParticipantSessionId: string;
 }
 
 interface UpdateSpaceData {
@@ -31,7 +32,7 @@ export async function isJoinCodeUnique(joinCode: string): Promise<boolean> {
 }
 
 export async function createSpace(data: CreateSpaceData) {
-  const { title, description, joinCode, hostId } = data;
+  const { title, description, joinCode, hostId, hostName, hostParticipantSessionId } = data;
 
   const isUnique = await isJoinCodeUnique(joinCode);
   if (!isUnique) {
@@ -49,9 +50,11 @@ export async function createSpace(data: CreateSpaceData) {
       participants: {
         create: {
           userId: hostId,
+          participantSessionId: hostParticipantSessionId,
+          displayName: hostName,
           role: "HOST",
           isActive: true,
-          isUnAuthenticated: false,
+          isGuest: false,
         },
       },
     },
