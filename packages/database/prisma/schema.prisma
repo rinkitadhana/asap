@@ -69,7 +69,7 @@ model SpaceParticipant {
   userId               String?
   user                 User?           @relation(fields: [userId], references: [id])
   participantSessionId String
-  guestName            String?
+  displayName          String?
   isGuest              Boolean         @default(false)
   isActive             Boolean         @default(true)
   role                 ParticipantRole @default(GUEST)
