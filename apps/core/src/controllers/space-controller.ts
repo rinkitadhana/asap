@@ -21,10 +21,15 @@ export async function createSpaceController(
       return;
     }
 
-    const { title, description, joinCode } = req.body;
+    const { title, description, joinCode, participantSessionId } = req.body;
 
     if (!joinCode || typeof joinCode !== "string" || joinCode.trim().length === 0) {
       res.status(400).json({ error: "Bad Request", details: "Join code is required" });
+      return;
+    }
+
+    if (!participantSessionId || typeof participantSessionId !== "string" || participantSessionId.trim().length === 0) {
+      res.status(400).json({ error: "Bad Request", details: "Participant session ID is required!" });
       return;
     }
 
@@ -32,29 +37,28 @@ export async function createSpaceController(
     const spaceTitle = (title && title.trim()) || `${user.name}'s Space`;
     const spaceDescription = (description && description.trim()) || `This is ${user.name}'s space`;
 
-    try {
-      const space = await createSpace({
-        title: spaceTitle,
-        description: spaceDescription,
-        joinCode: joinCode.trim(),
-        hostId: user.id,
-      });
+    const space = await createSpace({
+      title: spaceTitle,
+      description: spaceDescription,
+      joinCode: joinCode.trim(),
+      hostId: user.id,
+      hostName: user.name,
+      hostParticipantSessionId: participantSessionId.trim(),
+    });
 
-      res.status(201).json({
-        space,
-        message: "Space created and started successfully!",
-      });
-    } catch (error: unknown) {
-      if (error instanceof Error && error.message === "JOIN_CODE_EXISTS") {
-        res.status(409).json({
-          error: "Conflict",
-          details: "A space with this join code already exists",
-        });
-        return;
-      }
-      throw error;
-    }
+    res.status(201).json({
+      space,
+      message: "Space created and started successfully!",
+    });
   } catch (error: unknown) {
+    if (error instanceof Error && error.message === "JOIN_CODE_EXISTS") {
+      res.status(409).json({
+        error: "Conflict",
+        details: "A space with this join code already exists",
+      });
+      return;
+    }
+
     const errorMessage = error instanceof Error ? error.message : "Unknown error";
     res.status(500).json({
       error: "Failed to create space",
