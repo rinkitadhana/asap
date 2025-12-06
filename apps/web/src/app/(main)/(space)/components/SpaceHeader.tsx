@@ -2,7 +2,6 @@ import { ThemeSwitcher } from "@/shared/components/ThemeSwitcher";
 import { UserPlus } from "lucide-react";
 import React from "react";
 import { BsPatchQuestion } from "react-icons/bs";
-import BackButton from "./ui/BackButton";
 import AsapLogo from "@/shared/components/ui/AsapLogo";
 
 const SpaceHeader = ({ prejoin }: { prejoin?: boolean }) => {
@@ -10,7 +9,6 @@ const SpaceHeader = ({ prejoin }: { prejoin?: boolean }) => {
     <header className="w-full px-2 select-none z-50">
       <div className="flex items-center justify-between py-2 w-full rounded-xl">
         <div className="flex items-center gap-2">
-          <BackButton />
           <AsapLogo icon name />
           <div className="h-6 border-l border-primary-border mx-1" />
           <div className=" text-secondary-text text-sm">
