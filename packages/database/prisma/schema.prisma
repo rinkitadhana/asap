@@ -136,8 +136,8 @@ model ParticipantRecording {
   hasVideo   Boolean @default(false)
 
   //quality (for UI)
-  videoQuality VideoQuality?
-  audioQuality AudioQuality?
+  videoQuality VideoQuality?   
+  audioQuality AudioQuality?   
   videoLabel   String? // "1080p • 30fps • 4.8 Mbps"
   audioLabel   String? // "48 kHz • Stereo • 192 kbps"
 
@@ -194,7 +194,7 @@ model RecordingSegment {
   uploadedAt DateTime      @default(now())
   status     SegmentStatus @default(UPLOADED)
 
-  @@index([participantRecordingId])
+  @@index([participantRecordingId]) 
   @@index([participantRecordingId, startMs])
   @@index([recordingSessionId])
   @@index([participantId])

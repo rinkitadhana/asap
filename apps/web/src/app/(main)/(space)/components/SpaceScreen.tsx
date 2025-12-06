@@ -1,3 +1,31 @@
+/**
+ * COMPONENT: SpaceScreen
+ * 
+ * PURPOSE:
+ * The main orchestrator of the video calling experience. Combines all hooks and
+ * manages the complete WebRTC connection flow.
+ * 
+ * WEBRTC CONNECTION FLOW (simplified):
+ * 1. Get your camera/mic (useMediaStream)
+ * 2. Create peer instance (usePeer) → get peer ID
+ * 3. Join room via Socket.IO → tell server you're here
+ * 4. When new user joins:
+ *    a. You call them with peer.call(theirId, yourStream)
+ *    b. They receive your stream
+ *    c. They answer with their stream
+ *    d. You receive their stream
+ * 5. When you receive incoming call:
+ *    a. Answer with your stream
+ *    b. Receive their stream
+ * 6. Both users now have bidirectional audio/video
+ * 
+ * STATE MANAGEMENT:
+ * - players: Map of all participants and their streams
+ * - users: Map of active peer connections (for cleanup)
+ * - currentPage: Pagination for participant grid
+ * - fullScreen states: Object-fit mode for videos
+ */
+
 "use client";
 import React, { useEffect, useState } from "react";
 import { useSocket } from "@/shared/context/socket";
@@ -21,11 +49,21 @@ const SpaceScreen = ({
   activeSidebar,
   preJoinSettings,
 }: SpaceScreenProps) => {
+  // ============================================================================
+  // SETUP & HOOKS
+  // ============================================================================
+  
   const socket = useSocket();
   const params = useParams();
   const roomId = params.roomId as string;
+  
+  // Get peer instance and peer ID
   const { peer, myId } = usePeer();
+  
+  // Get camera/microphone stream
   const { stream } = useMediaStream(preJoinSettings || undefined);
+  
+  // Get player management functions
   const {
     players,
     setPlayers,
@@ -36,12 +74,17 @@ const SpaceScreen = ({
     toggleSpeaker,
     leaveRoom,
   } = usePlayer(myId || "", roomId || "", peer);
+
+  // UI state
   const [currentPage, setCurrentPage] = useState(0);
   const [closeWaiting, setCloseWaiting] = useState(false);
   const [myFullScreen, setMyFullScreen] = useState(true);
   const [otherFullScreen, setOtherFullScreen] = useState(true);
+  
+  // Track active peer connections for cleanup when users leave
   const [users, setUsers] = useState<Record<string, MediaConnection>>({});
 
+  // Pagination logic for participant grid
   const USERS_PER_PAGE = 4;
   const otherPlayerIds = Object.keys(nonHighlightedPlayers);
   const totalPages = Math.ceil(otherPlayerIds.length / USERS_PER_PAGE);
@@ -53,17 +96,32 @@ const SpaceScreen = ({
 
   const gridLayout = getGridLayout(visibleOtherPlayers.length);
 
+  // ============================================================================
+  // WEBRTC: HANDLE NEW USER JOINING (OUTGOING CALL)
+  // ============================================================================
+  
+  /**
+   * When socket server notifies us that a new user joined:
+   * 1. Call them with our stream
+   * 2. Wait for their stream in response
+   * 3. Add their stream to our players state
+   * 
+   * This runs when OTHER users join AFTER you
+   */
   useEffect(() => {
-    if (!socket || !peer || !stream) {
-      console.log("Socket, peer or stream not available yet");
-      return;
-    }
+    if (!socket || !peer || !stream) return;
+
     const handleUserConnected = (newUserId: string) => {
-      console.log(`User connected in a room with userID: ${newUserId}`);
+      console.log(`[WebRTC] New user joined: ${newUserId}, initiating call...`);
+      
+      // Initiate call to the new user with our stream
       const call = peer.call(newUserId, stream);
 
+      // When we receive their stream
       call.on("stream", (incomingStream: MediaStream) => {
-        console.log(`Received stream from user ${newUserId}`);
+        console.log(`[WebRTC] Received stream from ${newUserId}`);
+        
+        // Add them to our players state
         setPlayers((prev) => ({
           ...prev,
           [newUserId]: {
@@ -76,60 +134,79 @@ const SpaceScreen = ({
           },
         }));
 
+        // Store the call connection for cleanup later
         setUsers((prev) => ({
           ...prev,
           [newUserId]: call,
         }));
       });
     };
+
     socket.on("user-connected", handleUserConnected);
 
     return () => {
-      console.log("Cleaning up user-connected listener");
       socket.off("user-connected", handleUserConnected);
     };
   }, [socket, peer, stream, setPlayers]);
 
+  // ============================================================================
+  // SOCKET.IO: HANDLE MEDIA CONTROL EVENTS
+  // ============================================================================
+  
+  /**
+   * Listen for other users toggling their audio/video/speaker
+   * Update their state in our players object so UI reflects changes
+   */
   useEffect(() => {
     if (!socket) return;
+
+    // User muted/unmuted their mic
     const handleToggleAudio = (userId: string) => {
-      console.log(`user with id ${userId} toggled audio`);
       setPlayers((prev) => {
         const copy = cloneDeep(prev);
         copy[userId].muted = !copy[userId].muted;
-        return { ...copy };
+        return copy;
       });
     };
 
+    // User turned camera on/off
     const handleToggleVideo = (userId: string) => {
-      console.log(`user with id ${userId} toggled video`);
       setPlayers((prev) => {
         const copy = cloneDeep(prev);
         copy[userId].playing = !copy[userId].playing;
-        return { ...copy };
+        return copy;
       });
     };
 
+    // User muted/unmuted their speaker
     const handleToggleSpeaker = (userId: string) => {
-      console.log(`user with id ${userId} toggled speaker`);
       setPlayers((prev) => {
         const copy = cloneDeep(prev);
         copy[userId].speakerMuted = !copy[userId].speakerMuted;
-        return { ...copy };
+        return copy;
       });
     };
 
+    // User left the call
     const handleUserLeave = (userId: string) => {
-      console.log(`user ${userId} is leaving the room`);
+      console.log(`[WebRTC] User ${userId} left the call`);
+      
+      // Close the peer connection
       users[userId]?.close();
+      
+      // Remove them from players state
       const playersCopy = cloneDeep(players);
       delete playersCopy[userId];
       setPlayers(playersCopy);
     };
+
+    // Register all event listeners
     socket.on("user-toggle-audio", handleToggleAudio);
     socket.on("user-toggle-video", handleToggleVideo);
     socket.on("user-toggle-speaker", handleToggleSpeaker);
     socket.on("user-leave", handleUserLeave);
+
+    // Cleanup listeners on unmount
     return () => {
       socket.off("user-toggle-audio", handleToggleAudio);
       socket.off("user-toggle-video", handleToggleVideo);
@@ -138,14 +215,33 @@ const SpaceScreen = ({
     };
   }, [setPlayers, socket, users, players]);
 
+  // ============================================================================
+  // WEBRTC: ANSWER INCOMING CALLS
+  // ============================================================================
+  
+  /**
+   * When someone calls us (we joined AFTER them):
+   * 1. Answer with our stream
+   * 2. Receive their stream
+   * 3. Add their stream to our players state
+   * 
+   * This runs when YOU join and others are already there
+   */
   useEffect(() => {
     if (!peer || !stream) return;
+
     peer.on("call", (call) => {
       const { peer: callerId } = call;
+      console.log(`[WebRTC] Receiving call from ${callerId}, answering...`);
+      
+      // Answer the call with our stream
       call.answer(stream);
 
+      // When we receive their stream
       call.on("stream", (incomingStream: MediaStream) => {
-        console.log(`Received stream from user ${callerId}`);
+        console.log(`[WebRTC] Received stream from ${callerId}`);
+        
+        // Add them to our players state
         setPlayers((prev) => ({
           ...prev,
           [callerId]: {
@@ -157,6 +253,8 @@ const SpaceScreen = ({
             avatar: undefined,
           },
         }));
+
+        // Store the call connection for cleanup
         setUsers((prev) => ({
           ...prev,
           [callerId]: call,
@@ -165,12 +263,17 @@ const SpaceScreen = ({
     });
   }, [peer, stream, setPlayers]);
 
+  // ============================================================================
+  // ADD YOUR OWN STREAM TO PLAYERS
+  // ============================================================================
+  
+  /**
+   * Once we have our stream and peer ID, add ourselves to the players state
+   * This displays our own video in the UI
+   */
   useEffect(() => {
     if (!stream || !myId) return;
-    console.log(
-      `Setting my stream ${myId} with pre-join settings:`,
-      preJoinSettings,
-    );
+
     setPlayers((prev) => ({
       ...prev,
       [myId]: {
@@ -184,6 +287,10 @@ const SpaceScreen = ({
     }));
   }, [stream, myId, preJoinSettings, setPlayers]);
 
+  // ============================================================================
+  // RENDER: YOUR VIDEO (FEATURED/HIGHLIGHTED)
+  // ============================================================================
+  
   const renderMainUser = () => {
     if (!playerHighlighted) return null;
 
@@ -209,7 +316,12 @@ const SpaceScreen = ({
     );
   };
 
+  // ============================================================================
+  // RENDER: OTHER USERS (GRID)
+  // ============================================================================
+  
   const renderOtherUsers = () => {
+    // Show waiting state if no other users
     if (visibleOtherPlayers.length === 0) {
       return (
         <WaitingState
@@ -253,10 +365,9 @@ const SpaceScreen = ({
           })}
         </VideoGrid>
 
+        {/* Fullscreen toggle button for other users grid */}
         <button
-          onClick={() => {
-            setOtherFullScreen((prev) => !prev);
-          }}
+          onClick={() => setOtherFullScreen((prev) => !prev)}
           className="select-none opacity-0 group-hover/other-screen:opacity-100 absolute bottom-0 right-0 p-2 m-2 rounded-xl bg-secondary hover:bg-primary-hover border border-call-border cursor-pointer transition-all duration-300"
         >
           {otherFullScreen ? (
@@ -266,6 +377,7 @@ const SpaceScreen = ({
           )}
         </button>
 
+        {/* Pagination controls (if more than 4 users) */}
         <PaginationControls
           currentPage={currentPage}
           totalPages={totalPages}
@@ -275,13 +387,20 @@ const SpaceScreen = ({
     );
   };
 
+  // ============================================================================
+  // MAIN RENDER
+  // ============================================================================
+  
   return (
     <div className="flex flex-col h-full w-full">
+      {/* Video area: Your video + Others grid */}
       <div className="flex h-full w-full gap-2 flex-1 min-h-0 pb-2">
         {renderMainUser()}
         {renderOtherUsers()}
       </div>
-      <div className="w-full flex-shrink-0 py-2 ">
+
+      {/* Control bar: Mic, Camera, Leave, etc. */}
+      <div className="w-full flex-shrink-0 py-2">
         <VideoCallControls
           muted={playerHighlighted?.muted}
           playing={playerHighlighted?.playing}
