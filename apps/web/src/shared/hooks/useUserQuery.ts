@@ -5,8 +5,12 @@ export const useGetMe = () => {
   return useQuery({
     queryKey: ["get-me"],
     queryFn: async () => {
-      const { data } = await api.get("/auth/me")
-      return data.user
+      try {
+        const { data } = await api.get("/auth/me")
+        return data.data || null
+      } catch {
+        return null
+      }
     },
     staleTime: Infinity,
     retry: false,
