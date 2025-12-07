@@ -6,8 +6,13 @@ import Header from "./SpaceHeader";
 import playClickSound from "@/shared/utils/ClickSound";
 import UserMedia from "./UserMedia";
 import MediaPermissionError from "./ui/MediaPermissionError";
-import { PreJoinScreenProps } from "../types";
 import { useGetMe } from "@/shared/hooks/useUserQuery";
+import { PreJoinSettings } from "../[roomId]/page";
+
+interface PreJoinScreenProps {
+  onJoinCall: (settings: PreJoinSettings) => void;
+  roomId: string;
+}
 
 const PreJoinScreen = ({ onJoinCall }: PreJoinScreenProps) => {
   const { data: user } = useGetMe();

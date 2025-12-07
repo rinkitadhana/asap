@@ -1,6 +1,9 @@
 import React from "react";
 import { X } from "lucide-react";
-import { SidebarContentProps } from "../../types";
+
+interface SidebarContentProps {
+  onClose: () => void;
+}
 
 const InfoSidebar: React.FC<SidebarContentProps> = ({ onClose }) => {
   return (

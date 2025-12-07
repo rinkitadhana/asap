@@ -10,7 +10,20 @@ import { RxSpeakerLoud, RxSpeakerOff } from "react-icons/rx";
 import DateComponent from "@/shared/utils/Time";
 import { IoChatbubbleOutline } from "react-icons/io5";
 import ControlButton from "./controls/ControlButton";
-import { ControlsProps } from "../types";
+
+type SidebarType = "info" | "users" | "chat" | null;
+
+interface ControlsProps {
+  muted: boolean;
+  playing: boolean;
+  toggleAudio: () => void;
+  toggleVideo: () => void;
+  leaveRoom: () => void;
+  speakerMuted: boolean;
+  toggleSpeaker: () => void;
+  toggleSidebar: (sidebarType: SidebarType) => void;
+  activeSidebar: SidebarType;
+}
 
 const VideoCallControls = (props: ControlsProps) => {
   const {

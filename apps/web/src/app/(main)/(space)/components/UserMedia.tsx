@@ -34,7 +34,19 @@
 import { useEffect, useRef } from "react";
 import StatusIndicators from "./ui/StatusIndicators";
 import UserAvatar from "./ui/UserAvatar";
-import { UserMediaProps } from "../types";
+
+interface UserMediaProps {
+  url: string | MediaStream | null;
+  muted: boolean;
+  playing: boolean;
+  className: string;
+  myVideo?: boolean;
+  name?: string;
+  avatar?: string;
+  preJoin?: boolean;
+  speakerMuted?: boolean;
+  hideElements?: boolean;
+}
 
 const UserMedia = ({
   url,

@@ -29,9 +29,9 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { useSocket } from "@/shared/context/socket";
-import usePeer from "../hooks/usePeer";
-import useMediaStream from "../hooks/useMediaStream";
-import usePlayer from "../hooks/usePlayer";
+import usePeer from "@/shared/hooks/usePeer";
+import useMediaStream from "@/shared/hooks/useMediaStream";
+import usePlayer from "@/shared/hooks/usePlayer";
 import { useParams } from "next/navigation";
 import { cloneDeep } from "lodash";
 import { MediaConnection } from "peerjs";
@@ -41,8 +41,16 @@ import VideoGrid, { getGridLayout } from "./layout/VideoGrid";
 import VideoContainer from "./layout/VideoContainer";
 import PaginationControls from "./ui/PaginationControls";
 import WaitingState from "./ui/WaitingState";
-import { SpaceScreenProps } from "../types";
 import { RxEnterFullScreen, RxExitFullScreen } from "react-icons/rx";
+import { PreJoinSettings } from "../[roomId]/page";
+
+type SidebarType = "info" | "users" | "chat" | null;
+
+interface SpaceScreenProps {
+  toggleSidebar: (sidebarType: SidebarType) => void;
+  activeSidebar: SidebarType;
+  preJoinSettings: PreJoinSettings | null;
+}
 
 const SpaceScreen = ({
   toggleSidebar,

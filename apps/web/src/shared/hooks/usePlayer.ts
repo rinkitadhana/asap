@@ -34,7 +34,19 @@ import { cloneDeep } from "lodash";
 import { useVideoCall } from "@/shared/context/socket";
 import { useRouter } from "next/navigation";
 import { Peer } from "peerjs";
-import { Players } from "../types";
+
+interface Player {
+  url: MediaStream | string;
+  muted: boolean;
+  playing: boolean;
+  speakerMuted: boolean;
+  name?: string;
+  avatar?: string;
+}
+
+interface Players {
+  [key: string]: Player;
+}
 
 const usePlayer = (myId: string, roomId: string, peer: Peer | null) => {
   const { 
@@ -160,3 +172,4 @@ const usePlayer = (myId: string, roomId: string, peer: Peer | null) => {
 };
 
 export default usePlayer;
+

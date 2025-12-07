@@ -3,7 +3,14 @@ import SpaceHeader from "./SpaceHeader";
 import InfoSidebar from "./sidebars/InfoSidebar";
 import UsersSidebar from "./sidebars/UsersSidebar";
 import ChatSidebar from "./sidebars/ChatSidebar";
-import { SpaceWrapperProps } from "../types";
+
+type SidebarType = "info" | "users" | "chat" | null;
+
+interface SpaceWrapperProps {
+  children: React.ReactNode;
+  activeSidebar: SidebarType;
+  closeSidebar: () => void;
+}
 
 const SpaceWrapper = ({
   children,

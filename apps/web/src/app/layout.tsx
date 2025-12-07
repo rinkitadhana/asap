@@ -1,6 +1,6 @@
 import { Geist, Geist_Mono, Inter } from "next/font/google";
 import type { Metadata } from "next";
-import "../styles/globals.css";
+import "../shared/styles/globals.css";
 import { ThemeProvider } from "@/shared/components/ThemeProvider";
 import { QueryProvider } from "@/shared/utils/QueryProvider";
 
@@ -29,7 +29,11 @@ export const metadata: Metadata = {
       { url: "/icon/icon-192.png", sizes: "192x192", type: "image/png" },
       { url: "/icon/icon-512.png", sizes: "512x512", type: "image/png" },
     ],
-    apple: { url: "/icon/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
+    apple: {
+      url: "/icon/apple-touch-icon.png",
+      sizes: "180x180",
+      type: "image/png",
+    },
   },
 };
 

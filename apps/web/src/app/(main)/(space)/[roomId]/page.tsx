@@ -4,8 +4,16 @@ import SpaceWrapper from "../components/SpaceWrapper";
 import PreJoinScreen from "../components/PreJoinScreen";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import SpaceScreen from "../components/SpaceScreen";
-import { SidebarType, PreJoinSettings } from "../types";
 import { useGetMe } from "@/shared/hooks/useUserQuery";
+
+type SidebarType = "info" | "users" | "chat" | null;
+
+export interface PreJoinSettings {
+  videoEnabled: boolean;
+  audioEnabled: boolean;
+  name: string;
+  avatar?: string;
+}
 
 const Room = () => {
   const params = useParams();

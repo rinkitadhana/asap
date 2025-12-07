@@ -1,5 +1,10 @@
 import React from "react";
-import { GridLayout } from "../../types";
+
+interface GridLayout {
+  rows: number;
+  cols: number;
+  bottomSpan?: boolean;
+}
 
 export const getGridLayout = (userCount: number): GridLayout => {
   if (userCount === 0) return { rows: 0, cols: 0 };
