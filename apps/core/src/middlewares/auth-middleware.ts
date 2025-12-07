@@ -13,14 +13,14 @@ export async function authMiddleware(
   const authHeader = req.headers.authorization;
 
   if (!authHeader) {
-    res.status(401).json({ error: "Missing Authorization header" });
+    res.status(401).json({ success: false, data: null, message: "Missing Authorization header" });
     return;
   }
 
   try {
     const token = authHeader.split(" ")[1];
     if (!token) {
-      res.status(401).json({ error: "Invalid Authorization header format" });
+      res.status(401).json({ success: false, data: null, message: "Invalid Authorization header format!" });
       return;
     }
     const decoded = await verifySupabaseJWT(token);
@@ -28,7 +28,7 @@ export async function authMiddleware(
     next();
   } catch (err: unknown) {
     const errorMessage = err instanceof Error ? err.message : "Unknown error";
-    res.status(401).json({ error: "Unauthorized", details: errorMessage });
+    res.status(401).json({ success: false, data: null, message: `Unauthorized: ${errorMessage}!` });
     return;
   }
 }

@@ -20,12 +20,12 @@ export async function joinSpaceController(
     const { displayName, participantSessionId } = req.body;
 
     if (!spaceId) {
-      res.status(400).json({ error: "Bad Request", details: "Space ID is required" });
+      res.status(400).json({ success: false, data: null, message: "Space ID is required!" });
       return;
     }
 
     if (!participantSessionId || typeof participantSessionId !== "string" || participantSessionId.trim().length === 0) {
-      res.status(400).json({ error: "Bad Request", details: "Participant session ID is required" });
+      res.status(400).json({ success: false, data: null, message: "Participant session ID is required!" });
       return;
     }
 
@@ -40,7 +40,7 @@ export async function joinSpaceController(
       isGuest = false;
     } else {
       if (!displayName || typeof displayName !== "string" || displayName.trim().length === 0) {
-        res.status(400).json({ error: "Bad Request", details: "Display name is required for guest users" });
+        res.status(400).json({ success: false, data: null, message: "Display name is required for guest users!" });
         return;
       }
       finalDisplayName = displayName.trim();
@@ -56,25 +56,28 @@ export async function joinSpaceController(
     });
 
     res.status(200).json({
-      participant: result.participant,
-      space: result.space,
-      isRejoin: result.isRejoin,
-      message: result.isRejoin ? "Rejoined space successfully" : "Joined space successfully",
+      success: true,
+      data: {
+        participant: result.participant,
+        space: result.space,
+        isRejoin: result.isRejoin,
+      },
+      message: result.isRejoin ? "Rejoined space successfully!" : "Joined space successfully!",
     });
   } catch (error: unknown) {
     if (error instanceof Error) {
       if (error.message === "SPACE_NOT_FOUND") {
-        res.status(404).json({ error: "Not Found", details: "Space not found" });
+        res.status(404).json({ success: false, data: null, message: "Space not found!" });
         return;
       }
       if (error.message === "SPACE_NOT_LIVE") {
-        res.status(400).json({ error: "Bad Request", details: "Space is not currently live" });
+        res.status(400).json({ success: false, data: null, message: "Space is not currently live!" });
         return;
       }
     }
 
     const errorMessage = error instanceof Error ? error.message : "Unknown error";
-    res.status(500).json({ error: "Failed to join space", details: errorMessage });
+    res.status(500).json({ success: false, data: null, message: `Failed to join space: ${errorMessage}!` });
   }
 }
 
@@ -87,7 +90,7 @@ export async function leaveSpaceController(
     const { participantSessionId } = req.body;
 
     if (!spaceId) {
-      res.status(400).json({ error: "Bad Request", details: "Space ID is required" });
+      res.status(400).json({ success: false, data: null, message: "Space ID is required!" });
       return;
     }
 
@@ -99,7 +102,7 @@ export async function leaveSpaceController(
     }
 
     if (!userId && (!participantSessionId || typeof participantSessionId !== "string")) {
-      res.status(400).json({ error: "Bad Request", details: "Participant session ID is required for guest users" });
+      res.status(400).json({ success: false, data: null, message: "Participant session ID is required for guest users!" });
       return;
     }
 
@@ -111,23 +114,23 @@ export async function leaveSpaceController(
 
     res.status(200).json({
       success: true,
-      participant,
-      message: "Left space successfully",
+      data: participant,
+      message: "Left space successfully!",
     });
   } catch (error: unknown) {
     if (error instanceof Error) {
       if (error.message === "PARTICIPANT_NOT_FOUND") {
-        res.status(404).json({ error: "Not Found", details: "Participant not found in this space" });
+        res.status(404).json({ success: false, data: null, message: "Participant not found in this space!" });
         return;
       }
       if (error.message === "PARTICIPANT_ALREADY_LEFT") {
-        res.status(400).json({ error: "Bad Request", details: "You have already left this space" });
+        res.status(400).json({ success: false, data: null, message: "You have already left this space!" });
         return;
       }
     }
 
     const errorMessage = error instanceof Error ? error.message : "Unknown error";
-    res.status(500).json({ error: "Failed to leave space", details: errorMessage });
+    res.status(500).json({ success: false, data: null, message: `Failed to leave space: ${errorMessage}!` });
   }
 }
 
@@ -141,7 +144,7 @@ export async function getParticipantsController(
     const { active } = req.query;
 
     if (!spaceId) {
-      res.status(400).json({ error: "Bad Request", details: "Space ID is required" });
+      res.status(400).json({ success: false, data: null, message: "Space ID is required!" });
       return;
     }
 
@@ -152,17 +155,20 @@ export async function getParticipantsController(
 
     res.status(200).json({
       success: true,
-      participants,
-      count: participants.length,
+      data: {
+        participants,
+        count: participants.length,
+      },
+      message: "Participants retrieved successfully!",
     });
   } catch (error: unknown) {
     if (error instanceof Error && error.message === "SPACE_NOT_FOUND") {
-      res.status(404).json({ error: "Not Found", details: "Space not found" });
+      res.status(404).json({ success: false, data: null, message: "Space not found!" });
       return;
     }
 
     const errorMessage = error instanceof Error ? error.message : "Unknown error";
-    res.status(500).json({ error: "Failed to get participants", details: errorMessage });
+    res.status(500).json({ success: false, data: null, message: `Failed to get participants: ${errorMessage}!` });
   }
 }
 
@@ -172,7 +178,7 @@ export async function updateRoleController(
 ): Promise<void> {
   try {
     if (!req.user) {
-      res.status(401).json({ error: "Unauthorized", details: "Authentication required" });
+      res.status(401).json({ success: false, data: null, message: "Authentication required!" });
       return;
     }
 
@@ -180,17 +186,17 @@ export async function updateRoleController(
     const { role } = req.body;
 
     if (!spaceId) {
-      res.status(400).json({ error: "Bad Request", details: "Space ID is required" });
+      res.status(400).json({ success: false, data: null, message: "Space ID is required!" });
       return;
     }
 
     if (!participantId) {
-      res.status(400).json({ error: "Bad Request", details: "Participant ID is required" });
+      res.status(400).json({ success: false, data: null, message: "Participant ID is required!" });
       return;
     }
 
     if (!role || !["CO_HOST", "GUEST"].includes(role)) {
-      res.status(400).json({ error: "Bad Request", details: "Role must be CO_HOST or GUEST" });
+      res.status(400).json({ success: false, data: null, message: "Role must be CO_HOST or GUEST!" });
       return;
     }
 
@@ -199,14 +205,14 @@ export async function updateRoleController(
     const isHost = await isUserHost(spaceId, user.id);
 
     if (!isHost) {
-      res.status(403).json({ error: "Forbidden", details: "Only the host can update participant roles" });
+      res.status(403).json({ success: false, data: null, message: "Only the host can update participant roles!" });
       return;
     }
 
     // Verify participant belongs to this space
     const participant = await getParticipantById(participantId);
     if (!participant || participant.spaceId !== spaceId) {
-      res.status(404).json({ error: "Not Found", details: "Participant not found in this space" });
+      res.status(404).json({ success: false, data: null, message: "Participant not found in this space!" });
       return;
     }
 
@@ -214,23 +220,23 @@ export async function updateRoleController(
 
     res.status(200).json({
       success: true,
-      participant: updatedParticipant,
-      message: "Participant role updated successfully",
+      data: updatedParticipant,
+      message: "Participant role updated successfully!",
     });
   } catch (error: unknown) {
     if (error instanceof Error) {
       if (error.message === "PARTICIPANT_NOT_FOUND") {
-        res.status(404).json({ error: "Not Found", details: "Participant not found" });
+        res.status(404).json({ success: false, data: null, message: "Participant not found!" });
         return;
       }
       if (error.message === "CANNOT_CHANGE_HOST_ROLE") {
-        res.status(400).json({ error: "Bad Request", details: "Cannot change the host's role" });
+        res.status(400).json({ success: false, data: null, message: "Cannot change the host's role!" });
         return;
       }
     }
 
     const errorMessage = error instanceof Error ? error.message : "Unknown error";
-    res.status(500).json({ error: "Failed to update role", details: errorMessage });
+    res.status(500).json({ success: false, data: null, message: `Failed to update role: ${errorMessage}!` });
   }
 }
 
@@ -240,19 +246,19 @@ export async function kickParticipantController(
 ): Promise<void> {
   try {
     if (!req.user) {
-      res.status(401).json({ error: "Unauthorized", details: "Authentication required" });
+      res.status(401).json({ success: false, data: null, message: "Authentication required!" });
       return;
     }
 
     const { spaceId, participantId } = req.params;
 
     if (!spaceId) {
-      res.status(400).json({ error: "Bad Request", details: "Space ID is required" });
+      res.status(400).json({ success: false, data: null, message: "Space ID is required!" });
       return;
     }
 
     if (!participantId) {
-      res.status(400).json({ error: "Bad Request", details: "Participant ID is required" });
+      res.status(400).json({ success: false, data: null, message: "Participant ID is required!" });
       return;
     }
 
@@ -261,14 +267,14 @@ export async function kickParticipantController(
     const isHost = await isUserHost(spaceId, user.id);
 
     if (!isHost) {
-      res.status(403).json({ error: "Forbidden", details: "Only the host can kick participants" });
+      res.status(403).json({ success: false, data: null, message: "Only the host can kick participants!" });
       return;
     }
 
     // Verify participant belongs to this space
     const participant = await getParticipantById(participantId);
     if (!participant || participant.spaceId !== spaceId) {
-      res.status(404).json({ error: "Not Found", details: "Participant not found in this space" });
+      res.status(404).json({ success: false, data: null, message: "Participant not found in this space!" });
       return;
     }
 
@@ -276,27 +282,27 @@ export async function kickParticipantController(
 
     res.status(200).json({
       success: true,
-      participant: kickedParticipant,
-      message: "Participant kicked successfully",
+      data: kickedParticipant,
+      message: "Participant kicked successfully!",
     });
   } catch (error: unknown) {
     if (error instanceof Error) {
       if (error.message === "PARTICIPANT_NOT_FOUND") {
-        res.status(404).json({ error: "Not Found", details: "Participant not found" });
+        res.status(404).json({ success: false, data: null, message: "Participant not found!" });
         return;
       }
       if (error.message === "CANNOT_KICK_HOST") {
-        res.status(400).json({ error: "Bad Request", details: "Cannot kick the host" });
+        res.status(400).json({ success: false, data: null, message: "Cannot kick the host!" });
         return;
       }
       if (error.message === "PARTICIPANT_ALREADY_LEFT") {
-        res.status(400).json({ error: "Bad Request", details: "Participant has already left" });
+        res.status(400).json({ success: false, data: null, message: "Participant has already left!" });
         return;
       }
     }
 
     const errorMessage = error instanceof Error ? error.message : "Unknown error";
-    res.status(500).json({ error: "Failed to kick participant", details: errorMessage });
+    res.status(500).json({ success: false, data: null, message: `Failed to kick participant: ${errorMessage}!` });
   }
 }
 

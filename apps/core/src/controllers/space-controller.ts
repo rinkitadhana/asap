@@ -17,19 +17,19 @@ export async function createSpaceController(
 ): Promise<void> {
   try {
     if (!req.user) {
-      res.status(401).json({ error: "Unauthorized", details: "No user context" });
+      res.status(401).json({ success: false, data: null, message: "No user context!" });
       return;
     }
 
     const { title, description, joinCode, participantSessionId } = req.body;
 
     if (!joinCode || typeof joinCode !== "string" || joinCode.trim().length === 0) {
-      res.status(400).json({ error: "Bad Request", details: "Join code is required" });
+      res.status(400).json({ success: false, data: null, message: "Join code is required!" });
       return;
     }
 
     if (!participantSessionId || typeof participantSessionId !== "string" || participantSessionId.trim().length === 0) {
-      res.status(400).json({ error: "Bad Request", details: "Participant session ID is required!" });
+      res.status(400).json({ success: false, data: null, message: "Participant session ID is required!" });
       return;
     }
 
@@ -47,22 +47,25 @@ export async function createSpaceController(
     });
 
     res.status(201).json({
-      space,
+      success: true,
+      data: space,
       message: "Space created and started successfully!",
     });
   } catch (error: unknown) {
     if (error instanceof Error && error.message === "JOIN_CODE_EXISTS") {
       res.status(409).json({
-        error: "Conflict",
-        details: "A space with this join code already exists",
+        success: false,
+        data: null,
+        message: "A space with this join code already exists!",
       });
       return;
     }
 
     const errorMessage = error instanceof Error ? error.message : "Unknown error";
     res.status(500).json({
-      error: "Failed to create space",
-      details: errorMessage,
+      success: false,
+      data: null,
+      message: `Failed to create space: ${errorMessage}`,
     });
   }
 }
@@ -73,14 +76,14 @@ export async function updateSpaceController(
 ): Promise<void> {
   try {
     if (!req.user) {
-      res.status(401).json({ error: "Unauthorized", details: "No user context!" });
+      res.status(401).json({ success: false, data: null, message: "No user context!" });
       return;
     }
 
     const { spaceId } = req.params;
     
     if (!spaceId) {
-      res.status(400).json({ error: "Bad Request", details: "Space ID is required!" });
+      res.status(400).json({ success: false, data: null, message: "Space ID is required!" });
       return;
     }
 
@@ -88,8 +91,9 @@ export async function updateSpaceController(
 
     if (title === undefined && description === undefined) {
       res.status(400).json({
-        error: "Bad Request",
-        details: "At least one field (title or description) must be provided!",
+        success: false,
+        data: null,
+        message: "At least one field (title or description) must be provided!",
       });
       return;
     }
@@ -99,8 +103,9 @@ export async function updateSpaceController(
     const isHost = await verifySpaceHost(spaceId, user.id);
     if (!isHost) {
       res.status(403).json({
-        error: "Forbidden",
-        details: "Only the host can update space details!",
+        success: false,
+        data: null,
+        message: "Only the host can update space details!",
       });
       return;
     }
@@ -111,14 +116,16 @@ export async function updateSpaceController(
     });
 
     res.status(200).json({
-      space,
+      success: true,
+      data: space,
       message: "Space updated successfully!",
     });
   } catch (error: unknown) {
     const errorMessage = error instanceof Error ? error.message : "Unknown error";
     res.status(500).json({
-      error: "Failed to update space!",
-      details: errorMessage,
+      success: false,
+      data: null,
+      message: `Failed to update space: ${errorMessage}!`,
     });
   }
 }
@@ -129,14 +136,14 @@ export async function endSpaceController(
 ): Promise<void> {
   try {
     if (!req.user) {
-      res.status(401).json({ error: "Unauthorized", details: "No user context!" });
+      res.status(401).json({ success: false, data: null, message: "No user context!" });
       return;
     }
 
     const { spaceId } = req.params;
     
     if (!spaceId) {
-      res.status(400).json({ error: "Bad Request", details: "Space ID is required" });
+      res.status(400).json({ success: false, data: null, message: "Space ID is required!" });
       return;
     }
 
@@ -145,8 +152,9 @@ export async function endSpaceController(
     const isHost = await verifySpaceHost(spaceId, user.id);
     if (!isHost) {
       res.status(403).json({
-        error: "Forbidden",
-        details: "Only the host can end the space!",
+        success: false,
+        data: null,
+        message: "Only the host can end the space!",
       });
       return;
     }
@@ -155,22 +163,25 @@ export async function endSpaceController(
       const space = await endSpace(spaceId);
 
       res.status(200).json({
-        space,
+        success: true,
+        data: space,
         message: "Space ended successfully!",
       });
     } catch (error: unknown) {
       if (error instanceof Error) {
         if (error.message === "SPACE_NOT_FOUND") {
           res.status(404).json({
-            error: "Not Found",
-            details: "Space not found!",
+            success: false,
+            data: null,
+            message: "Space not found!",
           });
           return;
         }
         if (error.message === "SPACE_NOT_LIVE") {
           res.status(400).json({
-            error: "Bad Request",
-            details: "Space is not currently live!",
+            success: false,
+            data: null,
+            message: "Space is not currently live!",
           });
           return;
         }
@@ -180,8 +191,9 @@ export async function endSpaceController(
   } catch (error: unknown) {
     const errorMessage = error instanceof Error ? error.message : "Unknown error";
     res.status(500).json({
-      error: "Failed to end space",
-      details: errorMessage,
+      success: false,
+      data: null,
+      message: `Failed to end space: ${errorMessage}!`,
     });
   }
 }
@@ -192,14 +204,14 @@ export async function getSpaceByIdController(
 ): Promise<void> {
   try {
     if (!req.user) {
-      res.status(401).json({ error: "Unauthorized", details: "No user context!" });
+      res.status(401).json({ success: false, data: null, message: "No user context!" });
       return;
     }
 
     const { spaceId } = req.params;
     
     if (!spaceId) {
-      res.status(400).json({ error: "Bad Request", details: "Space ID is required!" });
+      res.status(400).json({ success: false, data: null, message: "Space ID is required!" });
       return;
     }
 
@@ -209,8 +221,9 @@ export async function getSpaceByIdController(
 
     if (!space) {
       res.status(404).json({
-        error: "Not Found",
-        details: "Space not found",
+        success: false,
+        data: null,
+        message: "Space not found!",
       });
       return;
     }
@@ -220,21 +233,24 @@ export async function getSpaceByIdController(
 
     if (!isHost && !isParticipant) {
       res.status(403).json({
-        error: "Forbidden",
-        details: "You are not authorized to view this space!",
+        success: false,
+        data: null,
+        message: "You are not authorized to view this space!",
       });
       return;
     }
 
     res.status(200).json({
-      space,
+      success: true,
+      data: space,
       message: "Space retrieved successfully!",
     });
   } catch (error: unknown) {
     const errorMessage = error instanceof Error ? error.message : "Unknown error";
     res.status(500).json({
-      error: "Failed to get space!",
-      details: errorMessage,
+      success: false,
+      data: null,
+      message: `Failed to get space: ${errorMessage}!`,
     });
   }
 }
@@ -248,8 +264,9 @@ export async function getSpaceByJoinCodeController(
 
     if (!joinCode) {
       res.status(400).json({
-        error: "Bad Request",
-        details: "Join code is required!",
+        success: false,
+        data: null,
+        message: "Join code is required!",
       });
       return;
     }
@@ -258,21 +275,24 @@ export async function getSpaceByJoinCodeController(
 
     if (!space) {
       res.status(404).json({
-        error: "Not Found",
-        details: "Space not found with this join code!",
+        success: false,
+        data: null,
+        message: "Space not found with this join code!",
       });
       return;
     }
 
     res.status(200).json({
-      space,
+      success: true,
+      data: space,
       message: "Space retrieved successfully!",
     });
   } catch (error: unknown) {
     const errorMessage = error instanceof Error ? error.message : "Unknown error";
     res.status(500).json({
-      error: "Failed to get space!",
-      details: errorMessage,
+      success: false,
+      data: null,
+      message: `Failed to get space: ${errorMessage}!`,
     });
   }
 }
