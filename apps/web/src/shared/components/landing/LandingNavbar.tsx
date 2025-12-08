@@ -6,13 +6,10 @@ import { useRouter } from "next/navigation";
 import { ThemeSwitcher } from "../ThemeSwitcher";
 import VersionBadge from "./ui/VersionBadge";
 import AsapLogo from "../ui/AsapLogo";
-import { useGetMe } from "@/shared/hooks/useUserQuery";
-import { Loader2 } from "lucide-react";
 
 const LandingNavbar = () => {
   const [scrolled, setScrolled] = useState(false);
   const router = useRouter();
-  const { data: user, isLoading } = useGetMe();
 
   useEffect(() => {
     const onScroll = () => {
@@ -75,17 +72,10 @@ const LandingNavbar = () => {
           </div>
           <div className="hidden md:flex gap-4">
             <button
-              onClick={() => router.push(user ? "/dashboard" : "/login")}
+              onClick={() => router.push("/login")}
               className="btn text-sm font-semibold w-[105px] flex items-center justify-center"
-              disabled={isLoading}
             >
-              {isLoading ? (
-                <Loader2 className="size-5 animate-spin" />
-              ) : user ? (
-                "Dashboard"
-              ) : (
-                "Get Started"
-              )}
+              Get Started
             </button>
           </div>
         </div>
