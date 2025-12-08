@@ -6,11 +6,13 @@ import authRouter from "./routes/auth-route.ts";
 import recordingRouter from "./routes/recording-route.ts";
 import spaceRouter from "./routes/space-route.ts";
 import participantRouter from "./routes/participant-route.ts";
+import dotenv from "dotenv";
+dotenv.config();
 
 const app = express();
-const PORT = 4000;
+const PORT = process.env.PORT || 4000;
 
-//middleware
+//middlewares
 app.use(express.json())
 app.use(
   cors({
