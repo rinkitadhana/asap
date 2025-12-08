@@ -2,13 +2,13 @@
   "name": "asap",
   "private": true,
   "scripts": {
-    "dev": "dotenv -- pnpm -r --parallel dev",
-    "dev:web": "dotenv -- pnpm --filter=web dev",
-    "dev:core": "dotenv -- pnpm --filter=core dev",
+    "dev": "pnpm -r --parallel dev",
+    "dev:web": "pnpm --filter=web dev",
+    "dev:core": "pnpm --filter=core dev",
 
-    "build": "dotenv -- turbo run build",
-    "build:web": "dotenv -- turbo run build --filter=web",
-    "build:core": "dotenv -- turbo run build --filter=core",
+    "build": "turbo run build",
+    "build:web": "turbo run build --filter=web",
+    "build:core": "turbo run build --filter=core",
 
     "lint": "turbo run lint",
  
@@ -23,7 +23,6 @@
     "prisma:format": "cd packages/database && npx prisma format"
   },
   "devDependencies": {
-    "dotenv-cli": "^7.4.2",
     "prettier": "^3.6.2",
     "turbo": "^2.5.6",
     "typescript": "5.9.2"
