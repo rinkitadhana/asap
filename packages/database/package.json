@@ -4,6 +4,7 @@
     "private": true,
     "main": "./src/index.ts",
     "types": "./src/index.ts",
+    "type": "module",
     "scripts": {
         "db:generate": "prisma generate",
         "db:push": "prisma db push",
@@ -15,12 +16,15 @@
     },
     "devDependencies": {
         "@repo/typescript-config": "workspace:*",
-        "@types/node": "^22.10.2",
-        "prisma": "^6.17.1",
+        "@types/node": "^22.15.3",
+        "@types/pg": "^8.15.6",
+        "prisma": "^7.1.0",
         "typescript": "^5.9.2"
     },
     "dependencies": {
-        "@prisma/client": "^6.17.1",
-        "dotenv": "^16.4.5"
+        "@prisma/adapter-pg": "^7.1.0",
+        "@prisma/client": "^7.1.0",
+        "dotenv": "^16.6.1",
+        "pg": "^8.16.3"
     }
 }
