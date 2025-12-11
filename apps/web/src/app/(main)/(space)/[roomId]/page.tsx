@@ -6,6 +6,7 @@ import { useParams, useRouter, useSearchParams } from "next/navigation";
 import SpaceScreen from "../components/SpaceScreen";
 import { useGetMe } from "@/shared/hooks/useUserQuery";
 import { useCreateSpace } from "@/shared/hooks/useSpace";
+import { useJoinSpace } from "@/shared/hooks/useParticipant";
 import usePeer from "@/shared/hooks/usePeer";
 import { getOrCreateSessionId } from "@/shared/utils/ParticipantSessionId";
 
@@ -27,6 +28,8 @@ const Room = () => {
   const createSpace = useCreateSpace();
   const roomId = params.roomId as string;
   const isHost = searchParams.get("host") === "true";
+  const [createdSpaceId, setCreatedSpaceId] = useState<string | null>(null);
+  const joinSpace = useJoinSpace(createdSpaceId || "");
   const [activeSidebar, setActiveSidebar] = useState<SidebarType>(null);
   const [hasJoined, setHasJoined] = useState(false);
   const [preJoinSettings, setPreJoinSettings] =
@@ -65,10 +68,10 @@ const Room = () => {
           participantSessionId: participantSessionId,
         },
         {
-          onSuccess: () => {
+          onSuccess: (spaceData) => {
             console.log("Space created successfully");
             setSpaceCreated(true);
-            setIsCreatingSpace(false);
+            setCreatedSpaceId(spaceData.id);
 
             // Auto-join with default settings (both camera and mic enabled)
             const defaultSettings: PreJoinSettings = {
@@ -77,10 +80,31 @@ const Room = () => {
               name: user.name || "Host",
               avatar: user.avatar,
             };
-            handleJoinCall(defaultSettings);
 
-            // Clean up the URL by removing the host parameter
-            router.replace(`/${roomId}`);
+            // Call join space API for the host
+            joinSpace.mutate(
+              {
+                displayName: defaultSettings.name,
+                participantSessionId: participantSessionId,
+              },
+              {
+                onSuccess: () => {
+                  console.log("Host joined space successfully");
+                  setIsCreatingSpace(false);
+                  handleJoinCall(defaultSettings);
+
+                  // Clean up the URL by removing the host parameter
+                  router.replace(`/${roomId}`);
+                },
+                onError: (error) => {
+                  console.error("Failed to join space as host:", error);
+                  setIsCreatingSpace(false);
+                  // Even if join fails, let them into the space since they created it
+                  handleJoinCall(defaultSettings);
+                  router.replace(`/${roomId}`);
+                },
+              }
+            );
           },
           onError: (error) => {
             console.error("Failed to create space:", error);
@@ -91,6 +115,7 @@ const Room = () => {
         }
       );
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     isHost,
     user,
@@ -101,6 +126,7 @@ const Room = () => {
     spaceCreated,
     isCreatingSpace,
     participantSessionId,
+    // joinSpace is intentionally omitted as it's only used in callback
   ]);
 
   // Show loading screen for host while creating space

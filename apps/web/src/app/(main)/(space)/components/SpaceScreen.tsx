@@ -45,6 +45,8 @@ import { RxEnterFullScreen, RxExitFullScreen } from "react-icons/rx";
 import { PreJoinSettings } from "../[roomId]/page";
 import { useGetMe } from "@/shared/hooks/useUserQuery";
 import { useEndSpace, useGetSpaceByJoinCode } from "@/shared/hooks/useSpace";
+import { useLeaveSpace } from "@/shared/hooks/useParticipant";
+import { getOrCreateSessionId } from "@/shared/utils/ParticipantSessionId";
 
 type SidebarType = "info" | "users" | "chat" | null;
 
@@ -69,6 +71,8 @@ const SpaceScreen = ({
   const { data: user } = useGetMe();
   const { data: spaceData } = useGetSpaceByJoinCode(roomId);
   const endSpace = useEndSpace();
+  const leaveSpaceApi = useLeaveSpace(spaceData?.id || "");
+  const participantSessionId = getOrCreateSessionId(roomId);
 
   // Get peer instance and peer ID
   const { peer, myId } = usePeer();
@@ -117,8 +121,21 @@ const SpaceScreen = ({
           originalLeaveRoom();
         },
       });
+    } else if (spaceData?.id) {
+      // Regular participant, call leave API first
+      leaveSpaceApi.mutate(
+        {
+          participantSessionId,
+        },
+        {
+          onSettled: () => {
+            // Whether success or error, leave the room
+            originalLeaveRoom();
+          },
+        }
+      );
     } else {
-      // Regular participant, just leave
+      // Fallback if no space data, just leave
       originalLeaveRoom();
     }
   };
