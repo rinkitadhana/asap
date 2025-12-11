@@ -1,55 +1,52 @@
-/**
- * Generates or retrieves a persistent participant session ID
- * This ID is used to track individual participants across sessions
- * If a user leaves and rejoins, they will get the same session ID
- * Format: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx (UUID v4)
- */
 
-const PARTICIPANT_SESSION_ID = "asap_participant_session_id";
+const SESSION_KEY_PREFIX = 'PARTICIPANT_SESSION_ID';
 
-const generateParticipantSessionId = (): string => {
-  // Only run in browser environment
-  if (typeof window === "undefined") {
-    return crypto.randomUUID();
+export function getOrCreateSessionId(spaceId: string): string {
+  if (!spaceId) {
+    throw new Error('spaceId is required');
   }
+  
+  const sessionKey = `${SESSION_KEY_PREFIX}_${spaceId}`;
+  
+  let sessionId = localStorage.getItem(sessionKey);
+  
+  if (sessionId) {
+    console.log(`Existing session found for space ${spaceId}:`, sessionId);
+    return sessionId;
+  }
+  
+  sessionId = crypto.randomUUID();
+  localStorage.setItem(sessionKey, sessionId);
+  console.log(`New session created for space ${spaceId}:`, sessionId);
+  
+  return sessionId;
+}
 
-  try {
-    // Check if we already have a session ID in localStorage
-    const existingSessionId = localStorage.getItem(PARTICIPANT_SESSION_ID);
+export function clearSessionId(spaceId: string): void {
+  if (!spaceId) {
+    throw new Error('spaceId is required');
+  }
+  
+  const sessionKey = `${SESSION_KEY_PREFIX}_${spaceId}`;
+  localStorage.removeItem(sessionKey);
+  console.log(`Session cleared for space ${spaceId}`);
+}
 
-    if (existingSessionId) {
-      console.log("Using existing participant session ID:", existingSessionId);
-      return existingSessionId;
+export function getSessionId(spaceId: string): string | null {
+  if (!spaceId) {
+    throw new Error('spaceId is required');
+  }
+  
+  const sessionKey = `${SESSION_KEY_PREFIX}_${spaceId}`;
+  return localStorage.getItem(sessionKey);
+}
+
+export function clearAllSessionIds(): void {
+  const keys = Object.keys(localStorage);
+  keys.forEach(key => {
+    if (key.startsWith(SESSION_KEY_PREFIX)) {
+      localStorage.removeItem(key);
     }
-
-    // Generate a new session ID
-    const newSessionId = crypto.randomUUID();
-
-    // Store it in localStorage for future sessions
-    localStorage.setItem(PARTICIPANT_SESSION_ID, newSessionId);
-
-    console.log("Generated new participant session ID:", newSessionId);
-    return newSessionId;
-  } catch (error) {
-    // Fallback if localStorage is not available
-    console.error("Error accessing localStorage:", error);
-    return crypto.randomUUID();
-  }
-};
-
-/**
- * Clears the stored participant session ID from localStorage
- * Useful for logout or testing purposes
- */
-export const clearParticipantSessionId = (): void => {
-  if (typeof window !== "undefined") {
-    try {
-      localStorage.removeItem(PARTICIPANT_SESSION_ID);
-      console.log("Participant session ID cleared");
-    } catch (error) {
-      console.error("Error clearing participant session ID:", error);
-    }
-  }
-};
-
-export default generateParticipantSessionId;
+  });
+  console.log('All sessions cleared');
+}

@@ -17,4 +17,3 @@ router.patch("/:spaceId/participant/:participantId/role", authMiddleware, update
 router.post("/:spaceId/participant/:participantId/kick", authMiddleware, kickParticipantController);
 
 export default router;
-
