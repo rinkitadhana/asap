@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import SpaceWrapper from "../components/SpaceWrapper";
 import PreJoinScreen from "../components/PreJoinScreen";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
@@ -7,7 +7,7 @@ import SpaceScreen from "../components/SpaceScreen";
 import { useGetMe } from "@/shared/hooks/useUserQuery";
 import { useCreateSpace } from "@/shared/hooks/useSpace";
 import usePeer from "@/shared/hooks/usePeer";
-import generateParticipantSessionId from "@/shared/utils/ParticipantSessionId";
+import { getOrCreateSessionId } from "@/shared/utils/ParticipantSessionId";
 
 type SidebarType = "info" | "users" | "chat" | null;
 
@@ -34,11 +34,7 @@ const Room = () => {
   const [spaceCreated, setSpaceCreated] = useState(false);
   const [isCreatingSpace, setIsCreatingSpace] = useState(false);
 
-  // Generate a unique participant session ID for this user's session
-  const participantSessionId = useMemo(
-    () => generateParticipantSessionId(),
-    []
-  );
+  const participantSessionId = getOrCreateSessionId(roomId);
 
   const toggleSidebar = (sidebarType: SidebarType) => {
     if (activeSidebar === sidebarType) {
