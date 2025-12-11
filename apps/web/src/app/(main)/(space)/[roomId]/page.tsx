@@ -1,10 +1,13 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import SpaceWrapper from "../components/SpaceWrapper";
 import PreJoinScreen from "../components/PreJoinScreen";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import SpaceScreen from "../components/SpaceScreen";
 import { useGetMe } from "@/shared/hooks/useUserQuery";
+import { useCreateSpace } from "@/shared/hooks/useSpace";
+import usePeer from "@/shared/hooks/usePeer";
+import generateParticipantSessionId from "@/shared/utils/ParticipantSessionId";
 
 type SidebarType = "info" | "users" | "chat" | null;
 
@@ -20,11 +23,22 @@ const Room = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { data: user } = useGetMe();
+  const { myId } = usePeer();
+  const createSpace = useCreateSpace();
   const roomId = params.roomId as string;
+  const isHost = searchParams.get("host") === "true";
   const [activeSidebar, setActiveSidebar] = useState<SidebarType>(null);
   const [hasJoined, setHasJoined] = useState(false);
   const [preJoinSettings, setPreJoinSettings] =
     useState<PreJoinSettings | null>(null);
+  const [spaceCreated, setSpaceCreated] = useState(false);
+  const [isCreatingSpace, setIsCreatingSpace] = useState(false);
+
+  // Generate a unique participant session ID for this user's session
+  const participantSessionId = useMemo(
+    () => generateParticipantSessionId(),
+    []
+  );
 
   const toggleSidebar = (sidebarType: SidebarType) => {
     if (activeSidebar === sidebarType) {
@@ -43,36 +57,88 @@ const Room = () => {
     setHasJoined(true);
   };
 
-  // Check if host parameter is present and auto-join
+  // Check if host parameter is present and create space
   useEffect(() => {
-    const isHost = searchParams.get("host") === "true";
-    if (isHost && user) {
-      // Auto-join with default settings (both camera and mic enabled)
-      const defaultSettings: PreJoinSettings = {
-        videoEnabled: true,
-        audioEnabled: true,
-        name: user.name || "Host",
-        avatar: user.avatar,
-      };
-      handleJoinCall(defaultSettings);
+    if (isHost && user && myId && !spaceCreated && !isCreatingSpace) {
+      setIsCreatingSpace(true);
 
-      // Clean up the URL by removing the host parameter
-      router.replace(`/${roomId}`);
+      // Create the space first
+      createSpace.mutate(
+        {
+          joinCode: roomId,
+          participantSessionId: participantSessionId,
+        },
+        {
+          onSuccess: () => {
+            console.log("Space created successfully");
+            setSpaceCreated(true);
+            setIsCreatingSpace(false);
+
+            // Auto-join with default settings (both camera and mic enabled)
+            const defaultSettings: PreJoinSettings = {
+              videoEnabled: true,
+              audioEnabled: true,
+              name: user.name || "Host",
+              avatar: user.avatar,
+            };
+            handleJoinCall(defaultSettings);
+
+            // Clean up the URL by removing the host parameter
+            router.replace(`/${roomId}`);
+          },
+          onError: (error) => {
+            console.error("Failed to create space:", error);
+            setIsCreatingSpace(false);
+            // Redirect to dashboard on error
+            router.push("/dashboard/home");
+          },
+        }
+      );
     }
-  }, [searchParams, user, roomId, router]);
+  }, [
+    isHost,
+    user,
+    myId,
+    roomId,
+    router,
+    createSpace,
+    spaceCreated,
+    isCreatingSpace,
+    participantSessionId,
+  ]);
 
-  if (!hasJoined) {
+  // Show loading screen for host while creating space
+  if (isHost && isCreatingSpace) {
+    return (
+      <div className="bg-call-background h-screen flex items-center justify-center">
+        <div className="animate-pulse">Loading...</div>
+      </div>
+    );
+  }
+
+  // Show pre-join screen for non-hosts
+  if (!hasJoined && !isHost) {
     return <PreJoinScreen onJoinCall={handleJoinCall} roomId={roomId} />;
   }
 
+  // Show space screen after joining
+  if (hasJoined) {
+    return (
+      <SpaceWrapper activeSidebar={activeSidebar} closeSidebar={closeSidebar}>
+        <SpaceScreen
+          toggleSidebar={toggleSidebar}
+          activeSidebar={activeSidebar}
+          preJoinSettings={preJoinSettings}
+        />
+      </SpaceWrapper>
+    );
+  }
+
+  // Fallback loading state
   return (
-    <SpaceWrapper activeSidebar={activeSidebar} closeSidebar={closeSidebar}>
-      <SpaceScreen
-        toggleSidebar={toggleSidebar}
-        activeSidebar={activeSidebar}
-        preJoinSettings={preJoinSettings}
-      />
-    </SpaceWrapper>
+    <div className="bg-call-background h-screen flex items-center justify-center">
+      <div className="animate-pulse">Loading...</div>
+    </div>
   );
 };
 

@@ -1,10 +1,10 @@
 /**
  * COMPONENT: SpaceScreen
- * 
+ *
  * PURPOSE:
  * The main orchestrator of the video calling experience. Combines all hooks and
  * manages the complete WebRTC connection flow.
- * 
+ *
  * WEBRTC CONNECTION FLOW (simplified):
  * 1. Get your camera/mic (useMediaStream)
  * 2. Create peer instance (usePeer) → get peer ID
@@ -18,7 +18,7 @@
  *    a. Answer with your stream
  *    b. Receive their stream
  * 6. Both users now have bidirectional audio/video
- * 
+ *
  * STATE MANAGEMENT:
  * - players: Map of all participants and their streams
  * - users: Map of active peer connections (for cleanup)
@@ -43,6 +43,8 @@ import PaginationControls from "./ui/PaginationControls";
 import WaitingState from "./ui/WaitingState";
 import { RxEnterFullScreen, RxExitFullScreen } from "react-icons/rx";
 import { PreJoinSettings } from "../[roomId]/page";
+import { useGetMe } from "@/shared/hooks/useUserQuery";
+import { useEndSpace, useGetSpaceByJoinCode } from "@/shared/hooks/useSpace";
 
 type SidebarType = "info" | "users" | "chat" | null;
 
@@ -60,17 +62,20 @@ const SpaceScreen = ({
   // ============================================================================
   // SETUP & HOOKS
   // ============================================================================
-  
+
   const socket = useSocket();
   const params = useParams();
   const roomId = params.roomId as string;
-  
+  const { data: user } = useGetMe();
+  const { data: spaceData } = useGetSpaceByJoinCode(roomId);
+  const endSpace = useEndSpace();
+
   // Get peer instance and peer ID
   const { peer, myId } = usePeer();
-  
+
   // Get camera/microphone stream
   const { stream } = useMediaStream(preJoinSettings || undefined);
-  
+
   // Get player management functions
   const {
     players,
@@ -80,7 +85,7 @@ const SpaceScreen = ({
     toggleAudio,
     toggleVideo,
     toggleSpeaker,
-    leaveRoom,
+    leaveRoom: originalLeaveRoom,
   } = usePlayer(myId || "", roomId || "", peer);
 
   // UI state
@@ -88,9 +93,35 @@ const SpaceScreen = ({
   const [closeWaiting, setCloseWaiting] = useState(false);
   const [myFullScreen, setMyFullScreen] = useState(true);
   const [otherFullScreen, setOtherFullScreen] = useState(true);
-  
+
   // Track active peer connections for cleanup when users leave
   const [users, setUsers] = useState<Record<string, MediaConnection>>({});
+
+  // Check if current user is the host
+  const isHost = user && spaceData && user.id === spaceData.host?.id;
+
+  // ============================================================================
+  // HANDLE LEAVE ROOM - END SPACE IF HOST
+  // ============================================================================
+
+  /**
+   * Custom leave room handler that ends the space if user is the host
+   * Otherwise just leaves the room normally
+   */
+  const leaveRoom = () => {
+    if (isHost && spaceData?.id) {
+      // If host, end the space first
+      endSpace.mutate(spaceData.id, {
+        onSettled: () => {
+          // Whether success or error, leave the room
+          originalLeaveRoom();
+        },
+      });
+    } else {
+      // Regular participant, just leave
+      originalLeaveRoom();
+    }
+  };
 
   // Pagination logic for participant grid
   const USERS_PER_PAGE = 4;
@@ -99,7 +130,7 @@ const SpaceScreen = ({
   const startIndex = currentPage * USERS_PER_PAGE;
   const visibleOtherPlayers = otherPlayerIds.slice(
     startIndex,
-    startIndex + USERS_PER_PAGE,
+    startIndex + USERS_PER_PAGE
   );
 
   const gridLayout = getGridLayout(visibleOtherPlayers.length);
@@ -107,13 +138,13 @@ const SpaceScreen = ({
   // ============================================================================
   // WEBRTC: HANDLE NEW USER JOINING (OUTGOING CALL)
   // ============================================================================
-  
+
   /**
    * When socket server notifies us that a new user joined:
    * 1. Call them with our stream
    * 2. Wait for their stream in response
    * 3. Add their stream to our players state
-   * 
+   *
    * This runs when OTHER users join AFTER you
    */
   useEffect(() => {
@@ -121,14 +152,14 @@ const SpaceScreen = ({
 
     const handleUserConnected = (newUserId: string) => {
       console.log(`[WebRTC] New user joined: ${newUserId}, initiating call...`);
-      
+
       // Initiate call to the new user with our stream
       const call = peer.call(newUserId, stream);
 
       // When we receive their stream
       call.on("stream", (incomingStream: MediaStream) => {
         console.log(`[WebRTC] Received stream from ${newUserId}`);
-        
+
         // Add them to our players state
         setPlayers((prev) => ({
           ...prev,
@@ -160,7 +191,7 @@ const SpaceScreen = ({
   // ============================================================================
   // SOCKET.IO: HANDLE MEDIA CONTROL EVENTS
   // ============================================================================
-  
+
   /**
    * Listen for other users toggling their audio/video/speaker
    * Update their state in our players object so UI reflects changes
@@ -198,10 +229,10 @@ const SpaceScreen = ({
     // User left the call
     const handleUserLeave = (userId: string) => {
       console.log(`[WebRTC] User ${userId} left the call`);
-      
+
       // Close the peer connection
       users[userId]?.close();
-      
+
       // Remove them from players state
       const playersCopy = cloneDeep(players);
       delete playersCopy[userId];
@@ -226,13 +257,13 @@ const SpaceScreen = ({
   // ============================================================================
   // WEBRTC: ANSWER INCOMING CALLS
   // ============================================================================
-  
+
   /**
    * When someone calls us (we joined AFTER them):
    * 1. Answer with our stream
    * 2. Receive their stream
    * 3. Add their stream to our players state
-   * 
+   *
    * This runs when YOU join and others are already there
    */
   useEffect(() => {
@@ -241,14 +272,14 @@ const SpaceScreen = ({
     peer.on("call", (call) => {
       const { peer: callerId } = call;
       console.log(`[WebRTC] Receiving call from ${callerId}, answering...`);
-      
+
       // Answer the call with our stream
       call.answer(stream);
 
       // When we receive their stream
       call.on("stream", (incomingStream: MediaStream) => {
         console.log(`[WebRTC] Received stream from ${callerId}`);
-        
+
         // Add them to our players state
         setPlayers((prev) => ({
           ...prev,
@@ -274,7 +305,7 @@ const SpaceScreen = ({
   // ============================================================================
   // ADD YOUR OWN STREAM TO PLAYERS
   // ============================================================================
-  
+
   /**
    * Once we have our stream and peer ID, add ourselves to the players state
    * This displays our own video in the UI
@@ -298,7 +329,7 @@ const SpaceScreen = ({
   // ============================================================================
   // RENDER: YOUR VIDEO (FEATURED/HIGHLIGHTED)
   // ============================================================================
-  
+
   const renderMainUser = () => {
     if (!playerHighlighted) return null;
 
@@ -327,7 +358,7 @@ const SpaceScreen = ({
   // ============================================================================
   // RENDER: OTHER USERS (GRID)
   // ============================================================================
-  
+
   const renderOtherUsers = () => {
     // Show waiting state if no other users
     if (visibleOtherPlayers.length === 0) {
@@ -398,7 +429,7 @@ const SpaceScreen = ({
   // ============================================================================
   // MAIN RENDER
   // ============================================================================
-  
+
   return (
     <div className="flex flex-col h-full w-full">
       {/* Video area: Your video + Others grid */}

@@ -92,16 +92,6 @@ export async function updateSpace(spaceId: string, data: UpdateSpaceData) {
       ...(data.title !== undefined && { title: data.title }),
       ...(data.description !== undefined && { description: data.description }),
     },
-    include: {
-      host: {
-        select: {
-          id: true,
-          name: true,
-          email: true,
-          avatar: true,
-        },
-      },
-    },
   });
 
   return space;

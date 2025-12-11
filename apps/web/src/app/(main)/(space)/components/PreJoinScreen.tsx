@@ -7,6 +7,7 @@ import playClickSound from "@/shared/utils/ClickSound";
 import UserMedia from "./UserMedia";
 import MediaPermissionError from "./ui/MediaPermissionError";
 import { useGetMe } from "@/shared/hooks/useUserQuery";
+import { useGetSpaceByJoinCode } from "@/shared/hooks/useSpace";
 import { PreJoinSettings } from "../[roomId]/page";
 
 interface PreJoinScreenProps {
@@ -14,8 +15,10 @@ interface PreJoinScreenProps {
   roomId: string;
 }
 
-const PreJoinScreen = ({ onJoinCall }: PreJoinScreenProps) => {
+const PreJoinScreen = ({ onJoinCall, roomId }: PreJoinScreenProps) => {
   const { data: user } = useGetMe();
+  const { data: spaceData, isLoading: isLoadingSpace } =
+    useGetSpaceByJoinCode(roomId);
   const [stream, setStream] = useState<MediaStream | null>(null);
   const [videoEnabled, setVideoEnabled] = useState(true);
   const [audioEnabled, setAudioEnabled] = useState(true);
@@ -52,15 +55,15 @@ const PreJoinScreen = ({ onJoinCall }: PreJoinScreenProps) => {
       if (error instanceof Error) {
         if (error.name === "NotAllowedError") {
           setPermissionError(
-            "Camera and microphone access denied. Please allow access and try again.",
+            "Camera and microphone access denied. Please allow access and try again."
           );
         } else if (error.name === "NotFoundError") {
           setPermissionError(
-            "No camera or microphone found. Please check your devices.",
+            "No camera or microphone found. Please check your devices."
           );
         } else {
           setPermissionError(
-            "Unable to access camera and microphone. Please check your devices and permissions.",
+            "Unable to access camera and microphone. Please check your devices and permissions."
           );
         }
       }
@@ -176,10 +179,14 @@ const PreJoinScreen = ({ onJoinCall }: PreJoinScreenProps) => {
           <div className="flex flex-col items-start gap-4 w-full">
             <div className="flex flex-col gap-1.5 mb-2">
               <p className="text-xs text-secondary-text font-medium">
-                You are about to join Rinkit Adhana&apos;s space
+                {isLoadingSpace
+                  ? "Loading space info..."
+                  : spaceData
+                    ? `You are about to join ${spaceData.host?.name || "Host"}'s space`
+                    : "You are about to join a space"}
               </p>
               <h1 className="text-xl font-semibold">
-                Let&apos;s check your cam and mic
+                {spaceData?.title || "Let's check your cam and mic"}
               </h1>
             </div>
             <div className="flex w-full gap-2 items-center">
