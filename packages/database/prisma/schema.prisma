@@ -91,14 +91,14 @@ enum ParticipantRole {
 }
 
 model RecordingSession {
-  id                 String                 @id @default(cuid())
-  spaceId            String
-  space              Space                  @relation(fields: [spaceId], references: [id])
-  recordingSessionId String                 @unique
-  startedAt          DateTime               @default(now())
-  stoppedAt          DateTime?
-  status             RecordingSessionStatus @default(ACTIVE)
-  createdAt          DateTime               @default(now())
+  id                      String                 @id @default(cuid())
+  spaceId                 String
+  space                   Space                  @relation(fields: [spaceId], references: [id])
+  spaceRecordingSessionId String                 @unique
+  startedAt               DateTime               @default(now())
+  stoppedAt               DateTime?
+  status                  RecordingSessionStatus @default(ACTIVE)
+  createdAt               DateTime               @default(now())
 
   participantRecordings ParticipantRecording[]
   finalOutputs          FinalOutput[]
@@ -181,9 +181,9 @@ model RecordingSegment {
   participantRecordingId String
   participantRecording   ParticipantRecording @relation(fields: [participantRecordingId], references: [id])
 
-  recordingSessionId String
-  spaceId            String
-  participantId      String
+  spaceRecordingSessionId String
+  spaceId                 String
+  participantId           String
 
   assetKey   String // S3 key for uploaded chunk
   startMs    Int // offset from session start in milliseconds
@@ -195,7 +195,7 @@ model RecordingSegment {
 
   @@index([participantRecordingId])
   @@index([participantRecordingId, startMs])
-  @@index([recordingSessionId])
+  @@index([spaceRecordingSessionId])
   @@index([participantId])
   @@index([status])
 }
