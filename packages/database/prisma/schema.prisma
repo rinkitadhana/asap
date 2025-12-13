@@ -144,13 +144,18 @@ model ParticipantRecording {
   startOffsetMs   Int?
   durationMs      Int?
   lastChunkAt     DateTime?
-  fileKey         String? // S3 key for uploaded chunk
+  mergedFileKey   String? // S3 key for merged file
   fileSize        BigInt?
   checksum        String? // sha256 checksum of the uploaded chunk
   mimeType        String?
   status          RecordingFileStatus @default(UPLOADING)
   processingJobId String?
   processingError String?
+
+  // upload completion tracking
+  expectedSegments Int? // total chunks expected (set when recording stops)
+  uploadedSegments Int     @default(0) // count of chunks received
+  isComplete       Boolean @default(false) // true when expectedSegments == uploadedSegments
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -185,16 +190,19 @@ model RecordingSegment {
   spaceId                 String
   participantId           String
 
-  assetKey   String // S3 key for uploaded chunk
-  startMs    Int // offset from session start in milliseconds
-  durationMs Int // duration in milliseconds
-  sizeBytes  BigInt
-  checksum   String? // optional sha256
-  uploadedAt DateTime      @default(now())
-  status     SegmentStatus @default(UPLOADED)
+  sequenceNumber Int // track chunk order (0, 1, 2, 3...)
+  assetKey       String // S3 key for uploaded chunk
+  startMs        Int // offset from session start in milliseconds
+  durationMs     Int // duration in milliseconds
+  sizeBytes      BigInt
+  checksum       String? // optional sha256
+  uploadedAt     DateTime      @default(now())
+  status         SegmentStatus @default(UPLOADED)
 
+  @@unique([participantRecordingId, sequenceNumber])
   @@index([participantRecordingId])
   @@index([participantRecordingId, startMs])
+  @@index([participantRecordingId, sequenceNumber])
   @@index([spaceRecordingSessionId])
   @@index([participantId])
   @@index([status])
