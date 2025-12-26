@@ -31,12 +31,37 @@ import { io, Socket } from "socket.io-client";
 // Define the events that our socket will handle
 // These must match the events in the backend Socket.IO server
 
+// Recording session data
+interface RecordingSessionData {
+  sessionId: string;
+  spaceRecordingSessionId: string;
+  startedAt: number;
+}
+
+// Chunk upload progress data
+interface ChunkUploadedData {
+  participantId: string;
+  sequenceNumber: number;
+  totalUploaded: number;
+}
+
+// Recording complete data
+interface RecordingCompleteData {
+  participantId: string;
+  totalSegments: number;
+}
+
 interface ServerToClientEvents {
   "user-connected": (userId: string) => void;
   "user-toggle-audio": (userId: string) => void;
   "user-toggle-video": (userId: string) => void;
   "user-toggle-speaker": (userId: string) => void;
   "user-leave": (userId: string) => void;
+  // Recording events
+  "recording-started": (data: RecordingSessionData) => void;
+  "recording-stopped": (sessionId: string) => void;
+  "participant-chunk-uploaded": (data: ChunkUploadedData) => void;
+  "participant-recording-complete": (data: RecordingCompleteData) => void;
 }
 
 interface ClientToServerEvents {
@@ -45,6 +70,11 @@ interface ClientToServerEvents {
   "user-toggle-video": (userId: string, roomId: string) => void;
   "user-toggle-speaker": (userId: string, roomId: string) => void;
   "user-leave": (userId: string, roomId: string) => void;
+  // Recording events
+  "recording-start": (roomId: string, data: RecordingSessionData) => void;
+  "recording-stop": (roomId: string, sessionId: string) => void;
+  "recording-chunk-uploaded": (roomId: string, data: ChunkUploadedData) => void;
+  "recording-complete": (roomId: string, data: RecordingCompleteData) => void;
 }
 
 type SocketType = Socket<ServerToClientEvents, ClientToServerEvents>;
